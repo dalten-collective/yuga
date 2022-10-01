@@ -5,11 +5,12 @@ import sigilLogo from './assets/sarped-todler.svg'
 import Notebook from './Notebook'
 import Spinner from './Spinner'
 import Urbit from '@urbit/http-api'
-import { extract } from "https://unpkg.com/article-parser@latest/dist/article-parser.esm.js";
+// import { extract } from 'article-parser'
 
 
 function App() {
   const [ship, setShip] = useState('');
+  const [code, setCode] = useState('');
   const [loading, setLoading] = useState(true);
   const spinner = (
     <Spinner width={100} height={100} innerColor="white" outerColor="black" />
@@ -35,40 +36,43 @@ function App() {
     ship: string; // the ship that hosts the channel
   }
 
-  function checkExtractedData() {
-    const input = "https://compactmag.com/article/the-dream-of-digital-homesteading";
-    extract(input)
-      .then((article) => document.body.innerHTML = article.content)
-      .catch((err) => console.error(err));
-  }
+  // function checkExtractedData() {
+  //   const input = "https://compactmag.com/article/the-dream-of-digital-homesteading";
+  //   extract(input)
+  //     .then((article) => document.body.innerHTML = article.content)
+  //     .catch((err) => console.error(err));
+  // }
 
   async function connect() {
     const urbit = await Urbit.authenticate({
       ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
       url: "http://localhost:80",
-      code: "siller-fammep-narner-moptug",
+      code: code,
       verbose: true
     });
-    document.body.innerHTML = "Connected!";
     console.log('Connected!');
     console.log(urbit);
-    const body = {
-      create: {
-        resource: {
-          ship: `~${ship}`,
-          name: "cyclopaedia",
-        },
-        title: "My Urbit Notes",
-        description: "My Awesome Private Urbit Notebook",
-        associated: {
-          policy: {
-            invite: { pending: [] },
-          },
-        },
-        module: "publish",
-        mark: "graph-validator-publish",
-      },
-    };
+
+    urbit.poke({
+      app: "hood",
+      mark: "helm-hi",
+      json: "jojojo!",
+      onSuccess: success,
+      onError: handleKeyScryError
+    });
+
+  };
+
+  async function doPoke() {
+    const urbit = await Urbit.authenticate({
+      ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
+      url: "http://localhost:80",
+      code: code,
+      verbose: true
+    });
+    console.log('Connected!');
+    console.log(urbit);
+
     urbit.poke({
       app: "hood",
       mark: "helm-hi",
@@ -83,7 +87,7 @@ function App() {
     const urbit = await Urbit.authenticate({
       ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
       url: "http://localhost:80",
-      code: "siller-fammep-narner-moptug",
+      code: code,
       verbose: true
     });
     console.log('Connected!');
@@ -95,9 +99,9 @@ function App() {
 
   async function runThread() {
     const urbit = await Urbit.authenticate({
-      ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
+      ship: ship,
       url: "http://localhost:80",
-      code: "siller-fammep-narner-moptug",
+      code: code,
       verbose: true
     });
     urbit.desk = "landscape";
@@ -109,9 +113,8 @@ function App() {
           ship: `~${ship}`,
           name: "cyclopaedia",
         },
-        title: "My Urbit Notes",
-        description: "My Awesome Private Urbit Notebook",
-        associated: {
+        title: "Cyclopaedia",
+        description: "A literal but delinquent reprint of the Encyclopedia Schizophrenica",        associated: {
           policy: {
             invite: { pending: [] },
           },
@@ -227,11 +230,17 @@ function App() {
               Connect your Urbit Visor
             </button>
           )}
-          {ship && (
+          {/* {ship && (
             <button className="create-button" onClick={checkExtractedData}>
               extract
             </button>
-          )}
+          )} */}
+          {/* Input to set code for ship: */}
+          <input
+            type="text"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+          />
           {ship && (
             <button className="create-button" onClick={doScry}>
               Scry
