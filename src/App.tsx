@@ -4,6 +4,7 @@ import { urbitVisor } from '@dcspark/uv-core'
 import sigilLogo from './assets/sarped-todler.svg'
 import Notebook from './Notebook'
 import Spinner from './Spinner'
+import Urbit from '@urbit/http-api'
 
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
   function setData() {
     urbitVisor.getShip().then((res) => {
       setShip(res.response);
-      checkChannelExists(res.response);
+      checkChannelExists();
     });
   }
 
@@ -32,10 +33,102 @@ function App() {
     name: string; // the name of the channel, in kebab-case.
     ship: string; // the ship that hosts the channel
   }
+
+  async function connect() {
+    const urbit = await Urbit.authenticate({
+      ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
+      url: "http://localhost:80",
+      code: "siller-fammep-narner-moptug",
+      verbose: true
+    });
+    document.body.innerHTML = "Connected!";
+    console.log('Connected!');
+    console.log(urbit);
+    const body = {
+      create: {
+        resource: {
+          ship: `~${ship}`,
+          name: "cyclopaedia",
+        },
+        title: "My Urbit Notes",
+        description: "My Awesome Private Urbit Notebook",
+        associated: {
+          policy: {
+            invite: { pending: [] },
+          },
+        },
+        module: "publish",
+        mark: "graph-validator-publish",
+      },
+    };
+    urbit.poke({
+      app: "hood",
+      mark: "helm-hi",
+      json: "jojojo!",
+      onSuccess: success,
+      onError: handleKeyScryError
+    });
+
+  };
+
+  async function doScry() {
+    const urbit = await Urbit.authenticate({
+      ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
+      url: "http://localhost:80",
+      code: "siller-fammep-narner-moptug",
+      verbose: true
+    });
+    console.log('Connected!');
+    console.log(urbit);
+    var groups = await urbit.scry({app: "graph-store", path: "/keys"});
+    console.log(groups);
+
+  };
+
+  async function runThread() {
+    const urbit = await Urbit.authenticate({
+      ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
+      url: "http://localhost:80",
+      code: "siller-fammep-narner-moptug",
+      verbose: true
+    });
+    urbit.desk = "landscape";
+    console.log('Connected!');
+    console.log(urbit);
+    const body = {
+      create: {
+        resource: {
+          ship: `~${ship}`,
+          name: "cyclopaedia",
+        },
+        title: "My Urbit Notes",
+        description: "My Awesome Private Urbit Notebook",
+        associated: {
+          policy: {
+            invite: { pending: [] },
+          },
+        },
+        module: "publish",
+        mark: "graph-validator-publish",
+      },
+    };
+    var thread = await urbit.thread({
+      inputMark: "graph-view-action",
+      outputMark: "json",
+      threadName: "graph-create",
+      body: body,
+    });
+    console.log(thread);
+
+  };
   
+  function success() {
+    console.log("Success!");
+    console.log("")
+  }
 
   const [registered, setRegistered] = useState(false);
-  function checkChannelExists(ship: string) {
+  function checkChannelExists() {
     urbitVisor.scry({ app: "graph-store", path: "/keys" }).then((res) => {
       setLoading(false);
       if (res.status === "ok") {
@@ -58,6 +151,7 @@ function App() {
 
   function handleThreadError() {
     setError("Thread failed");
+    console.log(error);
   }
 
   interface Thread {
@@ -70,11 +164,41 @@ function App() {
   // Create channel
   async function createChannel() {
     setLoading(true);
-    const body = {
-      create: {
-        resource: {
-          ship: `~${ship}`,
-          name: "cyclopaedia",
+  //   const body = {
+  //     create: {
+  //       resource: {
+  //         ship: `~${ship}`,
+  //         name: "cyclopaedia",
+  //     },
+  //     title: "Cyclopaedia",
+  //     description: "A literal but delinquent reprint of the Encyclopedia Schizophrenica",
+  //     associated: {
+  //       policy: {
+  //         invite: { pending: [] },
+  //       },
+  //     },
+  //     module: "publish",
+  //     mark: "graph-validator-publish",
+  //   },
+  // };
+  //   urbitVisor
+  //     .thread({
+  //       threadName: "graph-create",
+  //       inputMark: "graph-view-action",
+  //       outputMark: "json",
+  //       body: body,
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+  //       if (res.status === "ok") checkChannelExists();
+  //       else handleThreadError();
+  //     });
+  // }
+  const body = {
+    create: {
+      resource: {
+        ship: `~${ship}`,
+        name: "cyclopaedia",
       },
       title: "Cyclopaedia",
       description: "A literal but delinquent reprint of the Encyclopedia Schizophrenica",
@@ -89,17 +213,17 @@ function App() {
   };
   urbitVisor
     .thread({
-      threadName: "graph-create",
       inputMark: "graph-view-action",
       outputMark: "json",
+      threadName: "graph-create",
       body: body,
     })
     .then((res) => {
-      if (res.status === "ok") {
-        checkChannelExists(ship);
-      } else handleThreadError();
+      checkChannelExists();
+      // if (res.status === "ok") checkChannelExists();
+      // else handleThreadError();
     });
-  }
+}
 
   const [count, setCount] = useState(0)
   if (loading)
@@ -123,6 +247,16 @@ function App() {
           {!ship && (
             <button className="create-button" onClick={createChannel}>
               Connect your Urbit Visor
+            </button>
+          )}
+          {ship && (
+            <button className="create-button" onClick={doScry}>
+              Scry
+            </button>
+          )}
+          {ship && (
+            <button className="create-button" onClick={runThread}>
+              Thread
             </button>
           )}
           {ship && (

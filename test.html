@@ -1,0 +1,22 @@
+<html>
+
+<head>
+	<script src="https://unpkg.com/@urbit/http-api"></script>
+</head>
+
+<body>
+	<button id="start" type="button" onClick="connect()">Connect</button>
+</body>
+<script>
+	async function connect() {
+		window.api = await UrbitHttpApi.Urbit.authenticate({
+			ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
+			url: "http://localhost:80",
+			code: "siller-fammep-narner-moptug",
+			verbose: true
+		});
+		document.body.innerHTML = "Connected!";
+	};
+</script>
+
+</html>

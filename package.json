@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@dcspark/uv-core": "^0.3.6",
+    "@urbit/http-api": "^2.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
