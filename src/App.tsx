@@ -5,6 +5,7 @@ import sigilLogo from './assets/sarped-todler.svg'
 import Notebook from './Notebook'
 import Spinner from './Spinner'
 import Urbit from '@urbit/http-api'
+import { extract } from "https://unpkg.com/article-parser@latest/dist/article-parser.esm.js";
 
 
 function App() {
@@ -32,6 +33,13 @@ function App() {
   interface Key {
     name: string; // the name of the channel, in kebab-case.
     ship: string; // the ship that hosts the channel
+  }
+
+  function checkExtractedData() {
+    const input = "https://compactmag.com/article/the-dream-of-digital-homesteading";
+    extract(input)
+      .then((article) => document.body.innerHTML = article.content)
+      .catch((err) => console.error(err));
   }
 
   async function connect() {
@@ -164,36 +172,6 @@ function App() {
   // Create channel
   async function createChannel() {
     setLoading(true);
-  //   const body = {
-  //     create: {
-  //       resource: {
-  //         ship: `~${ship}`,
-  //         name: "cyclopaedia",
-  //     },
-  //     title: "Cyclopaedia",
-  //     description: "A literal but delinquent reprint of the Encyclopedia Schizophrenica",
-  //     associated: {
-  //       policy: {
-  //         invite: { pending: [] },
-  //       },
-  //     },
-  //     module: "publish",
-  //     mark: "graph-validator-publish",
-  //   },
-  // };
-  //   urbitVisor
-  //     .thread({
-  //       threadName: "graph-create",
-  //       inputMark: "graph-view-action",
-  //       outputMark: "json",
-  //       body: body,
-  //     })
-  //     .then((res) => {
-  //       console.log(res);
-  //       if (res.status === "ok") checkChannelExists();
-  //       else handleThreadError();
-  //     });
-  // }
   const body = {
     create: {
       resource: {
@@ -247,6 +225,11 @@ function App() {
           {!ship && (
             <button className="create-button" onClick={createChannel}>
               Connect your Urbit Visor
+            </button>
+          )}
+          {ship && (
+            <button className="create-button" onClick={checkExtractedData}>
+              extract
             </button>
           )}
           {ship && (
