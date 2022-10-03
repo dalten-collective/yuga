@@ -5,8 +5,8 @@ import sigilLogo from './assets/sarped-todler.svg'
 import Notebook from './Notebook'
 import Spinner from './Spinner'
 import Urbit from '@urbit/http-api'
-import { extract } from 'article-parser'
 import { connectUrbit } from './UrbitApi'
+import { extract } from 'article-parser'
 import TurndownService from 'turndown'
 
 function App() {
@@ -256,11 +256,7 @@ function App() {
               Thread
             </button>
           )}
-          {api && (
-            <button className="create-button" onClick={runThread}>
-              HIIII 
-            </button>
-          )}
+
           {ship && (
             <button className="create-button" onClick={createChannel}>
               Open your Cyclopaedia

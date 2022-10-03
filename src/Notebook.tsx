@@ -3,6 +3,8 @@ import { useState, useEffect, useReducer } from "react";
 import { urbitVisor } from "@dcspark/uv-core";
 import type { Graph, Post, Content, TextContent } from "./types";
 import Spinner from "./Spinner";
+import { extract } from 'article-parser'
+import TurndownService from 'turndown'
 interface NotebookProps {
 	ship: string; // ship name
 }
@@ -26,6 +28,22 @@ function Notebook(props: NotebookProps) {
 		urbitVisor.on("sse", ["graph-update", "remove-posts"], handleRemovePosts);
 		urbitVisor.subscribe({ app: "graph-store", path: "/updates" });
 	}, []);
+
+	function extractArticle() {
+		var td = new TurndownService();
+		// const input = "https://urbit.org/blog/convivial-networks";
+		extract(articleUrl)
+			.then((article) => {
+				// var content = turndown(article.content);
+				var content = td.turndown(article.content);
+				var title = article.title;
+				setTitle(title);
+				setText(content);
+				console.log(td.turndown(article.content), "content")
+				// document.body.innerHTML = article.content;
+			})
+			.catch((err) => console.error(err));
+	}
 
 	const postReducer = (state: Graph, action) => {
 		switch (action.type) {
@@ -56,6 +74,7 @@ function Notebook(props: NotebookProps) {
 	const spinner = (
 		<Spinner width={40} height={40} innerColor="white" outerColor="black" />
 	);
+	const [articleUrl, setArticleUrl] = useState("https://urbit.org/blog/convivial-networks");
 	const [title, setTitle] = useState("");
 	const [text, setText] = useState("");
 	const [selected, setSelected] = useState<Post>(null);
@@ -207,9 +226,23 @@ function Notebook(props: NotebookProps) {
 	return (
 		<div className="notebook">
 			<header>
-				<h1>My Urbit Notes</h1>
+				<h1>~</h1>
 			</header>
 			<div className="composer">
+				<div className="row-1">
+					<input
+						type="text"
+						value={articleUrl}
+						placeholder="Article URL"
+						onChange={(e) => setArticleUrl(e.target.value)}
+					/>
+					<br />
+					{!selected && <button onClick={extractArticle}>Extract</button>}
+					{/* {selected && <button onClick={editPost}>Edit post</button>} */}
+				</div>
+				<br />
+				<br />
+
 				<div className="row-1">
 					<input
 						type="text"
