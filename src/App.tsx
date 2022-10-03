@@ -6,27 +6,38 @@ import Notebook from './Notebook'
 import Spinner from './Spinner'
 import Urbit from '@urbit/http-api'
 // import { extract } from 'article-parser'
+import { connectUrbit } from './UrbitApi'
 
 
 function App() {
   const [ship, setShip] = useState('');
   const [code, setCode] = useState('');
+  const [url, setUrl] = useState('http://localhost:80');
+  const [api, setApi] = useState(null);
   const [loading, setLoading] = useState(true);
   const spinner = (
     <Spinner width={100} height={100} innerColor="white" outerColor="black" />
   );
 
   useEffect(() => {
-    urbitVisor.require(
-      ["shipName", "scry", "subscribe", "poke", "thread"],
-      setData
-      );
+    setUrbit
+    // urbitVisor.require(
+    //   ["shipName", "scry", "subscribe", "poke", "thread"],
+    //   setData
+    //   );
   }, []);
 
   function setData() {
     urbitVisor.getShip().then((res) => {
       setShip(res.response);
+      console.log(res.response, "ship")
       checkChannelExists();
+    });
+  }
+
+  function setUrbit() {
+    connectUrbit(ship, url, code).then((res) => {
+      setApi(res);
     });
   }
 
@@ -43,70 +54,14 @@ function App() {
   //     .catch((err) => console.error(err));
   // }
 
-  async function connect() {
-    const urbit = await Urbit.authenticate({
-      ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
-      url: "http://localhost:80",
-      code: code,
-      verbose: true
-    });
-    console.log('Connected!');
-    console.log(urbit);
 
-    urbit.poke({
-      app: "hood",
-      mark: "helm-hi",
-      json: "jojojo!",
-      onSuccess: success,
-      onError: handleKeyScryError
-    });
-
-  };
-
-  async function doPoke() {
-    const urbit = await Urbit.authenticate({
-      ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
-      url: "http://localhost:80",
-      code: code,
-      verbose: true
-    });
-    console.log('Connected!');
-    console.log(urbit);
-
-    urbit.poke({
-      app: "hood",
-      mark: "helm-hi",
-      json: "jojojo!",
-      onSuccess: success,
-      onError: handleKeyScryError
-    });
-
-  };
-
-  async function doScry() {
-    const urbit = await Urbit.authenticate({
-      ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
-      url: "http://localhost:80",
-      code: code,
-      verbose: true
-    });
-    console.log('Connected!');
-    console.log(urbit);
-    var groups = await urbit.scry({app: "graph-store", path: "/keys"});
-    console.log(groups);
-
-  };
 
   async function runThread() {
-    const urbit = await Urbit.authenticate({
-      ship: ship,
-      url: "http://localhost:80",
-      code: code,
-      verbose: true
-    });
-    urbit.desk = "landscape";
+    // const api = await connectUrbit(ship, url, code);
+    api.desk = "landscape";
     console.log('Connected!');
-    console.log(urbit);
+    console.log(api);
+
     const body = {
       create: {
         resource: {
@@ -123,7 +78,7 @@ function App() {
         mark: "graph-validator-publish",
       },
     };
-    var thread = await urbit.thread({
+    var thread = await api.thread({
       inputMark: "graph-view-action",
       outputMark: "json",
       threadName: "graph-create",
@@ -175,45 +130,45 @@ function App() {
   // Create channel
   async function createChannel() {
     setLoading(true);
-  const body = {
-    create: {
-      resource: {
-        ship: `~${ship}`,
-        name: "cyclopaedia",
-      },
-      title: "Cyclopaedia",
-      description: "A literal but delinquent reprint of the Encyclopedia Schizophrenica",
-      associated: {
-        policy: {
-          invite: { pending: [] },
+    const body = {
+      create: {
+        resource: {
+          ship: `~${ship}`,
+          name: "cyclopaedia",
         },
+        title: "Cyclopaedia",
+        description: "A literal but delinquent reprint of the Encyclopedia Schizophrenica",
+        associated: {
+          policy: {
+            invite: { pending: [] },
+          },
+        },
+        module: "publish",
+        mark: "graph-validator-publish",
       },
-      module: "publish",
-      mark: "graph-validator-publish",
-    },
-  };
-  urbitVisor
-    .thread({
-      inputMark: "graph-view-action",
-      outputMark: "json",
-      threadName: "graph-create",
-      body: body,
-    })
-    .then((res) => {
-      checkChannelExists();
-      // if (res.status === "ok") checkChannelExists();
-      // else handleThreadError();
-    });
+    };
+    urbitVisor
+      .thread({
+        inputMark: "graph-view-action",
+        outputMark: "json",
+        threadName: "graph-create",
+        body: body,
+      })
+      .then((res) => {
+        checkChannelExists();
+        // if (res.status === "ok") checkChannelExists();
+        // else handleThreadError();
+      });
 }
 
   const [count, setCount] = useState(0)
-  if (loading)
-    return (
-      <div className="App">
-        <div className="loading">{spinner}</div>
-      </div>
-    );
-  else if (!registered)
+  // if (loading)
+  //   return (
+  //     <div className="App">
+  //       <div className="loading">{spinner}</div>
+  //     </div>
+  //   );
+  if (!registered)
     return (
       <div className="App">
         <header className="App-header">
@@ -225,30 +180,58 @@ function App() {
           <div>
             {ship && <p>Welcome, <code>~{ship}</code></p>}
           </div>
-          {!ship && (
+          {/* Login form with url, ship name, and code */}
+          <div className="composer">
+            <div className="row-1">
+              <input
+                type="text"
+                value={ship}
+                placeholder="Ship name"
+                onChange={(e) => setShip(e.target.value)}
+              />
+              <br />
+              <input
+                type="text"
+                value={url}
+                placeholder="Ship URL"
+                onChange={(e) => setUrl(e.target.value)}
+              />
+              <br />
+              <input
+                type="text"
+                value={code}
+                placeholder="+code"
+                onChange={(e) => setCode(e.target.value)}
+              />
+              <br />
+              <br />
+              <button className="create-button" onClick={setUrbit}>Connect Urbit</button>
+            </div>
+          </div>
+          {/* {!ship && (
             <button className="create-button" onClick={createChannel}>
               Connect your Urbit Visor
             </button>
-          )}
+          )} */}
           {/* {ship && (
             <button className="create-button" onClick={checkExtractedData}>
               extract
             </button>
           )} */}
           {/* Input to set code for ship: */}
-          <input
+          {/* <input
             type="text"
             value={code}
             onChange={(e) => setCode(e.target.value)}
-          />
-          {ship && (
-            <button className="create-button" onClick={doScry}>
-              Scry
-            </button>
-          )}
+          /> */}
           {ship && (
             <button className="create-button" onClick={runThread}>
               Thread
+            </button>
+          )}
+          {api && (
+            <button className="create-button" onClick={runThread}>
+              HIIII 
             </button>
           )}
           {ship && (
