@@ -5,16 +5,18 @@ import sigilLogo from './assets/sarped-todler.svg'
 import Notebook from './Notebook'
 import Spinner from './Spinner'
 import Urbit from '@urbit/http-api'
-// import { extract } from 'article-parser'
+import { extract } from 'article-parser'
 import { connectUrbit } from './UrbitApi'
-
+import TurndownService from 'turndown'
 
 function App() {
-  const [ship, setShip] = useState('');
-  const [code, setCode] = useState('');
+  const [ship, setShip] = useState('bolfep-lopdep-daptev-dolfyr--polbet-rocseg-bismyl-litzod');
+  const [code, setCode] = useState('pasfep-tormur-tapmug-narper');
   const [url, setUrl] = useState('http://localhost:80');
   const [api, setApi] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [registered, setRegistered] = useState(false);
+
   const spinner = (
     <Spinner width={100} height={100} innerColor="white" outerColor="black" />
   );
@@ -38,6 +40,7 @@ function App() {
   function setUrbit() {
     connectUrbit(ship, url, code).then((res) => {
       setApi(res);
+      checkChannelExists();
     });
   }
 
@@ -47,12 +50,17 @@ function App() {
     ship: string; // the ship that hosts the channel
   }
 
-  // function checkExtractedData() {
-  //   const input = "https://compactmag.com/article/the-dream-of-digital-homesteading";
-  //   extract(input)
-  //     .then((article) => document.body.innerHTML = article.content)
-  //     .catch((err) => console.error(err));
-  // }
+  function checkExtractedData() {
+    var td = new TurndownService();
+    const input = "https://urbit.org/blog/august-2022-grants-program";
+    extract(input)
+      .then((article) => {
+        // var content = turndown(article.content);
+        console.log(td.turndown(article.content), "content")
+        document.body.innerHTML = article.content;
+      })
+      .catch((err) => console.error(err));
+  }
 
 
 
@@ -93,7 +101,6 @@ function App() {
     console.log("")
   }
 
-  const [registered, setRegistered] = useState(false);
   function checkChannelExists() {
     urbitVisor.scry({ app: "graph-store", path: "/keys" }).then((res) => {
       setLoading(false);
@@ -161,7 +168,6 @@ function App() {
       });
 }
 
-  const [count, setCount] = useState(0)
   // if (loading)
   //   return (
   //     <div className="App">
@@ -181,43 +187,43 @@ function App() {
             {ship && <p>Welcome, <code>~{ship}</code></p>}
           </div>
           {/* Login form with url, ship name, and code */}
-          <div className="composer">
-            <div className="row-1">
-              <input
-                type="text"
-                value={ship}
-                placeholder="Ship name"
-                onChange={(e) => setShip(e.target.value)}
-              />
-              <br />
-              <input
-                type="text"
-                value={url}
-                placeholder="Ship URL"
-                onChange={(e) => setUrl(e.target.value)}
-              />
-              <br />
-              <input
-                type="text"
-                value={code}
-                placeholder="+code"
-                onChange={(e) => setCode(e.target.value)}
-              />
-              <br />
-              <br />
-              <button className="create-button" onClick={setUrbit}>Connect Urbit</button>
+          {!api && (
+            <div className="composer">
+              <div className="row-1">
+                <input
+                  type="text"
+                  value={ship}
+                  placeholder="Ship name"
+                  onChange={(e) => setShip(e.target.value)}
+                />
+                <br />
+                <input
+                  type="text"
+                  value={url}
+                  placeholder="Ship URL"
+                  onChange={(e) => setUrl(e.target.value)}
+                />
+                <br />
+                <input
+                  type="text"
+                  value={code}
+                  placeholder="+code"
+                  onChange={(e) => setCode(e.target.value)}
+                />
+                <br />
+                <br />
+                <button className="create-button" onClick={setUrbit}>Connect Urbit</button>
+              </div>
             </div>
-          </div>
+          )}
           {/* {!ship && (
             <button className="create-button" onClick={createChannel}>
               Connect your Urbit Visor
             </button>
           )} */}
-          {/* {ship && (
-            <button className="create-button" onClick={checkExtractedData}>
-              extract
-            </button>
-          )} */}
+          <button className="create-button" onClick={checkExtractedData}>
+            extract
+          </button>
           {/* Input to set code for ship: */}
           {/* <input
             type="text"
