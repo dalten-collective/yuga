@@ -10,9 +10,12 @@ import { connectUrbit } from './UrbitApi'
 import TurndownService from 'turndown'
 
 function App() {
-  const [ship, setShip] = useState('bolfep-lopdep-daptev-dolfyr--polbet-rocseg-bismyl-litzod');
-  const [code, setCode] = useState('pasfep-tormur-tapmug-narper');
-  const [url, setUrl] = useState('http://localhost:80');
+  // const [ship, setShip] = useState('bolfep-lopdep-daptev-dolfyr--polbet-rocseg-bismyl-litzod');
+  // const [code, setCode] = useState('pasfep-tormur-tapmug-narper');
+  // const [url, setUrl] = useState('http://localhost:80');
+  const [ship, setShip] = useState('');
+  const [code, setCode] = useState('');
+  const [url, setUrl] = useState('');
   const [api, setApi] = useState(null);
   const [loading, setLoading] = useState(true);
   const [registered, setRegistered] = useState(false);
@@ -22,6 +25,21 @@ function App() {
   );
 
   useEffect(() => {
+    if (localStorage.getItem('api')) {
+      const stored = JSON.parse(localStorage.getItem('api'));
+      console.log(stored, "stored")
+      setShip(stored.ship);
+      setCode(stored.code);
+      setUrl(stored.url);
+      setApi(stored);
+      // connectUrbit(ship, url, code).then((res) => {
+      //   setApi(res);
+      //   // set api in local storage
+      //   localStorage.setItem('api', JSON.stringify(res));
+      //   checkChannelExists();
+      // });
+      setUrbit;
+    };
     setUrbit
     // urbitVisor.require(
     //   ["shipName", "scry", "subscribe", "poke", "thread"],
@@ -40,6 +58,8 @@ function App() {
   function setUrbit() {
     connectUrbit(ship, url, code).then((res) => {
       setApi(res);
+      // set api in local storage
+      localStorage.setItem('api', JSON.stringify(res));
       checkChannelExists();
     });
   }
@@ -204,6 +224,7 @@ function App() {
                   onChange={(e) => setUrl(e.target.value)}
                 />
                 <br />
+                {/* Hide code */}
                 <input
                   type="text"
                   value={code}
