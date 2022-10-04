@@ -7,11 +7,14 @@ import { extract } from 'article-parser'
 import TurndownService from 'turndown'
 interface NotebookProps {
 	ship: string; // ship name
+	api: any;
 }
 
 function Notebook(props: NotebookProps) {
 	useEffect(() => {
-		urbitVisor
+		const api = props.api;
+		api	
+		// urbitVisor
 			.scry({
 				app: "graph-store",
 				path: `/graph/~${props.ship}/cyclopaedia`,
@@ -20,7 +23,7 @@ function Notebook(props: NotebookProps) {
 				console.log(res, "scried")
 				setPosts({
 					type: "add-post",
-					payload: res.response["graph-update"]["add-graph"]["graph"],
+					payload: res["graph-update"]["add-graph"]["graph"],
 				});
 				setLoading(false);
 			});
@@ -28,6 +31,25 @@ function Notebook(props: NotebookProps) {
 		urbitVisor.on("sse", ["graph-update", "remove-posts"], handleRemovePosts);
 		urbitVisor.subscribe({ app: "graph-store", path: "/updates" });
 	}, []);
+
+	// function getPosts() {
+	// 	// Get api from props
+	// 	const api = props.api;
+	// 	api	
+	// 		.scry({
+	// 			app: "graph-store",
+	// 			path: `/graph/~${props.ship}/cyclopaedia`,
+	// 		})
+	// 		.then((res) => {
+	// 			console.log(res, "======= GET POSTS CHECK")
+	// 			// setPosts({
+	// 			// 	type: "add-post",
+	// 			// 	payload: res["graph-update"]["add-graph"]["graph"],
+	// 			// });
+	// 			setLoading(false);
+	// 		});
+	// }
+	// getPosts();
 
 	function extractArticle() {
 		var td = new TurndownService();
@@ -260,15 +282,16 @@ function Notebook(props: NotebookProps) {
 				></textarea>
 				{loading && spinner}
 			</div>
+			<br />
 			<div className="post-list">
-				<div className="post-preview post-preview-header">
+				{/* <div className="post-preview post-preview-header">
 					<div className="post-preview-title">
 						<p>Note Title</p>
 					</div>
 					<div className="post-preview-date">
 						<p>Last Modified</p>
 					</div>
-				</div>
+				</div> */}
 				{graphToList(posts).map((post: Post) => {
 					return <PostPreview key={`${post.index}`} post={post} select={select} />;
 				})}
@@ -289,11 +312,15 @@ function PostPreview(props: PostProps) {
 	return (
 		<div className="post-preview">
 			<div onClick={showPost} className="post-preview-title">
-				<p>{(props.post.contents[0] as TextContent).text}</p>
+				<a>
+					{(props.post.contents[0] as TextContent).text} - 
+					<span>
+						<small><code> {new Date(props.post.date).toLocaleDateString()}</code></small>
+					</span>
+				</a>
 			</div>
 			<div className="post-preview-date">
-				<p>{new Date(props.post.date).toLocaleDateString()}</p>
-				<p>{new Date(props.post.date).toLocaleTimeString()}</p>
+				{/* <p>{new Date(props.post.date).toLocaleTimeString()}</p> */}
 			</div>
 		</div>
 	);

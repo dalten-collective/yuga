@@ -26,25 +26,27 @@ function App() {
 
   useEffect(() => {
     if (localStorage.getItem('api')) {
-      const stored = JSON.parse(localStorage.getItem('api'));
-      console.log(stored, "stored")
-      setShip(stored.ship);
-      setCode(stored.code);
-      setUrl(stored.url);
-      setApi(stored);
-      // connectUrbit(ship, url, code).then((res) => {
-      //   setApi(res);
-      //   // set api in local storage
-      //   localStorage.setItem('api', JSON.stringify(res));
-      //   checkChannelExists();
-      // });
-      setUrbit;
+      // const stored = JSON.parse(localStorage.getItem('api'));
+
+      let ship = localStorage.getItem('ship');
+      let code = localStorage.getItem('code');
+      let url = localStorage.getItem('url');
+      setShip(ship);
+      setCode(code);
+      setUrl(url);
+      connectUrbit(ship, url, code).then((res) => {
+        setApi(res);
+        // api.desk = "landscape";
+        // set api in local storage
+        localStorage.setItem('ship', res.ship);
+        localStorage.setItem('url', res.url);
+        localStorage.setItem('code', res.code);
+        // localStorage.setItem('api', JSON.stringify(res));
+        checkChannelExists(res);
+      });
+
     };
     setUrbit
-    // urbitVisor.require(
-    //   ["shipName", "scry", "subscribe", "poke", "thread"],
-    //   setData
-    //   );
   }, []);
 
   function setData() {
@@ -59,8 +61,11 @@ function App() {
     connectUrbit(ship, url, code).then((res) => {
       setApi(res);
       // set api in local storage
-      localStorage.setItem('api', JSON.stringify(res));
-      checkChannelExists();
+      localStorage.setItem('ship', res.ship);
+      localStorage.setItem('url', res.url);
+      localStorage.setItem('code', res.code);
+      // localStorage.setItem('api', JSON.stringify(res));
+      checkChannelExists(res);
     });
   }
 
@@ -121,19 +126,20 @@ function App() {
     console.log("")
   }
 
-  function checkChannelExists() {
-    urbitVisor.scry({ app: "graph-store", path: "/keys" }).then((res) => {
+  async function checkChannelExists(api) {
+    // const api = await connectUrbit(ship, url, code);
+    // setUrbit();
+    api.scry({ app: "graph-store", path: "/keys" }).then((res) => {
+      console.log(res, "check channel exists");
       setLoading(false);
-      if (res.status === "ok") {
-        const keys: Key[] = res.response["graph-update"].keys;
-        console.log(keys);
-        if (
-          keys.find(
-            (key: Key) => key.ship === ship && key.name === "cyclopaedia"
-          )
-        )
-          setRegistered(true);
-      } else handleKeyScryError();
+      const keys: Key[] = res["graph-update"].keys;
+      // check if any key.name === "cyclopaedia"
+      const cyclopaedia = keys.find((key) => key.name === "cyclopaedia");
+      if (cyclopaedia) {
+        // if so, setRegistered to true
+        setRegistered(true);
+      }
+      else handleKeyScryError();
     });
   }
 
@@ -182,7 +188,7 @@ function App() {
         body: body,
       })
       .then((res) => {
-        checkChannelExists();
+        checkChannelExists(api);
         // if (res.status === "ok") checkChannelExists();
         // else handleThreadError();
       });
@@ -269,7 +275,7 @@ function App() {
   else
     return (
       <div className="App">
-        <Notebook ship={ship} />
+        <Notebook ship={ship} api={api} />
       </div>
     );
 
