@@ -11,6 +11,8 @@ interface NotebookProps {
 }
 
 function Notebook(props: NotebookProps) {
+
+	const api = props.api;
 	useEffect(() => {
 		const api = props.api;
 		api	
@@ -27,29 +29,11 @@ function Notebook(props: NotebookProps) {
 				});
 				setLoading(false);
 			});
-		urbitVisor.on("sse", ["graph-update", "add-nodes"], handleAddNodes);
-		urbitVisor.on("sse", ["graph-update", "remove-posts"], handleRemovePosts);
-		urbitVisor.subscribe({ app: "graph-store", path: "/updates" });
+		// urbitVisor.on("sse", ["graph-update", "add-nodes"], handleAddNodes);
+		// urbitVisor.on("sse", ["graph-update", "remove-posts"], handleRemovePosts);
+		api.subscribe({ app: "graph-store", path: "/updates" });
 	}, []);
 
-	// function getPosts() {
-	// 	// Get api from props
-	// 	const api = props.api;
-	// 	api	
-	// 		.scry({
-	// 			app: "graph-store",
-	// 			path: `/graph/~${props.ship}/cyclopaedia`,
-	// 		})
-	// 		.then((res) => {
-	// 			console.log(res, "======= GET POSTS CHECK")
-	// 			// setPosts({
-	// 			// 	type: "add-post",
-	// 			// 	payload: res["graph-update"]["add-graph"]["graph"],
-	// 			// });
-	// 			setLoading(false);
-	// 		});
-	// }
-	// getPosts();
 
 	function extractArticle() {
 		var td = new TurndownService();
@@ -113,6 +97,7 @@ function Notebook(props: NotebookProps) {
 	};
 	function addNotebookPost() {
 		setLoading(true);
+		const api = props.api;
 		const indexes: bigint[] = graphToList(posts).map((p) => p.index);
 		const last: bigint = indexes.reduce(
 			(acc: bigint, cur: bigint) => (acc > cur ? acc : cur),
@@ -146,7 +131,7 @@ function Notebook(props: NotebookProps) {
 				nodes: nodes,
 			},
 		};
-		urbitVisor
+		api
 			.poke({ app: "graph-store", mark: "graph-update-3", json: body })
 			.then((res) => console.log(res));
 	};
@@ -156,6 +141,7 @@ function Notebook(props: NotebookProps) {
 		else modifyPost();
 	};
 	function deletePost() {
+		// const api = props.api;
 		setLoading(true);
 		const body = {
 			"remove-posts": {
@@ -166,7 +152,7 @@ function Notebook(props: NotebookProps) {
 				indices: [`/${selected.index}`],
 			},
 		};
-		urbitVisor
+		api
 			.poke({ app: "graph-store", mark: "graph-update-3", json: body })
 			.then((res) => console.log(res));
 	};
@@ -190,7 +176,7 @@ function Notebook(props: NotebookProps) {
 				nodes: nodes,
 			},
 		};
-		urbitVisor
+		api
 			.poke({ app: "graph-store", mark: "graph-update-3", json: body })
 			.then((res) => console.log(res));
 	}
@@ -240,6 +226,7 @@ function Notebook(props: NotebookProps) {
 			setText("");
 		} else {
 			setSelected(post);
+			console.log(post, "post")
 			setTitle((post.contents[0] as TextContent).text);
 			setText((post.contents[1] as TextContent).text);
 		}
