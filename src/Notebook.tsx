@@ -34,6 +34,21 @@ function Notebook(props: NotebookProps) {
 		api.subscribe({ app: "graph-store", path: "/updates" });
 	}, []);
 
+	function refreshPosts() {
+		api
+			.scry({
+				app: "graph-store",
+				path: `/graph/~${props.ship}/cyclopaedia`,
+			})
+			.then((res) => {
+				setPosts({
+					type: "add-post",
+					payload: res["graph-update"]["add-graph"]["graph"],
+				});
+				setLoading(false);
+			});
+	}
+
 
 	function extractArticle() {
 		var td = new TurndownService();
@@ -134,6 +149,7 @@ function Notebook(props: NotebookProps) {
 		api
 			.poke({ app: "graph-store", mark: "graph-update-3", json: body })
 			.then((res) => console.log(res));
+		refreshPosts();
 	};
 
 	function editPost() {
@@ -155,6 +171,8 @@ function Notebook(props: NotebookProps) {
 		api
 			.poke({ app: "graph-store", mark: "graph-update-3", json: body })
 			.then((res) => console.log(res));
+
+		refreshPosts();
 	};
 	function modifyPost() {
 		setLoading(true);
@@ -179,6 +197,8 @@ function Notebook(props: NotebookProps) {
 		api
 			.poke({ app: "graph-store", mark: "graph-update-3", json: body })
 			.then((res) => console.log(res));
+
+		refreshPosts();
 	}
 
 	function handleAddNodes(data: any) {
