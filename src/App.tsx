@@ -158,24 +158,24 @@ function App() {
     return (
       <ThemeProvider theme={light}>
         <div className="App">
-          <Header />
+          {/* <Header /> */}
           <header className="App-header">
-            <div>
+            {/* <div>
               <a href="https://reactjs.org" target="_blank">
                 <img src={sigilLogo} className="logo react" alt="React logo" />
               </a>
             </div>
             <div>
               {ship && <p>Welcome, <code>~{ship}</code></p>}
-            </div>
+            </div> */}
             {/* Login form with url, ship name, and code */}
             {!api && (
               <LoginForm ship={ship} code={code} url={url} setShip={setShip} setUrl={setUrl} setCode={setCode} setUrbit={setUrbit} />
               )}
-            <button className="create-button" onClick={checkExtractedData}>
+            {/* <button className="create-button" onClick={checkExtractedData}>
               extract
-            </button>
-            {ship && (
+            </button> */}
+            {api && (
               <button className="create-button" onClick={createChannel}>
                 Open your Cyclopaedia
               </button>
