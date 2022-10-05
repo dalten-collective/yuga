@@ -1,5 +1,6 @@
 import "./App.css"
 import { Box, Row, StatelessTextInput, Text, Center, Button, BaseInput } from "@tlon/indigo-react";
+import stpurbit from './assets/stpurbit.png'
 
 import { useState, useEffect } from 'react'
 
@@ -61,6 +62,9 @@ function LoginForm(props : LoginProps) {
 					<p className="logotext">
 						Cyclopaedia
 					</p>
+						<span>
+							<img width={70} src={stpurbit} alt="" />
+						</span>
 					<p>
 						Log in, drop out.
 					</p>
