@@ -4,11 +4,15 @@ import { urbitVisor } from '@dcspark/uv-core'
 import LoginForm from './Login'
 import sigilLogo from './assets/sarped-todler.svg'
 import Notebook from './Notebook'
+import Header from './Header'
 import Spinner from './Spinner'
 import Urbit from '@urbit/http-api'
 import { connectUrbit } from './UrbitApi'
 import { extract } from 'article-parser'
 import TurndownService from 'turndown'
+import { Row, Col, Text, Box,  Reset } from "@tlon/indigo-react";
+import light from '@tlon/indigo-light'
+import { ThemeProvider } from "styled-components";
 
 function App() {
   // const [ship, setShip] = useState('bolfep-lopdep-daptev-dolfyr--polbet-rocseg-bismyl-litzod');
@@ -152,31 +156,34 @@ function App() {
 
   if (!registered)
     return (
-      <div className="App">
-        <header className="App-header">
-          <div>
-            <a href="https://reactjs.org" target="_blank">
-              <img src={sigilLogo} className="logo react" alt="React logo" />
-            </a>
-          </div>
-          <div>
-            {ship && <p>Welcome, <code>~{ship}</code></p>}
-          </div>
-          {/* Login form with url, ship name, and code */}
-          {!api && (
-            <LoginForm ship={ship} code={code} url={url} setShip={setShip} setUrl={setUrl} setCode={setCode} setUrbit={setUrbit} />
-          )}
-          <button className="create-button" onClick={checkExtractedData}>
-            extract
-          </button>
-          {ship && (
-            <button className="create-button" onClick={createChannel}>
-              Open your Cyclopaedia
+      <ThemeProvider theme={light}>
+        <div className="App">
+          <Header />
+          <header className="App-header">
+            <div>
+              <a href="https://reactjs.org" target="_blank">
+                <img src={sigilLogo} className="logo react" alt="React logo" />
+              </a>
+            </div>
+            <div>
+              {ship && <p>Welcome, <code>~{ship}</code></p>}
+            </div>
+            {/* Login form with url, ship name, and code */}
+            {!api && (
+              <LoginForm ship={ship} code={code} url={url} setShip={setShip} setUrl={setUrl} setCode={setCode} setUrbit={setUrbit} />
+              )}
+            <button className="create-button" onClick={checkExtractedData}>
+              extract
             </button>
-          )}
-          {error && <p className="error-message">{error}</p>}
-        </header>
-      </div>
+            {ship && (
+              <button className="create-button" onClick={createChannel}>
+                Open your Cyclopaedia
+              </button>
+            )}
+            {error && <p className="error-message">{error}</p>}
+          </header>
+        </div>
+      </ThemeProvider>
     );
   else
     return (
