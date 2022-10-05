@@ -1,7 +1,7 @@
 import "./App.css"
-import { Box, Row, StatelessTextInput, Text, Center, Button } from "@tlon/indigo-react";
+import { Box, Row, StatelessTextInput, Text, Center, Button, BaseInput } from "@tlon/indigo-react";
 
-// import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 
 // const [ship, setShip] = useState('');
 // const [code, setCode] = useState('');
@@ -49,7 +49,7 @@ function Old(props) {
 		</div>
 	)
 }
-function LoginForm(props) {
+function LoginForm(props : LoginProps) {
 	return (
 		<Box p="0">
 			<Row
@@ -90,6 +90,7 @@ function LoginForm(props) {
 						fontWeight={400}
 						height={40}
 						width={256}
+						onChange={(e) => props.setShip(e.target.value)}
 					/>
 					<br />
 					<StatelessTextInput
@@ -103,6 +104,7 @@ function LoginForm(props) {
 						fontWeight={400}
 						height={40}
 						width={256}
+						onChange={(e) => props.setUrl(e.target.value)}
 					/>
 					<br />
 					<StatelessTextInput
@@ -117,9 +119,10 @@ function LoginForm(props) {
 						fontWeight={400}
 						height={40}
 						width={256}
+						onChange={(e) => props.setCode(e.target.value)}
 					/>
 					<br />
-					<button className="create-button">Connect Urbit</button>
+					<button className="create-button" onClick={props.setUrbit}>Connect Urbit</button>
 				</Box>
 			</Row>
 		</Box>

@@ -30,17 +30,19 @@ function App() {
   );
 
   useEffect(() => {
-    if (localStorage.getItem('api')) {
+    if (localStorage.getItem('ship')) {
       // const stored = JSON.parse(localStorage.getItem('api'));
 
       let ship = localStorage.getItem('ship');
       let code = localStorage.getItem('code');
       let url = localStorage.getItem('url');
+      console.log(ship, code, url);
       setShip(ship);
       setCode(code);
       setUrl(url);
       connectUrbit(ship, url, code).then((res) => {
         setApi(res);
+        console.log(res);
         // api.desk = "landscape";
         // set api in local storage
         localStorage.setItem('ship', res.ship);

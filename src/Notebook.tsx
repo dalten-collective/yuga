@@ -5,6 +5,19 @@ import type { Graph, Post, Content, TextContent } from "./types";
 import Spinner from "./Spinner";
 import { extract } from 'article-parser'
 import TurndownService from 'turndown'
+import {
+	LoadingSpinner,
+	Center,
+	Table,
+	Tr,
+	Td,
+	Box,
+	Row,
+	Col,
+	StatelessTextArea,
+	StatelessTextInput,
+	Text
+} from '@tlon/indigo-react';
 interface NotebookProps {
 	ship: string; // ship name
 	api: any;
@@ -216,7 +229,7 @@ function Notebook(props: NotebookProps) {
 	}
 
 	function graphToList(graph: Graph): Post[] {
-		console.log(graph, "graph")
+		// console.log(graph, "graph")
 		const nodes = Object.keys(graph).map((index) => graph[index]);
 		const notDeleted = nodes.filter((node) => typeof node.post !== "string"); // filter out deleted posts
 		return notDeleted
@@ -246,49 +259,98 @@ function Notebook(props: NotebookProps) {
 			setText("");
 		} else {
 			setSelected(post);
-			console.log(post, "post")
+			// console.log(post, "post")
 			setTitle((post.contents[0] as TextContent).text);
 			setText((post.contents[1] as TextContent).text);
 		}
 	}
 
 	return (
-		<div className="notebook">
+		<Box width={"70vw"}>
 			<header>
 				<h1>~</h1>
 			</header>
-			<div className="composer">
-				<div className="row-1">
-					<input
+				<Row className="row-1" justifyContent={"center"} alignItems="center">
+					<Box>
+						<StatelessTextInput
+							fontFamily={"Inter"}
+							className="input"
+							color={"white"}
+							value={articleUrl}
+							placeholder="Note title"
+							backgroundColor="rgba(0, 0, 0, 0.04)"
+							borderColor={"#c3bdbda5"}
+							borderRadius="8px"
+							fontWeight={400}
+							height={40}
+							width={256}
+							onChange={(e) => setArticleUrl(e.target.value)}
+						/>
+					{/* <input
 						type="text"
 						value={articleUrl}
 						placeholder="Article URL"
 						onChange={(e) => setArticleUrl(e.target.value)}
-					/>
+					/> */}
 					<br />
 					{!selected && <button onClick={extractArticle}>Extract</button>}
 					{/* {selected && <button onClick={editPost}>Edit post</button>} */}
-				</div>
+					</Box>
+				</Row>
 				<br />
 				<br />
 
-				<div className="row-1">
-					<input
+				<Box>
+					<Row justifyContent={'space-between'} pb='10px'>
+
+					{/* <input
 						type="text"
 						value={title}
 						placeholder="Note Title"
 						onChange={(e) => setTitle(e.target.value)}
-					/>
-					{!selected && <button onClick={addNotebookPost}>New post</button>}
-					{selected && <button onClick={editPost}>Edit post</button>}
-				</div>
-				<textarea
+					/> */}
+						<StatelessTextInput
+							className="input"
+							fontFamily={"Inter"}
+							color={"white"}
+							value={title}
+							placeholder="Note title"
+							backgroundColor="rgba(0, 0, 0, 0.04)"
+							borderColor={"#c3bdbda5"}
+							borderRadius="8px"
+							fontWeight={400}
+							height={40}
+							width={256}
+							onChange={(e) => setTitle(e.target.value)}
+							/>
+						{!selected && <button onClick={addNotebookPost}>New post</button>}
+						{selected && <button onClick={editPost}>Edit post</button>}
+					</Row>
+				<Row>
+					<StatelessTextArea
+						className="input"
+						backgroundColor="rgba(0, 0, 0, 0.04)"
+						fontFamily={"'Source Code Pro', monospace"}
+						// className="inter"
+						borderColor={"#c3bdbda5"}
+						// width={"512px"}
+						borderRadius="8px"
+						height={256}
+						color="white"
+						fontWeight={400}
+						rows={10}
+						value={text}
+						onChange={(e) => setText(e.target.value)}	
+						/ >
+				</Row>
+
+				</Box>
+				{/* <textarea
 					rows={10}
 					value={text}
 					onChange={(e) => setText(e.target.value)}
-				></textarea>
+				></textarea> */}
 				{loading && spinner}
-			</div>
 			<br />
 			<div className="post-list">
 				{/* <div className="post-preview post-preview-header">
@@ -303,7 +365,7 @@ function Notebook(props: NotebookProps) {
 					return <PostPreview key={`${post.index}`} post={post} select={select} />;
 				})}
 			</div>
-		</div>
+		</Box>
 	);
 }
 export default Notebook;
@@ -313,22 +375,86 @@ interface PostProps {
 	select: (post: Post) => void;
 }
 function PostPreview(props: PostProps) {
+	// console.log(props.post)
 	function showPost() {
 		props.select(props.post);
 	}
 	return (
-		<div className="post-preview">
-			<div onClick={showPost} className="post-preview-title">
-				<a>
+		<Box p="1" className="App" display="flex" flexDirection="column" height="100%">
+			{/* <Table mt={2} width='100%'>
+				<thead>
+					<Tr textAlign='left' pb={2} >
+						<th style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.04)' }}>
+							<Text fontWeight={400} fontSize={0} color='white'>Event Type</Text>
+						</th>
+						<th style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.04)' }}>
+							<Text fontWeight={400} fontSize={0} color='white'>Data</Text>
+						</th>
+						<th style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.04)' }}>
+							<Text fontWeight={400} fontSize={0} color='white'>Time</Text>
+						</th>
+					</Tr>
+				</thead>
+				<tbody>
+					<Tr>
+						<Td>
+							<Text ml={2} fontSize={0} verticalAlign='middle'>one</Text>
+						</Td>
+						<Td>
+								<Text
+									fontFamily='Source Code Pro !important'
+									ml={1}
+									color='white'
+									fontSize={0}
+									verticalAlign='middle'
+								>
+									{props.post.author}
+								</Text>
+						</Td>
+						<Td>
+								<Text
+									fontFamily='Source Code Pro !important'
+									ml={1}
+									color='white'
+									fontSize={0}
+									verticalAlign='middle'
+								>
+									one
+								</Text>
+						</Td>
+						<Td>
+							<Text ml={1}
+								pl={1}
+								pr={1}
+								fontSize={0}
+								color='black'
+								backgroundColor='rgba(0, 0, 0, 0.04)'
+								borderRadius='2px'
+							>
+								two
+							</Text>
+						</Td>
+						<Td>
+							<Text
+								fontFamily='Source Code Pro !important'
+								color='white'
+								fontSize={0}
+							>
+								three
+							</Text>
+						</Td>
+					</Tr>
+				</tbody>
+			</Table> */}
+				<a onClick={showPost}>
 					{(props.post.contents[0] as TextContent).text} - 
 					<span>
 						<small><code> {new Date(props.post.date).toLocaleDateString()}</code></small>
 					</span>
+					<br />
 				</a>
-			</div>
-			<div className="post-preview-date">
-				{/* <p>{new Date(props.post.date).toLocaleTimeString()}</p> */}
-			</div>
-		</div>
+				<small><code>By ~zod</code></small>
+				<hr />
+		</Box>
 	);
 }
