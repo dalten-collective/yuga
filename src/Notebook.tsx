@@ -62,13 +62,34 @@ function Notebook(props: NotebookProps) {
 			});
 	}
 
+	function extractArticleBackup() {
+		const encodedUrl = encodeURIComponent(articleUrl);
+		const reqUrl = "https://extract-article.deta.dev/?url=" + encodedUrl;
+		setLoading(false);
+
+		fetch(reqUrl, {method: 'GET', redirect: 'follow'})
+			.then(response => response.json())
+			.then(result => {
+				console.log(result.data);
+				const turndownService = new TurndownService();
+				var content = turndownService.turndown(result.data.content);
+				var title = result.data.title;
+				setTitle(title);
+				setText(content);
+			})
+			.catch(error => console.log('error', error));
+	}
 
 	function extractArticle() {
 		var td = new TurndownService();
 		// const input = "https://urbit.org/blog/convivial-networks";
+		// Fix CORS no access control allow origin
+		// Use this request url to get around CORS
 		extract(articleUrl)
 			.then((article) => {
 				// var content = turndown(article.content);
+
+				setLoading(false);
 				var content = td.turndown(article.content);
 				var title = article.title;
 				setTitle(title);
@@ -76,7 +97,10 @@ function Notebook(props: NotebookProps) {
 				console.log(td.turndown(article.content), "content")
 				// document.body.innerHTML = article.content;
 			})
-			.catch((err) => console.error(err));
+			.catch((err) => {
+				setLoading(true);
+				extractArticleBackup();
+			});
 	}
 
 	const postReducer = (state: Graph, action) => {
@@ -161,7 +185,7 @@ function Notebook(props: NotebookProps) {
 		};
 		api
 			.poke({ app: "graph-store", mark: "graph-update-3", json: body })
-			.then((res) => console.log(res));
+			.then((res) => console.log(res, "ADD POST RES"));
 		refreshPosts();
 	};
 
@@ -341,7 +365,8 @@ function Notebook(props: NotebookProps) {
 						rows={10}
 						value={text}
 						onChange={(e) => setText(e.target.value)}	
-						/ >
+						>
+					</StatelessTextArea>
 				</Row>
 
 				</Box>
@@ -351,16 +376,8 @@ function Notebook(props: NotebookProps) {
 					onChange={(e) => setText(e.target.value)}
 				></textarea> */}
 				{loading && spinner}
-			<br />
+				<br />
 			<div className="post-list">
-				{/* <div className="post-preview post-preview-header">
-					<div className="post-preview-title">
-						<p>Note Title</p>
-					</div>
-					<div className="post-preview-date">
-						<p>Last Modified</p>
-					</div>
-				</div> */}
 				{graphToList(posts).map((post: Post) => {
 					return <PostPreview key={`${post.index}`} post={post} select={select} />;
 				})}
