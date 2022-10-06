@@ -24,6 +24,15 @@ interface NotebookProps {
 }
 
 function Notebook(props: NotebookProps) {
+	function handleUpdate(event) {
+		// Check if add-nodes or remove-nodes
+		if (event['graph-update']['add-nodes']) {
+			handleAddNodes(event['graph-update']['add-nodes']);
+		}
+		if (event['graph-update']['remove-nodes']) {
+			handleRemovePosts(event['graph-update']['remove-nodes']);
+		}
+	}
 
 	const api = props.api;
 	useEffect(() => {
@@ -42,9 +51,10 @@ function Notebook(props: NotebookProps) {
 				});
 				setLoading(false);
 			});
+		// api.onOpen(handleAddNodes);
 		// urbitVisor.on("sse", ["graph-update", "add-nodes"], handleAddNodes);
 		// urbitVisor.on("sse", ["graph-update", "remove-posts"], handleRemovePosts);
-		api.subscribe({ app: "graph-store", path: "/updates" });
+		api.subscribe({ app: "graph-store", path: "/updates", event: handleUpdate});
 	}, []);
 
 	function refreshPosts() {
