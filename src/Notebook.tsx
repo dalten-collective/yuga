@@ -65,34 +65,37 @@ function Notebook(props: NotebookProps) {
 	function extractArticleBackup() {
 		const encodedUrl = encodeURIComponent(articleUrl);
 		const reqUrl = "https://extract-article.deta.dev/?url=" + encodedUrl;
-		setLoading(false);
-
+		
 		fetch(reqUrl, {method: 'GET', redirect: 'follow'})
-			.then(response => response.json())
-			.then(result => {
-				console.log(result.data);
-				const turndownService = new TurndownService();
-				var content = turndownService.turndown(result.data.content);
-				var title = result.data.title;
-				setTitle(title);
-				setText(content);
+		.then(response => response.json())
+		.then(result => {
+			console.log(result.data);
+			const turndownService = new TurndownService();
+			var content = turndownService.turndown(result.data.content);
+			var title = result.data.title;
+			setTitle(title);
+			setText(content);
+			setLoading(false);
 			})
 			.catch(error => console.log('error', error));
 	}
 
 	function extractArticle() {
 		var td = new TurndownService();
-		// const input = "https://urbit.org/blog/convivial-networks";
-		// Fix CORS no access control allow origin
-		// Use this request url to get around CORS
+		setLoading(true);
 		extract(articleUrl)
 			.then((article) => {
 				// var content = turndown(article.content);
 
-				setLoading(false);
 				var content = td.turndown(article.content);
 				var title = article.title;
 				setTitle(title);
+				console.log(article, "AAAAAAAAAAAAAAA");
+				if (content.length <= 0) {
+					setLoading(true);
+				} else {
+					setLoading(false);
+				}
 				setText(content);
 				console.log(td.turndown(article.content), "content")
 				// document.body.innerHTML = article.content;
@@ -132,7 +135,7 @@ function Notebook(props: NotebookProps) {
 	const spinner = (
 		<Spinner width={40} height={40} innerColor="white" outerColor="black" />
 	);
-	const [articleUrl, setArticleUrl] = useState("https://urbit.org/blog/convivial-networks");
+	const [articleUrl, setArticleUrl] = useState("https://www.laphamsquarterly.org/roundtable/utopia-useful-things");
 	const [title, setTitle] = useState("");
 	const [text, setText] = useState("");
 	const [selected, setSelected] = useState<Post>(null);
@@ -292,7 +295,22 @@ function Notebook(props: NotebookProps) {
 	return (
 		<Box width={"70vw"}>
 			<header>
-				<h1>~</h1>
+				<Row justifyContent={"center"} alignItems="center">
+					{!loading && (
+						<h1>~</h1>
+					)}
+					{loading && (
+						<Box>
+							<LoadingSpinner
+								width='36px'
+								height='36px'
+								foreground='rgba(0, 0, 0, 0.6)'
+								background='rgba(0, 0, 0, 0.2)'
+							/>
+							<br />
+						</Box>
+					)}
+				</Row>
 			</header>
 				<Row className="row-1" justifyContent={"center"} alignItems="center">
 					<Box>
@@ -375,7 +393,17 @@ function Notebook(props: NotebookProps) {
 					value={text}
 					onChange={(e) => setText(e.target.value)}
 				></textarea> */}
-				{loading && spinner}
+				{loading && (
+					<Box>
+						<br />
+						<LoadingSpinner
+							width='36px'
+							height='36px'
+							foreground='rgba(0, 0, 0, 0.6)'
+							background='rgba(0, 0, 0, 0.2)'
+						/>	
+					</Box>
+				)}
 				<br />
 			<div className="post-list">
 				{graphToList(posts).map((post: Post) => {
@@ -398,71 +426,6 @@ function PostPreview(props: PostProps) {
 	}
 	return (
 		<Box p="1" className="App" display="flex" flexDirection="column" height="100%">
-			{/* <Table mt={2} width='100%'>
-				<thead>
-					<Tr textAlign='left' pb={2} >
-						<th style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.04)' }}>
-							<Text fontWeight={400} fontSize={0} color='white'>Event Type</Text>
-						</th>
-						<th style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.04)' }}>
-							<Text fontWeight={400} fontSize={0} color='white'>Data</Text>
-						</th>
-						<th style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.04)' }}>
-							<Text fontWeight={400} fontSize={0} color='white'>Time</Text>
-						</th>
-					</Tr>
-				</thead>
-				<tbody>
-					<Tr>
-						<Td>
-							<Text ml={2} fontSize={0} verticalAlign='middle'>one</Text>
-						</Td>
-						<Td>
-								<Text
-									fontFamily='Source Code Pro !important'
-									ml={1}
-									color='white'
-									fontSize={0}
-									verticalAlign='middle'
-								>
-									{props.post.author}
-								</Text>
-						</Td>
-						<Td>
-								<Text
-									fontFamily='Source Code Pro !important'
-									ml={1}
-									color='white'
-									fontSize={0}
-									verticalAlign='middle'
-								>
-									one
-								</Text>
-						</Td>
-						<Td>
-							<Text ml={1}
-								pl={1}
-								pr={1}
-								fontSize={0}
-								color='black'
-								backgroundColor='rgba(0, 0, 0, 0.04)'
-								borderRadius='2px'
-							>
-								two
-							</Text>
-						</Td>
-						<Td>
-							<Text
-								fontFamily='Source Code Pro !important'
-								color='white'
-								fontSize={0}
-							>
-								three
-							</Text>
-						</Td>
-					</Tr>
-				</tbody>
-			</Table> */}
 				<a onClick={showPost}>
 					{(props.post.contents[0] as TextContent).text} - 
 					<span>
