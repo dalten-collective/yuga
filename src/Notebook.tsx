@@ -18,6 +18,9 @@ import {
 	StatelessTextInput,
 	Text
 } from '@tlon/indigo-react';
+import { justifyContent } from "styled-system";
+import Markdown from 'markdown-to-jsx';
+
 interface NotebookProps {
 	ship: string; // ship name
 	api: any;
@@ -149,6 +152,9 @@ function Notebook(props: NotebookProps) {
 	const [title, setTitle] = useState("");
 	const [text, setText] = useState("");
 	const [selected, setSelected] = useState<Post>(null);
+	const [composer, setComposer] = useState(false);
+
+	// console.log(graphToList(posts), "posts");
 
 	function buildPost(index: string, contents: Content[] = []) {
 		return {
@@ -303,9 +309,9 @@ function Notebook(props: NotebookProps) {
 	}
 
 	return (
-		<Box width={"70vw"}>
+		<Box className="center" width={"980px"} alignItems="center" justifyContent="center">
 			<header>
-				<Row justifyContent={"center"} alignItems="center">
+				<Row className="text-center" justifyContent={"center"} alignItems="center">
 					{!loading && (
 						<h1>~</h1>
 					)}
@@ -322,7 +328,7 @@ function Notebook(props: NotebookProps) {
 					)}
 				</Row>
 			</header>
-				<Row className="row-1" justifyContent={"center"} alignItems="center">
+				<Row className="row-1 text-center" justifyContent={"center"} alignItems="center">
 					<Box>
 						<StatelessTextInput
 							fontFamily={"Inter"}
@@ -352,7 +358,7 @@ function Notebook(props: NotebookProps) {
 				<br />
 				<br />
 
-				<Box>
+				<Box justifyContent={"center"}>
 					<Row justifyContent={'space-between'} pb='10px'>
 
 					{/* <input
@@ -378,24 +384,24 @@ function Notebook(props: NotebookProps) {
 						{!selected && <button onClick={addNotebookPost}>New post</button>}
 						{selected && <button onClick={editPost}>Edit post</button>}
 					</Row>
-				<Row>
-					<StatelessTextArea
-						className="input"
-						backgroundColor="rgba(0, 0, 0, 0.04)"
-						fontFamily={"'Source Code Pro', monospace"}
-						// className="inter"
-						borderColor={"#c3bdbda5"}
-						// width={"512px"}
-						borderRadius="8px"
-						height={256}
-						color="white"
-						fontWeight={400}
-						rows={10}
-						value={text}
-						onChange={(e) => setText(e.target.value)}	
-						>
-					</StatelessTextArea>
-				</Row>
+					<Row>
+						<StatelessTextArea
+							className="input"
+							backgroundColor="rgba(0, 0, 0, 0.04)"
+							fontFamily={"'Source Code Pro', monospace"}
+							// className="inter"
+							borderColor={"#c3bdbda5"}
+							// width={"512px"}
+							borderRadius="8px"
+							height={256}
+							color="white"
+							fontWeight={400}
+							rows={10}
+							value={text}
+							onChange={(e) => setText(e.target.value)}	
+							>
+						</StatelessTextArea>
+					</Row>
 
 				</Box>
 				{/* <textarea
@@ -434,17 +440,35 @@ function PostPreview(props: PostProps) {
 	function showPost() {
 		props.select(props.post);
 	}
+	const title = (props.post.contents[0] as TextContent).text;
+	const text = (props.post.contents[1] as TextContent).text;
+	const date = new Date(props.post.date).toLocaleDateString();
+	const textPreview = text.slice(0, 400) + (text.length > 400 ? " ..." : "");
+
 	return (
-		<Box p="1" className="App" display="flex" flexDirection="column" height="100%">
+		<Box p="1" className="" display="flex" flexDirection="column" height="100%">
+			<Row justifyContent="space-between">
 				<a onClick={showPost}>
-					{(props.post.contents[0] as TextContent).text} - 
+					{title} - 
 					<span>
-						<small><code> {new Date(props.post.date).toLocaleDateString()}</code></small>
+						<small><code> {date}</code></small>
 					</span>
 					<br />
 				</a>
 				<small><code>By ~zod</code></small>
-				<hr />
+			</Row>
+			<Row justifyContent="space-between">
+				<small><code>By ~zod</code></small>
+			</Row>
+				<Markdown>{textPreview}</Markdown>
+				{/* <small><code>{textPreview}</code></small> */}
+				{/* <hr /> */}
+				<br />
+				<button onClick={showPost} className='show-more-btn'>Show more</button>
+				<br />
 		</Box>
 	);
+}
+
+function PostContent(props: PostProps) {
 }
