@@ -10,7 +10,7 @@ import Urbit from '@urbit/http-api'
 import { connectUrbit } from './UrbitApi'
 import { extract } from 'article-parser'
 import TurndownService from 'turndown'
-import { Row, Col, Text, Box,  Reset } from "@tlon/indigo-react";
+import { Row, Col, Text, Box,  Reset, _dark as dark } from "@tlon/indigo-react";
 import light from '@tlon/indigo-light'
 import { ThemeProvider } from "styled-components";
 
@@ -158,7 +158,7 @@ function App() {
 
   if (!registered)
     return (
-      <ThemeProvider theme={light}>
+      <ThemeProvider theme={dark}>
         <div className="App">
           {/* <Header /> */}
           <header className="App-header">

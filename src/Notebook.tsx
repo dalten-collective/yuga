@@ -13,6 +13,7 @@ import {
 	Td,
 	Box,
 	Row,
+	Icon,
 	Col,
 	StatelessTextArea,
 	StatelessTextInput,
@@ -309,10 +310,56 @@ function Notebook(props: NotebookProps) {
 		}
 	}
 
+	function refreshView() {
+		setSelected(null);
+		setComposer(false);
+		refreshPosts();
+	}
+
+	function compose() {
+		setComposer(true);
+		refreshPosts();
+	}
+
 	return (
 		<Box className="center" width={"980px"} alignItems="center" justifyContent="center">
-			{!selected && (
+			{/* Exit button */}
+			{selected && (
+				<Box
+					className="absolute"
+					position={"fixed"}
+					top="0"
+					right="10px"
+					mt="3"
+					mr="3"
+				>
+					<button onClick={refreshView}>x</button>
+				</Box>
+			)}
+			{!selected && !composer && (
+				<Box
+					className="absolute"
+					position={"fixed"}
+					top="0"
+					right="10px"
+					mt="3"
+					mr="3"
+				>
+					<button onClick={compose}>+</button>
+				</Box>
+			)}
+			{composer && (
 				<>
+				<Box
+					className="absolute"
+					position={"fixed"}
+					top="0"
+					right="10px"
+					mt="3"
+					mr="3"
+				>
+					<button onClick={refreshView}>x</button>
+				</Box>
 				<Row className="text-center" justifyContent={"center"} alignItems="center">
 					{!loading && (
 						<h1>~</h1>
@@ -408,11 +455,13 @@ function Notebook(props: NotebookProps) {
 
 			{selected && <Markdown>{text}</Markdown>}
 
-			<div className="post-list">
-				{graphToList(posts).map((post: Post) => {
-					return <PostPreview key={`${post.index}`} post={post} select={select} setView={setView} />;
-				})}
-			</div>
+			{!composer && !selected && (
+				<Box className="post-list">
+					{graphToList(posts).map((post: Post) => {
+						return <PostPreview key={`${post.index}`} post={post} select={select} setView={setView} />;
+					})}
+				</Box>
+			)}
 		</Box>
 	);
 }
@@ -453,7 +502,10 @@ function PostPreview(props: PostProps) {
 				{/* <small><code>{textPreview}</code></small> */}
 				{/* <hr /> */}
 				<br />
-				<button onClick={showPost} className='show-more-btn'>Show more</button>
+				<button onClick={showPost} className='show-more-btn'>
+					{/* <Icon icon="Smiley" /> */}
+					Show more
+				</button>
 		</Box>
 	);
 }
