@@ -153,6 +153,7 @@ function Notebook(props: NotebookProps) {
 	const [text, setText] = useState("");
 	const [selected, setSelected] = useState<Post>(null);
 	const [composer, setComposer] = useState(false);
+	const [view, setView] = useState(false);
 
 	// console.log(graphToList(posts), "posts");
 
@@ -310,11 +311,12 @@ function Notebook(props: NotebookProps) {
 
 	return (
 		<Box className="center" width={"980px"} alignItems="center" justifyContent="center">
-			<header>
+			{!selected && (
+				<>
 				<Row className="text-center" justifyContent={"center"} alignItems="center">
 					{!loading && (
 						<h1>~</h1>
-					)}
+						)}
 					{loading && (
 						<Box>
 							<LoadingSpinner
@@ -322,12 +324,11 @@ function Notebook(props: NotebookProps) {
 								height='36px'
 								foreground='rgba(0, 0, 0, 0.6)'
 								background='rgba(0, 0, 0, 0.2)'
-							/>
+								/>
 							<br />
 						</Box>
 					)}
 				</Row>
-			</header>
 				<Row className="row-1 text-center" justifyContent={"center"} alignItems="center">
 					<Box>
 						<StatelessTextInput
@@ -343,30 +344,15 @@ function Notebook(props: NotebookProps) {
 							height={40}
 							width={256}
 							onChange={(e) => setArticleUrl(e.target.value)}
-						/>
-					{/* <input
-						type="text"
-						value={articleUrl}
-						placeholder="Article URL"
-						onChange={(e) => setArticleUrl(e.target.value)}
-					/> */}
+							/>
 					<br />
 					{!selected && <button onClick={extractArticle}>Extract</button>}
-					{/* {selected && <button onClick={editPost}>Edit post</button>} */}
 					</Box>
 				</Row>
 				<br />
 				<br />
-
 				<Box justifyContent={"center"}>
 					<Row justifyContent={'space-between'} pb='10px'>
-
-					{/* <input
-						type="text"
-						value={title}
-						placeholder="Note Title"
-						onChange={(e) => setTitle(e.target.value)}
-					/> */}
 						<StatelessTextInput
 							className="input"
 							fontFamily={"Inter"}
@@ -383,6 +369,7 @@ function Notebook(props: NotebookProps) {
 							/>
 						{!selected && <button onClick={addNotebookPost}>New post</button>}
 						{selected && <button onClick={editPost}>Edit post</button>}
+						{selected && <button onClick={deletePost}>Delete post</button>}
 					</Row>
 					<Row>
 						<StatelessTextArea
@@ -404,11 +391,6 @@ function Notebook(props: NotebookProps) {
 					</Row>
 
 				</Box>
-				{/* <textarea
-					rows={10}
-					value={text}
-					onChange={(e) => setText(e.target.value)}
-				></textarea> */}
 				{loading && (
 					<Box>
 						<br />
@@ -417,13 +399,18 @@ function Notebook(props: NotebookProps) {
 							height='36px'
 							foreground='rgba(0, 0, 0, 0.6)'
 							background='rgba(0, 0, 0, 0.2)'
-						/>	
+							/>	
 					</Box>
 				)}
 				<br />
+				</>
+			)}
+
+			{selected && <Markdown>{text}</Markdown>}
+
 			<div className="post-list">
 				{graphToList(posts).map((post: Post) => {
-					return <PostPreview key={`${post.index}`} post={post} select={select} />;
+					return <PostPreview key={`${post.index}`} post={post} select={select} setView={setView} />;
 				})}
 			</div>
 		</Box>
@@ -433,12 +420,14 @@ export default Notebook;
 
 interface PostProps {
 	post: Post;
+	setView: (view: boolean) => void;
 	select: (post: Post) => void;
 }
 function PostPreview(props: PostProps) {
 	// console.log(props.post)
 	function showPost() {
 		props.select(props.post);
+		props.setView(true);
 	}
 	const title = (props.post.contents[0] as TextContent).text;
 	const text = (props.post.contents[1] as TextContent).text;
@@ -446,29 +435,59 @@ function PostPreview(props: PostProps) {
 	const textPreview = text.slice(0, 400) + (text.length > 400 ? " ..." : "");
 
 	return (
-		<Box p="1" className="" display="flex" flexDirection="column" height="100%">
+		<Box p="1" pb="4em" pt="4em" className="post-preview-box" display="flex" flexDirection="column" height="100%">
 			<Row justifyContent="space-between">
 				<a onClick={showPost}>
-					{title} - 
-					<span>
-						<small><code> {date}</code></small>
-					</span>
-					<br />
+					{title}
 				</a>
-				<small><code>By ~zod</code></small>
+				<small><code>~{props.post.author}</code></small>
 			</Row>
 			<Row justifyContent="space-between">
-				<small><code>By ~zod</code></small>
+				{/* <small><code>{date}</code></small> */}
+				<small><code>{date} {new Date(props.post.date).toLocaleTimeString()}</code></small>
 			</Row>
+			<br />
+			<Row>
 				<Markdown>{textPreview}</Markdown>
+			</Row>
 				{/* <small><code>{textPreview}</code></small> */}
 				{/* <hr /> */}
 				<br />
 				<button onClick={showPost} className='show-more-btn'>Show more</button>
-				<br />
 		</Box>
 	);
 }
 
 function PostContent(props: PostProps) {
+	function showPost() {
+		props.select(props.post);
+	}
+
+	const title = (props.post.contents[0] as TextContent).text;
+	const text = (props.post.contents[1] as TextContent).text;
+	const date = new Date(props.post.date).toLocaleDateString();
+	const textPreview = text.slice(0, 400) + (text.length > 400 ? " ..." : "");
+	
+	return (
+		<Box p="1" pb="4em" pt="4em" className="post-preview-box" display="flex" flexDirection="column" height="100%">
+			<Row justifyContent="space-between">
+				<a onClick={showPost}>
+					{title}
+				</a>
+				<small><code>~{props.post.author}</code></small>
+			</Row>
+			<Row justifyContent="space-between">
+				<small><code>{date} {new Date(props.post.date).toLocaleTimeString()}</code></small>
+			</Row>
+			<br />
+			<Row>
+				<Markdown>{text}</Markdown>
+			</Row>
+				{/* <small><code>{textPreview}</code></small> */}
+				{/* <hr /> */}
+				<br />
+				<button onClick={showPost} className='show-more-btn'>Show more</button>
+		</Box>
+	);
+
 }

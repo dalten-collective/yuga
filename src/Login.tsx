@@ -52,7 +52,7 @@ function Old(props) {
 }
 function LoginForm(props : LoginProps) {
 	return (
-		<Box p="0">
+		<Box p="0" className="text-center">
 			<Row
 				justifyContent="center"
 				alignItems="center"

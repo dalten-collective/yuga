@@ -78,6 +78,13 @@
   color: #888;
 }
 
+.post-preview-box {
+  margin: 0 auto;
+  /* max-width: 800px; */
+  width: 80%;
+  padding: 2em;
+}
+
 /* .show-more-btn {
   width: 40%;
 } */
