@@ -9,33 +9,27 @@ function handleError() {
 	console.log("Error!");
 }
 
-async function connect(ship) {
+export const connectUrbit = async (ship, url, code) => {
+	const urbit = await Urbit.authenticate({
+		ship: ship,
+		url: url,
+		code: code,
+		verbose: true
+	});
+
+	return urbit;
+}
+
+async function doPoke(ship, code) {
 	const urbit = await Urbit.authenticate({
 		ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
 		url: "http://localhost:80",
-		code: "siller-fammep-narner-moptug",
+		code: code,
 		verbose: true
 	});
-	document.body.innerHTML = "Connected!";
 	console.log('Connected!');
 	console.log(urbit);
-	const body = {
-		create: {
-			resource: {
-				ship: `~${ship}`,
-				name: "cyclopaedia",
-			},
-			title: "My Urbit Notes",
-			description: "My Awesome Private Urbit Notebook",
-			associated: {
-				policy: {
-					invite: { pending: [] },
-				},
-			},
-			module: "publish",
-			mark: "graph-validator-publish",
-		},
-	};
+
 	urbit.poke({
 		app: "hood",
 		mark: "helm-hi",
@@ -43,8 +37,7 @@ async function connect(ship) {
 		onSuccess: handleSuccess,
 		onError: handleError
 	});
-
-};
+}
 
 async function doScry() {
 	const urbit = await Urbit.authenticate({
@@ -58,7 +51,7 @@ async function doScry() {
 	var groups = await urbit.scry({ app: "graph-store", path: "/keys" });
 	console.log(groups);
 
-};
+}
 
 async function runThread(ship) {
 	const urbit = await Urbit.authenticate({
@@ -95,4 +88,4 @@ async function runThread(ship) {
 	});
 	console.log(thread);
 
-};
+}

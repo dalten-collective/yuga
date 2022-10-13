@@ -3,13 +3,46 @@ import { useState, useEffect, useReducer } from "react";
 import { urbitVisor } from "@dcspark/uv-core";
 import type { Graph, Post, Content, TextContent } from "./types";
 import Spinner from "./Spinner";
+import { extract } from 'article-parser'
+import TurndownService from 'turndown'
+import {
+	LoadingSpinner,
+	Center,
+	Table,
+	Tr,
+	Td,
+	Box,
+	Row,
+	Icon,
+	Col,
+	StatelessTextArea,
+	StatelessTextInput,
+	Text
+} from '@tlon/indigo-react';
+import { justifyContent } from "styled-system";
+import Markdown from 'markdown-to-jsx';
+
 interface NotebookProps {
 	ship: string; // ship name
+	api: any;
 }
 
 function Notebook(props: NotebookProps) {
+	function handleUpdate(event) {
+		// Check if add-nodes or remove-nodes
+		if (event['graph-update']['add-nodes']) {
+			handleAddNodes(event['graph-update']['add-nodes']);
+		}
+		if (event['graph-update']['remove-nodes']) {
+			handleRemovePosts(event['graph-update']['remove-nodes']);
+		}
+	}
+
+	const api = props.api;
 	useEffect(() => {
-		urbitVisor
+		const api = props.api;
+		api	
+		// urbitVisor
 			.scry({
 				app: "graph-store",
 				path: `/graph/~${props.ship}/cyclopaedia`,
@@ -18,14 +51,74 @@ function Notebook(props: NotebookProps) {
 				console.log(res, "scried")
 				setPosts({
 					type: "add-post",
-					payload: res.response["graph-update"]["add-graph"]["graph"],
+					payload: res["graph-update"]["add-graph"]["graph"],
 				});
 				setLoading(false);
 			});
-		urbitVisor.on("sse", ["graph-update", "add-nodes"], handleAddNodes);
-		urbitVisor.on("sse", ["graph-update", "remove-posts"], handleRemovePosts);
-		urbitVisor.subscribe({ app: "graph-store", path: "/updates" });
+		// api.onOpen(handleAddNodes);
+		// urbitVisor.on("sse", ["graph-update", "add-nodes"], handleAddNodes);
+		// urbitVisor.on("sse", ["graph-update", "remove-posts"], handleRemovePosts);
+		api.subscribe({ app: "graph-store", path: "/updates", event: handleUpdate});
 	}, []);
+
+	function refreshPosts() {
+		api
+			.scry({
+				app: "graph-store",
+				path: `/graph/~${props.ship}/cyclopaedia`,
+			})
+			.then((res) => {
+				setPosts({
+					type: "add-post",
+					payload: res["graph-update"]["add-graph"]["graph"],
+				});
+				setLoading(false);
+			});
+	}
+
+	function extractArticleBackup() {
+		const encodedUrl = encodeURIComponent(articleUrl);
+		const reqUrl = "https://extract-article.deta.dev/?url=" + encodedUrl;
+		
+		fetch(reqUrl, {method: 'GET', redirect: 'follow'})
+		.then(response => response.json())
+		.then(result => {
+			console.log(result.data);
+			const turndownService = new TurndownService();
+			var content = turndownService.turndown(result.data.content);
+			var title = result.data.title;
+			setTitle(title);
+			setText(content);
+			setLoading(false);
+			})
+			.catch(error => console.log('error', error));
+	}
+
+	function extractArticle() {
+		var td = new TurndownService();
+		setLoading(true);
+		extract(articleUrl)
+			.then((article) => {
+				// var content = turndown(article.content);
+
+				var content = td.turndown(article.content);
+				var title = article.title;
+				setTitle(title);
+				console.log(article, "AAAAAAAAAAAAAAA");
+				if (content.length <= 0) {
+					setLoading(true);
+				} else {
+					setLoading(false);
+				}
+				setText(content);
+				console.log(td.turndown(article.content), "content")
+				// document.body.innerHTML = article.content;
+			})
+			.catch((err) => {
+				setLoading(true);
+				extractArticleBackup();
+			});
+	}
 
 	const postReducer = (state: Graph, action) => {
 		switch (action.type) {
@@ -56,9 +149,14 @@ function Notebook(props: NotebookProps) {
 	const spinner = (
 		<Spinner width={40} height={40} innerColor="white" outerColor="black" />
 	);
+	const [articleUrl, setArticleUrl] = useState("https://www.laphamsquarterly.org/roundtable/utopia-useful-things");
 	const [title, setTitle] = useState("");
 	const [text, setText] = useState("");
 	const [selected, setSelected] = useState<Post>(null);
+	const [composer, setComposer] = useState(false);
+	const [view, setView] = useState(false);
+
+	// console.log(graphToList(posts), "posts");
 
 	function buildPost(index: string, contents: Content[] = []) {
 		return {
@@ -72,6 +170,7 @@ function Notebook(props: NotebookProps) {
 	};
 	function addNotebookPost() {
 		setLoading(true);
+		const api = props.api;
 		const indexes: bigint[] = graphToList(posts).map((p) => p.index);
 		const last: bigint = indexes.reduce(
 			(acc: bigint, cur: bigint) => (acc > cur ? acc : cur),
@@ -105,9 +204,10 @@ function Notebook(props: NotebookProps) {
 				nodes: nodes,
 			},
 		};
-		urbitVisor
+		api
 			.poke({ app: "graph-store", mark: "graph-update-3", json: body })
-			.then((res) => console.log(res));
+			.then((res) => console.log(res, "ADD POST RES"));
+		refreshPosts();
 	};
 
 	function editPost() {
@@ -115,6 +215,7 @@ function Notebook(props: NotebookProps) {
 		else modifyPost();
 	};
 	function deletePost() {
+		// const api = props.api;
 		setLoading(true);
 		const body = {
 			"remove-posts": {
@@ -125,9 +226,11 @@ function Notebook(props: NotebookProps) {
 				indices: [`/${selected.index}`],
 			},
 		};
-		urbitVisor
+		api
 			.poke({ app: "graph-store", mark: "graph-update-3", json: body })
 			.then((res) => console.log(res));
+
+		refreshPosts();
 	};
 	function modifyPost() {
 		setLoading(true);
@@ -149,9 +252,11 @@ function Notebook(props: NotebookProps) {
 				nodes: nodes,
 			},
 		};
-		urbitVisor
+		api
 			.poke({ app: "graph-store", mark: "graph-update-3", json: body })
 			.then((res) => console.log(res));
+
+		refreshPosts();
 	}
 
 	function handleAddNodes(data: any) {
@@ -169,7 +274,7 @@ function Notebook(props: NotebookProps) {
 	}
 
 	function graphToList(graph: Graph): Post[] {
-		console.log(graph, "graph")
+		// console.log(graph, "graph")
 		const nodes = Object.keys(graph).map((index) => graph[index]);
 		const notDeleted = nodes.filter((node) => typeof node.post !== "string"); // filter out deleted posts
 		return notDeleted
@@ -199,69 +304,242 @@ function Notebook(props: NotebookProps) {
 			setText("");
 		} else {
 			setSelected(post);
+			// console.log(post, "post")
 			setTitle((post.contents[0] as TextContent).text);
 			setText((post.contents[1] as TextContent).text);
 		}
 	}
 
+	function refreshView() {
+		setSelected(null);
+		setComposer(false);
+		refreshPosts();
+	}
+
+	function compose() {
+		setComposer(true);
+		refreshPosts();
+	}
+
 	return (
-		<div className="notebook">
-			<header>
-				<h1>My Urbit Notes</h1>
-			</header>
-			<div className="composer">
-				<div className="row-1">
-					<input
-						type="text"
-						value={title}
-						placeholder="Note Title"
-						onChange={(e) => setTitle(e.target.value)}
-					/>
-					{!selected && <button onClick={addNotebookPost}>New post</button>}
-					{selected && <button onClick={editPost}>Edit post</button>}
-				</div>
-				<textarea
-					rows={10}
-					value={text}
-					onChange={(e) => setText(e.target.value)}
-				></textarea>
-				{loading && spinner}
-			</div>
-			<div className="post-list">
-				<div className="post-preview post-preview-header">
-					<div className="post-preview-title">
-						<p>Note Title</p>
-					</div>
-					<div className="post-preview-date">
-						<p>Last Modified</p>
-					</div>
-				</div>
-				{graphToList(posts).map((post: Post) => {
-					return <PostPreview key={`${post.index}`} post={post} select={select} />;
-				})}
-			</div>
-		</div>
+		<Box className="center" width={"980px"} alignItems="center" justifyContent="center">
+			{/* Exit button */}
+			{selected && (
+				<Box
+					className="absolute"
+					position={"fixed"}
+					top="0"
+					right="10px"
+					mt="3"
+					mr="3"
+				>
+					<button onClick={refreshView}>x</button>
+				</Box>
+			)}
+			{!selected && !composer && (
+				<Box
+					className="absolute"
+					position={"fixed"}
+					top="0"
+					right="10px"
+					mt="3"
+					mr="3"
+				>
+					<button onClick={compose}>+</button>
+				</Box>
+			)}
+			{composer && (
+				<>
+				<Box
+					className="absolute"
+					position={"fixed"}
+					top="0"
+					right="10px"
+					mt="3"
+					mr="3"
+				>
+					<button onClick={refreshView}>x</button>
+				</Box>
+				<Row className="text-center" justifyContent={"center"} alignItems="center">
+					{!loading && (
+						<h1>~</h1>
+						)}
+					{loading && (
+						<Box>
+							<LoadingSpinner
+								width='36px'
+								height='36px'
+								foreground='rgba(0, 0, 0, 0.6)'
+								background='rgba(0, 0, 0, 0.2)'
+								/>
+							<br />
+						</Box>
+					)}
+				</Row>
+				<Row className="row-1 text-center" justifyContent={"center"} alignItems="center">
+					<Box>
+						<StatelessTextInput
+							fontFamily={"Inter"}
+							className="input"
+							color={"white"}
+							value={articleUrl}
+							placeholder="Note title"
+							backgroundColor="rgba(0, 0, 0, 0.04)"
+							borderColor={"#c3bdbda5"}
+							borderRadius="8px"
+							fontWeight={400}
+							height={40}
+							width={256}
+							onChange={(e) => setArticleUrl(e.target.value)}
+							/>
+					<br />
+					{!selected && <button onClick={extractArticle}>Extract</button>}
+					</Box>
+				</Row>
+				<br />
+				<br />
+				<Box justifyContent={"center"}>
+					<Row justifyContent={'space-between'} pb='10px'>
+						<StatelessTextInput
+							className="input"
+							fontFamily={"Inter"}
+							color={"white"}
+							value={title}
+							placeholder="Note title"
+							backgroundColor="rgba(0, 0, 0, 0.04)"
+							borderColor={"#c3bdbda5"}
+							borderRadius="8px"
+							fontWeight={400}
+							height={40}
+							width={256}
+							onChange={(e) => setTitle(e.target.value)}
+							/>
+						{!selected && <button onClick={addNotebookPost}>New post</button>}
+						{selected && <button onClick={editPost}>Edit post</button>}
+						{selected && <button onClick={deletePost}>Delete post</button>}
+					</Row>
+					<Row>
+						<StatelessTextArea
+							className="input"
+							backgroundColor="rgba(0, 0, 0, 0.04)"
+							fontFamily={"'Source Code Pro', monospace"}
+							// className="inter"
+							borderColor={"#c3bdbda5"}
+							// width={"512px"}
+							borderRadius="8px"
+							height={256}
+							color="white"
+							fontWeight={400}
+							rows={10}
+							value={text}
+							onChange={(e) => setText(e.target.value)}	
+							>
+						</StatelessTextArea>
+					</Row>
+
+				</Box>
+				{loading && (
+					<Box>
+						<br />
+						<LoadingSpinner
+							width='36px'
+							height='36px'
+							foreground='rgba(0, 0, 0, 0.6)'
+							background='rgba(0, 0, 0, 0.2)'
+							/>	
+					</Box>
+				)}
+				<br />
+				</>
+			)}
+
+			{selected && <Markdown>{text}</Markdown>}
+
+			{!composer && !selected && (
+				<Box className="post-list">
+					{graphToList(posts).map((post: Post) => {
+						return <PostPreview key={`${post.index}`} post={post} select={select} setView={setView} />;
+					})}
+				</Box>
+			)}
+		</Box>
 	);
 }
 export default Notebook;
 
 interface PostProps {
 	post: Post;
+	setView: (view: boolean) => void;
 	select: (post: Post) => void;
 }
 function PostPreview(props: PostProps) {
+	// console.log(props.post)
+	function showPost() {
+		props.select(props.post);
+		props.setView(true);
+	}
+	const title = (props.post.contents[0] as TextContent).text;
+	const text = (props.post.contents[1] as TextContent).text;
+	const date = new Date(props.post.date).toLocaleDateString();
+	const textPreview = text.slice(0, 400) + (text.length > 400 ? " ..." : "");
+
+	return (
+		<Box p="1" pb="4em" pt="4em" className="post-preview-box" display="flex" flexDirection="column" height="100%">
+			<Row justifyContent="space-between">
+				<a onClick={showPost}>
+					{title}
+				</a>
+				<small><code>~{props.post.author}</code></small>
+			</Row>
+			<Row justifyContent="space-between">
+				{/* <small><code>{date}</code></small> */}
+				<small><code>{date} {new Date(props.post.date).toLocaleTimeString()}</code></small>
+			</Row>
+			<br />
+			<Row>
+				<Markdown>{textPreview}</Markdown>
+			</Row>
+				{/* <small><code>{textPreview}</code></small> */}
+				{/* <hr /> */}
+				<br />
+				<button onClick={showPost} className='show-more-btn'>
+					{/* <Icon icon="Smiley" /> */}
+					Show more
+				</button>
+		</Box>
+	);
+}
+
+function PostContent(props: PostProps) {
 	function showPost() {
 		props.select(props.post);
 	}
+
+	const title = (props.post.contents[0] as TextContent).text;
+	const text = (props.post.contents[1] as TextContent).text;
+	const date = new Date(props.post.date).toLocaleDateString();
+	const textPreview = text.slice(0, 400) + (text.length > 400 ? " ..." : "");
+	
 	return (
-		<div className="post-preview">
-			<div onClick={showPost} className="post-preview-title">
-				<p>{(props.post.contents[0] as TextContent).text}</p>
-			</div>
-			<div className="post-preview-date">
-				<p>{new Date(props.post.date).toLocaleDateString()}</p>
-				<p>{new Date(props.post.date).toLocaleTimeString()}</p>
-			</div>
-		</div>
+		<Box p="1" pb="4em" pt="4em" className="post-preview-box" display="flex" flexDirection="column" height="100%">
+			<Row justifyContent="space-between">
+				<a onClick={showPost}>
+					{title}
+				</a>
+				<small><code>~{props.post.author}</code></small>
+			</Row>
+			<Row justifyContent="space-between">
+				<small><code>{date} {new Date(props.post.date).toLocaleTimeString()}</code></small>
+			</Row>
+			<br />
+			<Row>
+				<Markdown>{text}</Markdown>
+			</Row>
+				{/* <small><code>{textPreview}</code></small> */}
+				{/* <hr /> */}
+				<br />
+				<button onClick={showPost} className='show-more-btn'>Show more</button>
+		</Box>
 	);
+
 }
