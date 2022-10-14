@@ -85,7 +85,6 @@ function LoginForm(props : LoginProps) {
 				<Box p="0">
 					<StatelessTextInput
 						className="input"
-						color={"white"}
 						value={props.ship}
 						placeholder="Ship name"
 						backgroundColor="rgba(0, 0, 0, 0.04)"
@@ -99,7 +98,6 @@ function LoginForm(props : LoginProps) {
 					<br />
 					<StatelessTextInput
 						className="input"
-						color={"white"}
 						value={props.url}
 						placeholder="Ship URL"
 						backgroundColor="rgba(0, 0, 0, 0.04)"
@@ -114,7 +112,6 @@ function LoginForm(props : LoginProps) {
 					<StatelessTextInput
 						className="input"
 						type={"password"}
-						color={"white"}
 						value={props.code}
 						placeholder="+code"
 						backgroundColor="rgba(0, 0, 0, 0.04)"
