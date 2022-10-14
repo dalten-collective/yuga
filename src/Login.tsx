@@ -1,6 +1,7 @@
 import "./App.css"
 import { Box, Row, StatelessTextInput, Text, Center, Button, BaseInput } from "@tlon/indigo-react";
 import stpurbit from './assets/stpurbit.png'
+import cyclogo from './assets/cyclogo.png'
 
 import { useState, useEffect } from 'react'
 
@@ -56,18 +57,19 @@ function LoginForm(props : LoginProps) {
 			<Row
 				justifyContent="center"
 				alignItems="center"
+				pb="3"
 			//   borderBottom="1px solid rgba(0, 0, 0, 0.1)"
 			>
 				<Box>
+					<img className="logo" width={80} src={cyclogo} alt="cyclopaedia" />
 					<p className="logotext">
 						Cyclopaedia
 					</p>
-						<span>
-							<img width={70} src={stpurbit} alt="" />
-						</span>
-					<p>
+
+					{/* <img width={70} src={stpurbit} alt="" /> */}
+					<Text mono>
 						Log in, drop out.
-					</p>
+					</Text>
 				</Box>
 			</Row>
 			<Row

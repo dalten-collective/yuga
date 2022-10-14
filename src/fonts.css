@@ -12,3 +12,11 @@
 	font-style: normal;
 	font-display: auto;
 }
+
+@font-face {
+	font-family: 'InferiLight';
+	src: url('./fonts/Inferi-Light.woff') format('woff');
+	font-weight: 300;
+	font-style: normal;
+	font-display: auto;
+}

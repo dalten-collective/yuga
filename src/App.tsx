@@ -190,7 +190,9 @@ function App() {
   else
     return (
       <div className="App">
+      <ThemeProvider theme={dark}>
         <Notebook ship={ship} api={api} />
+      </ThemeProvider>
       </div>
     );
 
