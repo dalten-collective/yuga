@@ -21,6 +21,7 @@ import {
 } from '@tlon/indigo-react';
 import { justifyContent } from "styled-system";
 import Markdown from 'markdown-to-jsx';
+import cyclogo from './assets/cyclogo.png'
 
 interface NotebookProps {
 	ship: string; // ship name
@@ -149,7 +150,7 @@ function Notebook(props: NotebookProps) {
 	const spinner = (
 		<Spinner width={40} height={40} innerColor="white" outerColor="black" />
 	);
-	const [articleUrl, setArticleUrl] = useState("https://www.laphamsquarterly.org/roundtable/utopia-useful-things");
+	const [articleUrl, setArticleUrl] = useState("https://groups.csail.mit.edu/medg/people/psz/Licklider.html");
 	const [title, setTitle] = useState("");
 	const [text, setText] = useState("");
 	const [selected, setSelected] = useState<Post>(null);
@@ -208,6 +209,8 @@ function Notebook(props: NotebookProps) {
 			.poke({ app: "graph-store", mark: "graph-update-3", json: body })
 			.then((res) => console.log(res, "ADD POST RES"));
 		refreshPosts();
+		// setComposer(false);
+		refreshView();
 	};
 
 	function editPost() {
@@ -324,6 +327,16 @@ function Notebook(props: NotebookProps) {
 	return (
 		<Box className="center" width={"980px"} alignItems="center" justifyContent="center">
 			{/* Exit button */}
+			<Box
+				className="absolute"
+				position={"fixed"}
+				top="0"
+				left="10px"
+				mt="3"
+				ml="3"
+			>
+				<img className="logo" width={40} src={cyclogo} alt="cyclopaedia" />
+			</Box>
 			{selected && (
 				<Box
 					className="absolute"
@@ -345,7 +358,9 @@ function Notebook(props: NotebookProps) {
 					mt="3"
 					mr="3"
 				>
-					<button onClick={compose}>+</button>
+					<button onClick={compose}>
+						<Text>New post</Text>
+					</button>
 				</Box>
 			)}
 			{composer && (
@@ -381,7 +396,7 @@ function Notebook(props: NotebookProps) {
 						<StatelessTextInput
 							fontFamily={"Inter"}
 							className="input"
-							color={"white"}
+							// color={"white"}
 							value={articleUrl}
 							placeholder="Note title"
 							backgroundColor="rgba(0, 0, 0, 0.04)"
@@ -403,7 +418,7 @@ function Notebook(props: NotebookProps) {
 						<StatelessTextInput
 							className="input"
 							fontFamily={"Inter"}
-							color={"white"}
+							// color={"white"}
 							value={title}
 							placeholder="Note title"
 							backgroundColor="rgba(0, 0, 0, 0.04)"
@@ -428,7 +443,7 @@ function Notebook(props: NotebookProps) {
 							// width={"512px"}
 							borderRadius="8px"
 							height={256}
-							color="white"
+							// color="white"
 							fontWeight={400}
 							rows={10}
 							value={text}
