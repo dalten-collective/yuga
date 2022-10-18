@@ -26,6 +26,15 @@ a:hover {
   cursor: pointer;
   color: #535bf2;
 }
+.link {
+  font-weight: 500;
+  /* color: #646cff; */
+  /* text-decoration: inherit; */
+}
+.link:hover {
+  cursor: pointer;
+  color: #535bf2;
+}
 
 body {
   margin: 0;

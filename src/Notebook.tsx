@@ -2,7 +2,6 @@ import "./App.css";
 import { useState, useEffect, useReducer } from "react";
 import { urbitVisor } from "@dcspark/uv-core";
 import type { Graph, Post, Content, TextContent } from "./types";
-import Spinner from "./Spinner";
 import { extract } from 'article-parser'
 import TurndownService from 'turndown'
 import {
@@ -15,6 +14,8 @@ import {
 	Row,
 	Icon,
 	Col,
+	H2,
+	H1,
 	StatelessTextArea,
 	StatelessTextInput,
 	Text
@@ -147,9 +148,6 @@ function Notebook(props: NotebookProps) {
 	const initialPosts: Graph = {};
 	const [posts, setPosts] = useReducer(postReducer, initialPosts);
 	const [loading, setLoading] = useState(true);
-	const spinner = (
-		<Spinner width={40} height={40} innerColor="white" outerColor="black" />
-	);
 	const [articleUrl, setArticleUrl] = useState("https://groups.csail.mit.edu/medg/people/psz/Licklider.html");
 	const [title, setTitle] = useState("");
 	const [text, setText] = useState("");
@@ -502,7 +500,9 @@ function PostPreview(props: PostProps) {
 		<Box p="1" pb="4em" pt="4em" className="post-preview-box" display="flex" flexDirection="column" height="100%">
 			<Row justifyContent="space-between">
 				<a onClick={showPost}>
+				<H2 className="link">
 					{title}
+				</H2>
 				</a>
 				<small><code>~{props.post.author}</code></small>
 			</Row>
@@ -514,8 +514,6 @@ function PostPreview(props: PostProps) {
 			<Row>
 				<Markdown>{textPreview}</Markdown>
 			</Row>
-				{/* <small><code>{textPreview}</code></small> */}
-				{/* <hr /> */}
 				<br />
 				<button onClick={showPost} className='show-more-btn'>
 					{/* <Icon icon="Smiley" /> */}
