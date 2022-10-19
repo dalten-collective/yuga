@@ -43,12 +43,13 @@ function App() {
       });
 
     };
-    setUrbit
+    setUrbit();
   }, []);
 
 
   function setUrbit() {
     connectUrbit(ship, url, code).then((res) => {
+      console.log('SET URBIT', res);
       setApi(res);
       // set api in local storage
       localStorage.setItem('ship', res.ship);
