@@ -4,20 +4,13 @@ import { urbitVisor } from '@dcspark/uv-core'
 import LoginForm from './Login'
 import sigilLogo from './assets/sarped-todler.svg'
 import Notebook from './Notebook'
-import Header from './Header'
-import Spinner from './Spinner'
 import Urbit from '@urbit/http-api'
 import { connectUrbit } from './UrbitApi'
-import { extract } from 'article-parser'
-import TurndownService from 'turndown'
 import { Row, Col, Text, Box,  Reset, _dark as dark } from "@tlon/indigo-react";
 import light from '@tlon/indigo-light'
 import { ThemeProvider } from "styled-components";
 
 function App() {
-  // const [ship, setShip] = useState('bolfep-lopdep-daptev-dolfyr--polbet-rocseg-bismyl-litzod');
-  // const [code, setCode] = useState('pasfep-tormur-tapmug-narper');
-  // const [url, setUrl] = useState('http://localhost:80');
   const [ship, setShip] = useState('');
   const [code, setCode] = useState('');
   const [url, setUrl] = useState('');
@@ -25,9 +18,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [registered, setRegistered] = useState(false);
 
-  const spinner = (
-    <Spinner width={100} height={100} innerColor="white" outerColor="black" />
-  );
 
   useEffect(() => {
     if (localStorage.getItem('ship')) {
@@ -53,12 +43,13 @@ function App() {
       });
 
     };
-    setUrbit
+    setUrbit();
   }, []);
 
 
   function setUrbit() {
     connectUrbit(ship, url, code).then((res) => {
+      console.log('SET URBIT', res);
       setApi(res);
       // set api in local storage
       localStorage.setItem('ship', res.ship);
@@ -73,18 +64,6 @@ function App() {
   interface Key {
     name: string; // the name of the channel, in kebab-case.
     ship: string; // the ship that hosts the channel
-  }
-
-  function checkExtractedData() {
-    var td = new TurndownService();
-    const input = "https://urbit.org/blog/august-2022-grants-program";
-    extract(input)
-      .then((article) => {
-        // var content = turndown(article.content);
-        console.log(td.turndown(article.content), "content")
-        document.body.innerHTML = article.content;
-      })
-      .catch((err) => console.error(err));
   }
 
 
@@ -160,23 +139,10 @@ function App() {
     return (
       <ThemeProvider theme={dark}>
         <div className="App">
-          {/* <Header /> */}
           <header className="App-header">
-            {/* <div>
-              <a href="https://reactjs.org" target="_blank">
-                <img src={sigilLogo} className="logo react" alt="React logo" />
-              </a>
-            </div>
-            <div>
-              {ship && <p>Welcome, <code>~{ship}</code></p>}
-            </div> */}
-            {/* Login form with url, ship name, and code */}
             {!api && (
               <LoginForm ship={ship} code={code} url={url} setShip={setShip} setUrl={setUrl} setCode={setCode} setUrbit={setUrbit} />
               )}
-            {/* <button className="create-button" onClick={checkExtractedData}>
-              extract
-            </button> */}
             {api && (
               <button className="create-button" onClick={createChannel}>
                 Open your Cyclopaedia
