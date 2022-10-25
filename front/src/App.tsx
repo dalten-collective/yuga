@@ -9,6 +9,8 @@ import { connectUrbit } from './UrbitApi'
 import { Row, Col, Text, Box,  Reset, _dark as dark } from "@tlon/indigo-react";
 import light from '@tlon/indigo-light'
 import { ThemeProvider } from "styled-components";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Debug from './Debug'
 
 function App() {
   const [ship, setShip] = useState('');
@@ -157,7 +159,27 @@ function App() {
     return (
       <div className="App">
       <ThemeProvider theme={dark}>
-        <Notebook ship={ship} api={api} />
+        <Router basename="/apps/cyclopaedia/">
+          <nav>
+            <ul>
+              <li>
+                <Link to="/">Notebooks</Link>
+              </li>
+              <li>
+                <Link to="/debug">Debug</Link>
+              </li>
+            </ul>
+          </nav>
+
+          <Routes>
+            <Route path="/" element={
+                <Notebook ship={ship} api={api} />
+            }/>
+            <Route path="/debug" element={
+                <Debug />
+            }/>
+          </Routes>
+        </Router>
       </ThemeProvider>
       </div>
     );
