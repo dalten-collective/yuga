@@ -1,5 +1,5 @@
 /-  *foundation
-/+  d=diary-json
+/+  c-j=cyclo-json
 |_  jani=clean:actions:hari
 ++  grad  %noun
 ++  grow
@@ -9,13 +9,6 @@
 ++  grab
   |%
   ++  noun  clean:actions:hari
-  ++  json
-    %-  clean:actions:hari
-    =,  dejs:format
-    %-  of
-    :~  [%fix-note (ot ~[fon+so item+(se %da) content+(ar verse:dejs:d)])]
-        [%del-note (ot ~[fon+so item+(se %da)])]
-        [%tag-note (ot ~[fon+so item+(se %da) tag+so])]
-    ==
+  ++  json  somber:dejs:c-j
   --
 --

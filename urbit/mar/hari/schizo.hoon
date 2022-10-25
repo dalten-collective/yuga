@@ -1,5 +1,5 @@
-/-  *foundation, dia=diary
-/+  d=diary-json
+/-  *foundation
+/+  c-j=cyclo-json
 |_  almo=write:actions:hari
 ++  grad  %noun
 ++  grow
@@ -9,11 +9,6 @@
 ++  grab
   |%
   ++  noun  write:actions:hari
-  ++  json
-    %-  write:actions:hari
-    =,  dejs:format
-    %+  cu
-      |=([f=@t c=@t v=(list verse:dia)] [%add-note f c v %$])
-    (ot ~[fon+so cov+so ver+(ar verse:dejs:d)])
+  ++  json  schizo:dejs:c-j
   --
 --

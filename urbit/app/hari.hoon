@@ -175,16 +175,21 @@
 ++  look
   |=  pol=(pole knot)
   ^+  dat
-  ?.  ?=([%relay ~] pol)  dat
-  =;  backlog=(list [report:rama ?])
-    |-  ?~  backlog  dat
-    $(backlog t.backlog, dat (dupe i.backlog))
-  %-  zing  %+  turn
-    ~(tap by foundations)
-  |=  [t=term f=foundation:hari]
-  :~  [[provider.f %add-almoners %$ almoners.f] |]
-      [[provider.f %add-janitors %$ janitors.f] |]
-      [[provider.f %found %$] |]
+  ?-    pol  dat
+      [%relay ~]
+    =;  backlog=(list [report:rama ?])
+      |-  ?~  backlog  dat
+      $(backlog t.backlog, dat (dupe i.backlog))
+    %-  zing  %+  turn
+      ~(tap by foundations)
+    |=  [t=term f=foundation:hari]
+    :~  [[provider.f %add-almoners %$ almoners.f] |]
+        [[provider.f %add-janitors %$ janitors.f] |]
+        [[provider.f %found %$] |]
+    ==
+  ::
+      [%web-ui ~]
+    dat
   ==
 ::  +arvo: handle arvo responses
 ::
