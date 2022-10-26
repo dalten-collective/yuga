@@ -176,7 +176,7 @@ function App() {
                 <Notebook ship={ship} api={api} />
             }/>
             <Route path="/debug" element={
-                <Debug />
+                <Debug ship={ship} api={api} />
             }/>
           </Routes>
         </Router>
