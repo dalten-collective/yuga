@@ -18,7 +18,7 @@
 ::  
 ::
 /-  d=diary, g=groups, *foundation
-/+  dbug, default-agent, verb
+/+  c-j=cyclo-json, dbug, default-agent, verb
 |%
 ::
 +$  versioned-state  $%(state-0)
@@ -127,6 +127,7 @@
     no    (scot %da now.bol)
     dok   [our.bol %groups]
     dia   [our.bol %diary]
+    h-p   ~(. hari-poke:enjs:c-j [bol foundations])
 ::  +abet: flop the dek, produce [dek state]
 ::
 ++  abet  [(flop dek) state]
@@ -136,6 +137,9 @@
 ::  +emil: add a list of cards to the dek
 ::
 ++  emil  |=(lac=(list card) dat(dek (welp lac dek)))
+::  +show: forward to web-ui
+::
+++  show  |=(=cage (emit [%give %fact ~[/web-ui] cage]))
 ::  +dupe: forward to your subscribers
 ::
 ++  dupe
@@ -175,7 +179,7 @@
 ++  look
   |=  pol=(pole knot)
   ^+  dat
-  ?-    pol  dat
+  ?+    pol  dat
       [%relay ~]
     =;  backlog=(list [report:rama ?])
       |-  ?~  backlog  dat
@@ -189,7 +193,7 @@
     ==
   ::
       [%web-ui ~]
-    dat
+    (show json+!>(`json`(foundations:enjs:c-j foundations)))
   ==
 ::  +arvo: handle arvo responses
 ::
@@ -208,7 +212,10 @@
     =/  nam=@tas  (scot %tas wat.pol)
     ?>  ?=([%khan %arow *] sig)
     ?.  ?=(%& -.p.+.sig)  ((slog +.p.p.+.sig) dat)
-    (dupe [[our.bol nam] [%found %$]] &)
+    %-  show:(dupe [[our.bol nam] [%found %$]] &)
+    =-  json+!>(`json`-)
+    %-  admin:h-p
+    [%found (cut 3 [0 (sub (met 3 nam) 7)] nam)]
   ==
   --
 ::  +dude: handle incoming agent
@@ -267,23 +274,28 @@
     ?-    -.act
       %found  ~(found land +.act)  ::  dupe after thread
     ::
-        %close         
+        %close
+      =-  (show:- json+!>(`json`(admin:h-p act)))
       %-  dupe:~(close land +.act)
       [[[our.bol (cat 3 fon.act '-paedia')] act] &]
     ::
-        %add-almoners  
+        %add-almoners
+      =-  (show:- json+!>(`json`(admin:h-p act)))
       %-  dupe:(staff & %alm +.act)
       [[[our.bol (cat 3 fon.act '-paedia')] act] &]
     ::
-        %del-almoners  
+        %del-almoners
+      =-  (show:- json+!>(`json`(admin:h-p act)))
       %-  dupe:(staff | %alm +.act)
       [[[our.bol (cat 3 fon.act '-paedia')] act] &]
     ::
-        %add-janitors  
+        %add-janitors
+      =-  (show:- json+!>(`json`(admin:h-p act)))
       %-  dupe:(staff & %jan +.act)
       [[[our.bol (cat 3 fon.act '-paedia')] act] &]
     ::
-        %del-janitors  
+        %del-janitors
+      =-  (show:- json+!>(`json`(admin:h-p act)))
       %-  dupe:(staff | %jan +.act)
       [[[our.bol (cat 3 fon.act '-paedia')] act] &]
     ==

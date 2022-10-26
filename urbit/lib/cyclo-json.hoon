@@ -5,23 +5,78 @@
 ++  enjs
   =,  enjs:format
   |%
-  ++  flag
-    |=  f=flag:d
+  ++  ships  |=(p=@p ((lead %s) (scot %p p)))
+  ++  flap
+    ^-  $-(flag json)
+    |=  f=flag
     ^-  json
     s/(rap 3 (scot %p p.f) '/' q.f ~)
-  :: ++  foundations
-  ::   |=  fons=(map term foundation:hari:f)
-  ::   ^-  json
-  ::   %+  frond  %foundations
-  ::   :-  %a
-  ::   %+  turn  ~(tap by fons)
-  ::   |=  (pair term foundation:hari:f)
-  ::   (pairs ~[name+s/p foundation+(foundation q)])
-  :: ++  foundation
-  ::   |=  fon=foundation:hari:f
-
-
+  ++  foundations
+    |=  fons=(map term foundation:hari:f)
+    ^-  json
+    %+  frond  %foundations
+    :-  %a
+    %+  turn  ~(tap by fons)
+    |=  (pair term foundation:hari:f)
+    (pairs ~[name+s/p foundation+(foundation q)])
+  ++  foundation
+    |=  fon=foundation:hari:f
+    ^-  json
+    %-  pairs
+    :~  provider+(flap provider.fon)
+        almoners+a/(turn ~(tap in almoners.fon) ships)
+        janitors+a/(turn ~(tap in janitors.fon) ships)
+    ==
+  ++  hari-poke
+    |_  [bol=bowl:gall fon=(map term foundation:hari:f)]
+    ++  admin
+      |=  =admin:actions:hari:f
+      ?-    -.admin
+          %found
+        =+  nam=(cat 3 fon.admin '-paedia')
+        =;  faun=json
+          %+  frond  %add
+          (pairs ~[name+s/fon.admin foundation+faun])
+        %-  pairs
+        :~  provider+(flap [our.bol nam])
+            almoners+a/~
+            janitors+a/~
+        ==
+      ::
+          %close
+        (frond rem+(frond name+s/fon.admin))
+      ::
+          %add-almoners
+        %+  frond  %add
+        %-  pairs
+        :~  name+s/fon.admin
+            almoners+a/(turn ~(tap in who.admin) ship)
+        ==
+      ::
+          %del-almoners
+        %+  frond  %rem
+        %-  pairs
+        :~  name+s/fon.admin
+            almoners+a/(turn ~(tap in who.admin) ship)
+        ==
+      ::
+          %add-janitors
+        %+  frond  %add
+        %-  pairs
+        :~  name+s/fon.admin
+            janitors+a/(turn ~(tap in who.admin) ship)
+        ==
+      ::
+          %del-janitors
+        %+  frond  %rem
+        %-  pairs
+        :~  name+s/fon.admin
+            janitors+a/(turn ~(tap in who.admin) ship)
+        ==
+      ==
+    --
   --
+
 ::
 ++  dejs
   =,  dejs:format
