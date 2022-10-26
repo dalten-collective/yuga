@@ -1,7 +1,7 @@
 ::  rama - rendezvous with rama
 ::
 /-  d=diary, g=groups, *foundation
-/+  dbug, default-agent, verb
+/+  dbug, default-agent, verb, c-j=cyclo-json
 |%
 ::
 +$  versioned-state  $%(state-0)
@@ -17,6 +17,7 @@
 +$  flag  (pair ship term)
 --
 ::
+%+  verb  &
 %-  agent:dbug
 =|  state-0
 =*  state  -
@@ -101,6 +102,9 @@
 ++  abet
   ^-  (quip card _state)
   [(flop dek) state]
+::  +show: forward to web-ui
+::
+++  show  |=(=cage (emit [%give %fact ~[/web-ui] cage]))
 ::
 ++  init
   ^+  dat
@@ -126,7 +130,15 @@
     =/  wire  /relay/(scot %p p)
     (emit %pass wire %agent [p %hari] %watch /relay)
   --
-::  +poke: handle incoming pokes
+::  +look: handle being watched
+::
+++  look
+  |=  pol=(pole knot)
+  ^+  dat
+  ?+    pol  dat
+      [%web-ui ~]
+    (show json+!>(`json`(hosts:enjs:c-j hosts)))
+  ==
 ::
 ++  poke
   |=  [mar=mark vaz=vase]
@@ -213,13 +225,18 @@
       [%hosts who=@ wat=@ wic=@ ~]
     ?.  ?=(%poke-ack -.sig)  ~|(strange-sign-on/pol !!)
     ~_  leaf+"%rama bad groups - strange result"
+    =/  wic=@ud   (slav %ud wic.pol)
     =/  who=@p    (slav %p who.pol)
     =/  wat=@tas  (slav %tas wat.pol)
-    =/  wic=@ud   (slav %ud wic.pol)
     =|  emt=(set [term [? foundation:hari]])
     =/  old=[hav=? fon=foundation:hari]
       %.  wat  %~  got  by
       (malt ~(tap in (~(gut by hosts) who emt)))
+    ?~  p.sig
+      =-  (show json+!>(-))
+      ?:  =(0 wic)
+        (rama-only:rama-poke:enjs:c-j [%enter wat who])
+      (rama-only:rama-poke:enjs:c-j [%leave wat who])
     =.  hosts
       ?:  =(0 wic)
         %.  [who wat [%.n fon.old]]
@@ -228,8 +245,7 @@
       ~(put ju (~(del ju hosts) who [wat old]))
     ::
     =;  act=tape
-      %.  dat
-      ?~(p.sig same (slog leaf/"%rama can't {act}" u.p.sig))
+      ((slog leaf/"%rama can't {act}" u.p.sig) dat)
     %-  welp
     :-  ?:(=(0 wic) "join " "leave ")
     "[{(scow %p who)} {(scow %tas (cat 3 wat '-paedia'))}]"
@@ -246,6 +262,8 @@
   ::
   ++  rehydrate
     |=  [w=@p f=flag a=admin:actions:hari]
+    =*  h-p
+      ~(. rama-poke:enjs:c-j [bol (~(got by hosts) w)])
     ^+  dat
     ?>  =(p.f w)                                        :: XX: and clean groups?
     =/  fon  (cut 3 [0 (sub (met 3 q.f) 7)] q.f)        :: group subject
@@ -256,18 +274,22 @@
       ?^  hav=(~(get by foundations) fon)  dat
       =.  foundations
         (~(put by foundations) fon [%.n f ~ ~ %$])
-      dat(hosts (~(put by hosts) w foundations))
+      =+  do=dat(hosts (~(put by hosts) w foundations))
+      (show:do json+!>((rehydrate:h-p w f a)))
     ::
         %close
       =.  foundations
         (~(del by foundations) fon)
-      ?~  foundations
-        dat(hosts (~(del by hosts) w))
-      dat(hosts (~(put by hosts) w foundations))
+      =/  do
+        ?~  foundations
+          dat(hosts (~(del by hosts) w))
+        dat(hosts (~(put by hosts) w foundations))
+      (show:do json+!>((rehydrate:h-p w f a)))
     ::
         %add-almoners
       ?~  f=(~(get by foundations) fon)  dat
-      %=  dat
+      =+  do=(show json+!>((rehydrate:h-p w ^f a)))
+      %=  do
           hosts
         %+  ~(put by hosts)  w
         %+  ~(put by foundations)  fon
@@ -276,7 +298,8 @@
     ::
         %del-almoners
       ?~  f=(~(get by foundations) fon)  dat
-      %=  dat
+      =+  do=(show json+!>((rehydrate:h-p w ^f a)))
+      %=  do
           hosts
         %+  ~(put by hosts)  w
         %+  ~(put by foundations)  fon
@@ -285,7 +308,8 @@
     ::
         %add-janitors
       ?~  f=(~(get by foundations) fon)  dat
-      %=  dat
+      =+  do=(show json+!>((rehydrate:h-p w ^f a)))
+      %=  do
           hosts
         %+  ~(put by hosts)  w
         %+  ~(put by foundations)  fon
@@ -294,7 +318,8 @@
     ::
         %del-janitors
       ?~  f=(~(get by foundations) fon)  dat
-      %=  dat
+      =+  do=(show json+!>((rehydrate:h-p w ^f a)))
+      %=  do
           hosts
         %+  ~(put by hosts)  w
         %+  ~(put by foundations)  fon

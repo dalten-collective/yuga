@@ -123,11 +123,11 @@
 ::
 |_  [bol=bowl:gall dek=(list card)]
 +*  dat  .
-    or    (scot %p our.bol)
-    no    (scot %da now.bol)
-    dok   [our.bol %groups]
-    dia   [our.bol %diary]
-    h-p   ~(. hari-poke:enjs:c-j [bol foundations])
+    or   (scot %p our.bol)
+    no   (scot %da now.bol)
+    dok  [our.bol %groups]
+    dia  [our.bol %diary]
+    h-p  ~(. hari-poke:enjs:c-j [bol foundations])
 ::  +abet: flop the dek, produce [dek state]
 ::
 ++  abet  [(flop dek) state]

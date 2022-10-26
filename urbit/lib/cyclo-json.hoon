@@ -5,12 +5,31 @@
 ++  enjs
   =,  enjs:format
   |%
-  ++  ships  |=(p=@p ((lead %s) (scot %p p)))
+  ++  ships  `$-(@p json)`|=(p=@p ((lead %s) (scot %p p)))
   ++  flap
     ^-  $-(flag json)
     |=  f=flag
     ^-  json
     s/(rap 3 (scot %p p.f) '/' q.f ~)
+  ++  hosts
+    |=  host=(jug @p [term [? foundation:hari:f]])
+    ^-  json
+    %+  frond  %hosts
+    :-  %a
+    %+  turn  ~(tap by host)
+    |=  (pair @p (set [t=term [h=? f=foundation:hari:f]]))
+    %-  pairs
+    :~  host+(ships p)
+    ::
+      :+  %foundations  %a
+      %+  turn  ~(tap in q)
+      |=  (pair term [h=? f=foundation:hari:f])
+      %-  pairs
+      :~  name+s/p
+          subscribed+b/h.q
+          details+(foundation f.q)
+      ==
+    ==
   ++  foundations
     |=  fons=(map term foundation:hari:f)
     ^-  json
@@ -27,10 +46,76 @@
         almoners+a/(turn ~(tap in almoners.fon) ships)
         janitors+a/(turn ~(tap in janitors.fon) ships)
     ==
+  ++  rama-poke
+    |_  [bol=bowl:gall foundations=(map term [? foundation:hari:f])]
+    ++  rama-only
+      |=  =action:rama:f
+      ?-    -.action
+        %watch  (frond add+(frond host+(ships who.action)))
+      ::
+          %enter
+        =-  (frond put+(pairs -))
+        :~  host+(ships who.action)
+            name+s/fon.action
+            subscribed+b/%.y
+        ==
+      ::
+          %leave
+        =-  (frond put+(pairs -))
+        :~  host+(ships who.action)
+            name+s/fon.action
+            subscribed+b/%.y
+        ==
+      ==
+    ++  rehydrate
+      |=  [w=@p f=flag =admin:actions:hari:f]
+      ^-  json
+      ?-    -.admin
+          %found
+        =-  (frond put+(pairs -))
+        :~  host+(ships w)
+            name+s/q.f
+            subscribed+b/%.n
+            details+(foundation [f ~ ~ %$])
+        ==
+      ::
+        %close
+        =-  (frond del+(pairs -))
+        :~  host+(ships w)
+            name+s/q.f
+        ==
+      ::
+        %add-almoners
+        =-  (frond add+(pairs -))
+        :~  host+(ships w)
+            name+s/q.f
+            almoners+a/(turn ~(tap in who.admin) ships)
+        ==
+        %del-almoners
+        =-  (frond del+(pairs -))
+        :~  host+(ships w)
+            name+s/q.f
+            almoners+a/(turn ~(tap in who.admin) ships)
+        ==
+        %add-janitors
+        =-  (frond add+(pairs -))
+        :~  host+(ships w)
+            name+s/q.f
+            janitors+a/(turn ~(tap in who.admin) ships)
+        ==
+        %del-janitors
+        =-  (frond del+(pairs -))
+        :~  host+(ships w)
+            name+s/q.f
+            janitors+a/(turn ~(tap in who.admin) ships)
+        ==
+      ==
+    --
   ++  hari-poke
     |_  [bol=bowl:gall fon=(map term foundation:hari:f)]
     ++  admin
       |=  =admin:actions:hari:f
+      ^-  json
       ?-    -.admin
           %found
         =+  nam=(cat 3 fon.admin '-paedia')
