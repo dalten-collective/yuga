@@ -1,4 +1,23 @@
-# Cyclopaedia
+# Cyclopaedia / rama
+
+# Urbit setup
+
+- Have a fakezod running
+- Install the `%rama` desk from this repo:
+  - `|merge %rama our %base`
+  - `|mount %rama`
+  - copy contents of this repo's `urbit` directory into above-mounted desk
+  - `|commit %rama`
+  - `|install our %rama`
+
+## Set up CORS (still investigating why this is needed for this app...)
+
+After completing front-end setup below, add the resulting Vite dev URL to the
+fakezod's CORs registry:
+
+- See current items: `+cors-registry` (should be lacking the dev server)
+- Add dev server: `|cors-approve 'http://localhost:3000` (or whatever your dev
+server is from below. Mind the `http`).
 
 # Front-End Setup
 
@@ -26,7 +45,7 @@ might need to log in with your `+code` to the ship itself, first - that is, trim
 off the `/apps/cyclopaedia` bit from the URL Vite displays).
 
 **Note:** You must append a `/` to the end of the URL you visit when running
-through Vite. (`localhost:3000/apps/cyclopaedia/` not
+through Vite. (`http://localhost:3000/apps/cyclopaedia/` not
 `http://localhost:3000/apps/cyclopaedia`).
 
 ## Building the front end for deploy/glob
