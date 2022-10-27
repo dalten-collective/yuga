@@ -135,28 +135,28 @@
         %+  frond  %add
         %-  pairs
         :~  name+s/fon.admin
-            almoners+a/(turn ~(tap in who.admin) ship)
+            almoners+a/(turn ~(tap in who.admin) ships)
         ==
       ::
           %del-almoners
         %+  frond  %rem
         %-  pairs
         :~  name+s/fon.admin
-            almoners+a/(turn ~(tap in who.admin) ship)
+            almoners+a/(turn ~(tap in who.admin) ships)
         ==
       ::
           %add-janitors
         %+  frond  %add
         %-  pairs
         :~  name+s/fon.admin
-            janitors+a/(turn ~(tap in who.admin) ship)
+            janitors+a/(turn ~(tap in who.admin) ships)
         ==
       ::
           %del-janitors
         %+  frond  %rem
         %-  pairs
         :~  name+s/fon.admin
-            janitors+a/(turn ~(tap in who.admin) ship)
+            janitors+a/(turn ~(tap in who.admin) ships)
         ==
       ==
     --
