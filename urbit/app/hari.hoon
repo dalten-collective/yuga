@@ -323,17 +323,15 @@
                 =(author:(grab:lands item.act) src.bol)
             ==
           ==
-      (edit:~(diary land fon.act) item.act ver.act)
+      (edit:lands item.act ver.act)
     ?>  ?|  =(our.bol src.bol)
             (~(has in janitors:found) src.bol)
         ::
         ==
     ?-    -.act
-      %del-note  (wipe:~(diary land fon.act) item.act)
       %tag-note  dat
-    ::
-        %del-quip
-      (dust:~(diary land fon.act) item.act quip.act)
+      %del-note  (wipe:lands item.act)
+      %del-quip  (dust:lands item.act quip.act)
     ==
   ==
   ::  +staff: modifications to janitors, almoners

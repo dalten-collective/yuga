@@ -1,7 +1,7 @@
 :~  title+'cyclopaedia'
     info+'everything, everywhere; all at once.'
     color+0xff.d600
-    site+/apps/tent
+    site+/apps/cyclo
     version+[0 0 1]
     website+'https://stp.world/'
     license+'REKT'

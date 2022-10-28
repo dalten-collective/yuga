@@ -159,7 +159,7 @@ function App() {
     return (
       <div className="App">
       <ThemeProvider theme={dark}>
-        <Router basename="/apps/cyclopaedia/">
+        <Router basename="/apps/cyclo/">
           <nav>
             <ul>
               <li>
