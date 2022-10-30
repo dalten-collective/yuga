@@ -222,8 +222,8 @@
   ++  verses  (ar verse:dejs:d-j)
   ++  rama-only
     %-  of
-    :~  enter+(ot ~[fon+so who+(se %p)])
-        leave+(ot ~[fon+so who+(se %p)])
+    :~  enter+(ot ~[who+(se %p) fon+so])
+        leave+(ot ~[who+(se %p) fon+so])
         watch+(se %p)
         share+bo
         store+(ot ~[who+(se %p) fon+so id+ni])
