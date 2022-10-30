@@ -66,7 +66,7 @@
 ;<  ~  bind:m  (gro zone:mak)
 ;<  ~  bind:m  (not diary:mak)
 ::
-;<  ~  bind:m  (sleep ~s5)
+;<  ~  bind:m  (sleep ~s1)
 ;<  ~  bind:m  (gro section:mak)
 ;<  ~  bind:m  (gro default:mak)
 (pure:m !>(~))

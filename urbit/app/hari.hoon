@@ -198,7 +198,7 @@
 ::
 ++  arvo
   |=  [pol=(pole knot) sig=sign-arvo]
-  |^  ^+  dat
+  ^+  dat
   ?+    pol  ~|(bad-arvo-wire/pol !!)
       [%seldon %catalogue wen=@ ~]
     ?>  ?=([%behn %wake *] sig)
@@ -213,7 +213,6 @@
     %.  hari-seldon+!>([%found fon])
     show:(dupe [[our.bol fon] [%found fon]] &)
   ==
-  --
 ::  +dude: handle incoming agent
 ::
 ++  dude

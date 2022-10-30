@@ -85,9 +85,9 @@
       %+  turn
         (bap:((on @da ,[flag @da]) gth) save)
       |=  [wen=@da wer=flag wat=@da]
-      %-  pairs                                           ::  XX: note we send key
-      :~  key+(numb `@ud`wen)                             ::   because of bad time
-          added+(sect wen)                                ::   conversion to unix.
+      %-  pairs                                         ::  XX: note we send key
+      :~  key+(numb `@ud`wen)                           ::   because of bad time
+          added+(sect wen)                              ::   conversion to unix.
           provider+(flap wer)
           id+(numb `@ud`wat)
       ==
