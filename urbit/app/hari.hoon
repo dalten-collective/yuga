@@ -20,6 +20,9 @@
 /-  d=diary, g=groups, *foundation
 /+  c-j=cyclo-json, dbug, default-agent, verb
 |%
+::  boilerplate
+::
++$  card  card:agent:gall
 ::
 +$  versioned-state  $%(state-0)
 ::
@@ -29,10 +32,6 @@
   ==
 ::
 ::
-::  boilerplate
-::
-+$  card  card:agent:gall
-+$  flag  (pair ship term)
 --
 ::
 %+  verb  &
@@ -103,7 +102,7 @@
   ~>  %bout.[0 '%hari +on-watch']
   ^-  (quip card _this)
   =^  cards  state
-    abet:(look:gen pat)
+    abet:(peer:gen pat)
   [cards this]
   ::
   ++  on-fail
@@ -174,12 +173,15 @@
     ^+  dat
     (emit %pass /groups %agent dok %watch /groups)
   --
-::  +look: handle being watched
+::  +peer: handle being watched
 ::
-++  look
+++  peer
   |=  pol=(pole knot)
   ^+  dat
   ?+    pol  dat
+      [%web-ui ~]
+    (show hari-state+!>(`state-0`state))
+  ::
       [%relay ~]
     =;  backlog=(list [report:rama ?])
       |-  ?~  backlog  dat
@@ -187,13 +189,10 @@
     %-  zing  %+  turn
       ~(tap by foundations)
     |=  [t=term f=foundation:hari]
-    :~  [[provider.f %add-almoners %$ almoners.f] |]
-        [[provider.f %add-janitors %$ janitors.f] |]
-        [[provider.f %found %$] |]
+    :~  [[provider.f %add-almoners t almoners.f] |]
+        [[provider.f %add-janitors t janitors.f] |]
+        [[provider.f %found t] |]
     ==
-  ::
-      [%web-ui ~]
-    (show json+!>(`json`(foundations:enjs:c-j foundations)))
   ==
 ::  +arvo: handle arvo responses
 ::
@@ -203,19 +202,16 @@
   ?+    pol  ~|(bad-arvo-wire/pol !!)
       [%seldon %catalogue wen=@ ~]
     ?>  ?=([%behn %wake *] sig)
-    %-  ?~  error.sig
-          (slog '%hari -behn-timer ~' ~)
-        (slog u.error.sig)
-    behn
+    %.  behn
+    ?^  error.sig  (slog u.error.sig)
+    (slog '%hari -behn-timer ~' ~)
   ::
       [%found wat=@ ~]
-    =/  nam=@tas  (scot %tas wat.pol)
+    =/  fon=@tas  (scot %tas wat.pol)
     ?>  ?=([%khan %arow *] sig)
     ?.  ?=(%& -.p.+.sig)  ((slog +.p.p.+.sig) dat)
-    %-  show:(dupe [[our.bol nam] [%found %$]] &)
-    =-  json+!>(`json`-)
-    %-  admin:h-p
-    [%found (cut 3 [0 (sub (met 3 nam) 7)] nam)]
+    %.  hari-seldon+!>([%found fon])
+    show:(dupe [[our.bol fon] [%found fon]] &)
   ==
   --
 ::  +dude: handle incoming agent
@@ -236,11 +232,13 @@
     ==
   ::
       [%close wat=@ ~]
+    =/  fon=@tas  (scot %tas wat.pol)
     ?+    -.sig  ~|(bad-dude-sign-on/pol !!)
         %poke-ack
-      %.  dat
-      ?~  p.sig  same
-      (slog '%hari cannot close group' u.p.sig)
+      ?^  p.sig
+        ((slog '%hari cannot close group' u.p.sig) dat)
+      %.  hari-seldon+!>([%close fon])
+      show:(dupe [[our.bol fon] %close fon] &)
     ==
   ::
       [%post who=@ wen=@ ~]
@@ -256,10 +254,9 @@
     |=  (pair flag update:g)
     ^+  dat
     ?.  ?=([%del ~] q.q)  dat
-    =+  fon=(cut 3 [0 (sub (met 3 q.p) 7)] q.p)
-    ?~  (~(has by foundations) fon)  dat
-    %.  [[p %close %$] &]
-    dupe(foundations (~(del by foundations) fon))
+    ?~  (~(has by foundations) q.p)  dat
+    %.  [[p %close q.p] &]
+    dupe(foundations (~(del by foundations) q.p))
   --
 ::  +poke: handle incoming pokes
 ::
@@ -272,30 +269,26 @@
     ?>  =(our.bol src.bol)
     =/  act  !<(admin:actions:hari vaz)
     ?-    -.act
-      %found  ~(found land +.act)  ::  dupe after thread
-    ::
-        %close
-      =-  (show:- json+!>(`json`(admin:h-p act)))
-      %-  dupe:~(close land +.act)
-      [[[our.bol (cat 3 fon.act '-paedia')] act] &]
+      %found  ~(found land +.act)  ::  dupe and show after thread
+      %close  ~(close land +.act)  ::  dupe and show after poke-ack
     ::
         %add-almoners
-      =-  (show:- json+!>(`json`(admin:h-p act)))
+      =-  (show:- hari-seldon+!>(act))
       %-  dupe:(staff & %alm +.act)
       [[[our.bol (cat 3 fon.act '-paedia')] act] &]
     ::
         %del-almoners
-      =-  (show:- json+!>(`json`(admin:h-p act)))
+      =-  (show:- hari-seldon+!>(act))
       %-  dupe:(staff | %alm +.act)
       [[[our.bol (cat 3 fon.act '-paedia')] act] &]
     ::
         %add-janitors
-      =-  (show:- json+!>(`json`(admin:h-p act)))
+      =-  (show:- hari-seldon+!>(act))
       %-  dupe:(staff & %jan +.act)
       [[[our.bol (cat 3 fon.act '-paedia')] act] &]
     ::
         %del-janitors
-      =-  (show:- json+!>(`json`(admin:h-p act)))
+      =-  (show:- hari-seldon+!>(act))
       %-  dupe:(staff | %jan +.act)
       [[[our.bol (cat 3 fon.act '-paedia')] act] &]
     ==
@@ -365,8 +358,7 @@
 ++  land
   |_  fon=term
   +*  hu   (scot %p src.bol)
-      nam  (cat 3 fon '-paedia')
-      tit  nam
+      tit  (cat 3 fon '-paedia')
   ::  +diary: relay messages for some almoner or janitor
   ::
   ++  diary
@@ -379,7 +371,7 @@
       %-  emit
       =-  [%pass pat %agent dia %poke %diary-action -]
       !>  ^-  action:d
-      :-  [our.bol nam]
+      :-  [our.bol fon]
       [now.bol %notes `@da`p %quips `@da`q %del ~]
     ::  +wipe: delete note
     ::
@@ -388,7 +380,7 @@
       %-  emit
       =-  [%pass pat %agent dia %poke %diary-action -]
       !>  ^-  action:d
-      [[our.bol nam] [now.bol %notes `@da`p %del ~]]
+      [[our.bol fon] [now.bol %notes `@da`p %del ~]]
     ::  +post: add a note
     ::
     ++  post
@@ -396,7 +388,7 @@
       %-  emit
       =-  [%pass pat %agent dia %poke %diary-action -]
       !>  ^-  action:d
-      :-  [our.bol nam]
+      :-  [our.bol fon]
       [now.bol %notes now.bol %add t c v src.bol now.bol]
     ::  +edit: change a note
     ::
@@ -407,7 +399,7 @@
       %-  emit 
       =-  [%pass pat %agent dia %poke %diary-action -]
       !>  ^-  action:^d
-      :-  [our.bol nam]
+      :-  [our.bol fon]
       [now.bol %notes `@da`d %edit essay(content v)]
     ::  +grab: scry diary, get note
     ::
@@ -418,7 +410,7 @@
         %gx
         %+  welp
           /[or]/diary/[no]/diary
-        /[or]/[nam]/notes/note/(scot %ud w)/noun
+        /[or]/[fon]/notes/note/(scot %ud w)/noun
       ==
     --
   ::  +close: if check, perform shutdown
@@ -433,7 +425,7 @@
   ::
   ++  maker
     ^+  dat
-    =/  pat  /found/[nam]
+    =/  pat  /found/[fon]
     ~&  fon
     %-  emit
     =-  [%pass pat %arvo %k %fard -]
@@ -442,21 +434,21 @@
   ::
   ++  ender
     ^+  dat
-    =/  pat  /close/[nam]
+    =/  pat  /close/[fon]
     =-  (emit [%pass pat %agent dok %poke -])
     :-  %group-action
-    !>(`action:g`[[our.bol nam] [now.bol [%del ~]]])
+    !>(`action:g`[[our.bol fon] [now.bol [%del ~]]])
   ::  +found: if check, perform setup
   ::
   ++  found
     ^+  dat
-    ?.  &(check ((sane %tas) nam))
+    ?.  &(check ((sane %tas) fon))
       ::  XX: json to frontend, failure
       ::
       dat
     ::  XX: json to frontend, success
     =.  foundations
-      (~(put by foundations) fon [[our.bol nam] ~ ~ %$])
+      (~(put by foundations) fon [[our.bol fon] ~ ~ %$])
     maker
   ::  +check: test for existence of group
   ::
@@ -465,12 +457,12 @@
     ?&  %+  levy
           %~  tap  by
           .^(shelf:d %gx /[or]/diary/[no]/shelf/noun)
-        |=([=flag =diary:d] !=([our.bol nam] flag))
+        |=([=flag =diary:d] !=([our.bol fon] flag))
       ::
         %+  levy
           %~  tap  by
           .^(groups:g %gx /[or]/groups/[no]/groups/noun)
-        |=([=flag =group:g] !=([our.bol nam] flag))
+        |=([=flag =group:g] !=([our.bol fon] flag))
     ==
   --
 --

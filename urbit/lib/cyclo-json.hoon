@@ -6,30 +6,13 @@
   =,  enjs:format
   |%
   ++  ships  `$-(@p json)`|=(p=@p ((lead %s) (scot %p p)))
+  ::
   ++  flap
     ^-  $-(flag json)
     |=  f=flag
     ^-  json
     s/(rap 3 (scot %p p.f) '/' q.f ~)
-  ++  hosts
-    |=  host=(jug @p [term [? foundation:hari:f]])
-    ^-  json
-    %+  frond  %hosts
-    :-  %a
-    %+  turn  ~(tap by host)
-    |=  (pair @p (set [t=term [h=? f=foundation:hari:f]]))
-    %-  pairs
-    :~  host+(ships p)
-    ::
-      :+  %foundations  %a
-      %+  turn  ~(tap in q)
-      |=  (pair term [h=? f=foundation:hari:f])
-      %-  pairs
-      :~  name+s/p
-          subscribed+b/h.q
-          details+(foundation f.q)
-      ==
-    ==
+  ::
   ++  foundations
     |=  fons=(map term foundation:hari:f)
     ^-  json
@@ -38,6 +21,7 @@
     %+  turn  ~(tap by fons)
     |=  (pair term foundation:hari:f)
     (pairs ~[name+s/p foundation+(foundation q)])
+  ::
   ++  foundation
     |=  fon=foundation:hari:f
     ^-  json
@@ -46,34 +30,108 @@
         almoners+a/(turn ~(tap in almoners.fon) ships)
         janitors+a/(turn ~(tap in janitors.fon) ships)
     ==
-  ++  rama-poke
-    |_  [bol=bowl:gall foundations=(map term [? foundation:hari:f])]
+  ::  +rama: rama-enjs functions
+  ::
+  ++  rama
+    |%
+    ++  share  `$-(? json)`|=(a=? ((lead %b) a))
+    ::
+    ++  store-diff
+      |=  [[wen=@da flg=flag wic=@da] wat=?]
+      ?.  wat
+        (frond del+(frond saved+(frond key+(numb `@ud`wen))))
+      =-  (frond add+(frond saved+(pairs -)))
+      :~  key+(numb `@ud`wen)
+          added+(sect wen)
+          provider+(flap flg)
+          id+(numb `@ud`wic)
+      ==
+    ::
+    ++  state-0
+      |=  $:  %0
+              hos=(jug @p [@t [? foundation:hari:f]])
+              sav=((mop @da ,[flag @da]) gth)
+              sha=?
+          ==
+      ^-  json
+      %+  frond  %put
+      %-  pairs
+      ~[hosts+(hosts hos) saved+(saved sav) share+b/sha]
+    ::
+    ++  hosts
+      |=  host=(jug @p [term [? foundation:hari:f]])
+      ^-  json
+      %+  frond  %hosts
+      :-  %a
+      %+  turn  ~(tap by host)
+      |=  (pair @p (set [t=term [h=? f=foundation:hari:f]]))
+      %-  pairs
+      :~  host+(ships p)
+      ::
+        :+  %foundations  %a
+        %+  turn  ~(tap in q)
+        |=  (pair term [h=? f=foundation:hari:f])
+        %-  pairs
+        :~  name+s/p
+            subscribed+b/h.q
+            details+(foundation f.q)
+        ==
+      ==
+    ::
+    ++  saved
+      |=  save=((mop @da ,[flag @da]) gth)
+      ^-  json
+      =-  (frond put+(frond saved+a/-))
+      %+  turn
+        (bap:((on @da ,[flag @da]) gth) save)
+      |=  [wen=@da wer=flag wat=@da]
+      %-  pairs                                           ::  XX: note we send key
+      :~  key+(numb `@ud`wen)                             ::   because of bad time
+          added+(sect wen)                                ::   conversion to unix.
+          provider+(flap wer)
+          id+(numb `@ud`wat)
+      ==
+    ::
     ++  rama-only
       |=  =action:rama:f
       ?-    -.action
-        %watch  (frond add+(frond host+(ships who.action)))
+        %watch  (frond add+(frond hosts+(ships who.action)))
       ::
           %enter
-        =-  (frond put+(pairs -))
+        =-  (frond put+(frond hosts+(pairs -)))
         :~  host+(ships who.action)
             name+s/fon.action
             subscribed+b/%.y
         ==
       ::
           %leave
-        =-  (frond put+(pairs -))
+        =-  (frond put+(frond hosts+(pairs -)))
         :~  host+(ships who.action)
             name+s/fon.action
             subscribed+b/%.y
         ==
+      ::
+          %share
+        (frond put+(frond share+b/+.action))
+      ::
+          %store
+        =-  (frond add+(frond saved+(pairs -)))
+        :~  host+(ships who.action)
+            name+s/fon.action
+            post+(numb id.action)
+        ==
+      ::
+          %trash
+        (frond del+(frond saved+(frond key+(numb wen.action))))
       ==
+    ::
     ++  rehydrate
-      |=  [w=@p f=flag =admin:actions:hari:f]
+      |=  [f=flag =admin:actions:hari:f]
       ^-  json
       ?-    -.admin
           %found
         =-  (frond put+(pairs -))
-        :~  host+(ships w)
+        :~  host+(ships p.f)
             name+s/q.f
             subscribed+b/%.n
             details+(foundation [f ~ ~ %$])
@@ -81,55 +139,48 @@
       ::
         %close
         =-  (frond del+(pairs -))
-        :~  host+(ships w)
+        :~  host+(ships p.f)
             name+s/q.f
         ==
       ::
         %add-almoners
         =-  (frond add+(pairs -))
-        :~  host+(ships w)
+        :~  host+(ships p.f)
             name+s/q.f
             almoners+a/(turn ~(tap in who.admin) ships)
         ==
         %del-almoners
         =-  (frond del+(pairs -))
-        :~  host+(ships w)
+        :~  host+(ships p.f)
             name+s/q.f
             almoners+a/(turn ~(tap in who.admin) ships)
         ==
         %add-janitors
         =-  (frond add+(pairs -))
-        :~  host+(ships w)
+        :~  host+(ships p.f)
             name+s/q.f
             janitors+a/(turn ~(tap in who.admin) ships)
         ==
         %del-janitors
         =-  (frond del+(pairs -))
-        :~  host+(ships w)
+        :~  host+(ships p.f)
             name+s/q.f
             janitors+a/(turn ~(tap in who.admin) ships)
         ==
       ==
     --
-  ++  hari-poke
-    |_  [bol=bowl:gall fon=(map term foundation:hari:f)]
+  ++  hari
+    |%
+    ++  state-0
+      |=  [%0 fons=(map term foundation:hari:f)]
+      (frond put+(foundations fons))
+    ::
     ++  admin
       |=  =admin:actions:hari:f
       ^-  json
       ?-    -.admin
-          %found
-        =+  nam=(cat 3 fon.admin '-paedia')
-        =;  faun=json
-          %+  frond  %add
-          (pairs ~[name+s/fon.admin foundation+faun])
-        %-  pairs
-        :~  provider+(flap [our.bol nam])
-            almoners+a/~
-            janitors+a/~
-        ==
-      ::
-          %close
-        (frond rem+(frond name+s/fon.admin))
+        %found  (frond add+(frond name+s/fon.admin))
+        %close  (frond rem+(frond name+s/fon.admin))
       ::
           %add-almoners
         %+  frond  %add
@@ -161,7 +212,6 @@
       ==
     --
   --
-
 ::
 ++  dejs
   =,  dejs:format
@@ -175,6 +225,9 @@
     :~  enter+(ot ~[fon+so who+(se %p)])
         leave+(ot ~[fon+so who+(se %p)])
         watch+(se %p)
+        share+bo
+        store+(ot ~[who+(se %p) fon+so id+ni])
+        trash+ni
     ==
   ++  schizo
     ^-  $-(json write:actions:hari:f)

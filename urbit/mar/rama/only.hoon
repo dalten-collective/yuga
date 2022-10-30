@@ -5,6 +5,7 @@
 ++  grow
   |%
   ++  noun  only
+  ++  json  (rama-only:rama:enjs:c-j only)
   --
 ++  grab
   |%

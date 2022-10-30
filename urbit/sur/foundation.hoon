@@ -15,10 +15,15 @@
   ::  $action: pure rama actions, %rama-only
   ::
   +$  action
-    $%  [%enter fon=term who=ship]
-        [%leave fon=term who=ship]
+    $%  [%enter who=ship fon=term]
+        [%leave who=ship fon=term]
         [%watch who=ship]
+        [%share ?]
+        [%store who=ship fon=term id=@ud]
+        [%trash wen=@ud]
     ==
+  ::
+
   ::  $parcel: hari rama actions, %hari-rama
   ::
   +$  parcel

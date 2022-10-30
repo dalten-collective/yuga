@@ -7,7 +7,7 @@
   |_  [bol=bowl:gall fon=term]
   +*  nam  (cat 3 fon '-paedia')
       des  (cat 3 nam ' Foundation')
-      flg  [our.bol nam]
+      flg  [our.bol fon]
       cul  (scot %ux `@ux`(shaw our.bol 24 fon))
   ::  +col: a random color generator
   ::
@@ -22,7 +22,7 @@
     ^-  cage
     :-  %group-create
     !>  ^-  create:g
-    [nam des '' col col [%open ~ ~] ~]
+    [fon des '' col col [%open ~ ~] ~]
   ::
   ++  zone
     ^-  cage
@@ -35,7 +35,7 @@
     :-  %diary-create
     !>  ^-  create:d
     :-  flg
-    [nam nam nam ~ (sy [%admin]~)]
+    [fon nam nam ~ (sy [%admin]~)]
   ::
   ++  section
     ^-  cage

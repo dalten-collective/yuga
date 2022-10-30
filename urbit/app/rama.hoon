@@ -1,20 +1,31 @@
 ::  rama - rendezvous with rama
 ::
+::  - metadata - view count, likes
+::  - add to hari a (jug term tags) for tag unification
+::  - jug tag id for proposed tags
+::  - 
+::
 /-  d=diary, g=groups, *foundation
 /+  dbug, default-agent, verb, c-j=cyclo-json
 |%
-::
-+$  versioned-state  $%(state-0)
-::
-+$  state-0
-  $:  %0
-      hosts=(jug ship [term [hav=? fon=foundation:hari]])
-  ==
-::
 ::  boilerplate
 ::
 +$  card  card:agent:gall
-+$  flag  (pair ship term)
+::
++$  versioned-state  $%(state-0)
+::  +state-0:
+::
+::    hosts:  your hosts and foundations
+::    saved:  saved posts from your rama
+::    share:  turns on/off usage metrics
+::
++$  state-0
+  $:  %0
+      hosts=(jug ship [term [? foundation:hari]])
+      saved=((mop @da ,[flag @ud]) gth)
+      share=?
+  ==
+::
 --
 ::
 %+  verb  &
@@ -79,10 +90,11 @@
     [cards this]
   ::
   ++  on-watch
-  |=  =path
+  |=  pat=path
   ~>  %bout.[0 '%rama +on-watch']
-  ^-  (quip card _this)
-  `this
+  =^  cards  state
+    abet:(peer pat)
+  [cards this]
   ::
   ++  on-fail
     ~>  %bout.[0 '%rama +on-fail']
@@ -127,17 +139,17 @@
   ++  relay
     |=  p=@p
     ^+  dat
-    =/  wire  /relay/(scot %p p)
-    (emit %pass wire %agent [p %hari] %watch /relay)
+    =/  wir  /relay/(scot %p p)
+    (emit %pass wir %agent [p %hari] %watch /relay)
   --
-::  +look: handle being watched
+::  +peer: handle being watched
 ::
-++  look
+++  peer
   |=  pol=(pole knot)
   ^+  dat
   ?+    pol  dat
       [%web-ui ~]
-    (show json+!>(`json`(hosts:enjs:c-j hosts)))
+    (show rama-state+!>(`state-0`state))
   ==
 ::
 ++  poke
@@ -147,11 +159,26 @@
       %rama-only
     =/  act=action:rama  !<(action:rama vaz)
     ~_  leaf+"bad-rama-only - not an allowed action"
-    ?:  ?=(%watch -.act)  (relay:view who.act)
-    %-  ~(host land fon.act)
-    ?-    -.act
-      %enter  [who.act %.y]
-      %leave  [who.act %.n]
+    =*  pon  ((on @da ,[flag @ud]) gth)
+    ?+    -.act
+      %-  ~(host land +.act)
+      ?-(-.act %enter %.y, %leave %.n)
+    ::
+      %watch  (relay:view who.act)
+      %share  (show(share +.act) share+!>(+.act))
+    ::
+        %store
+      =+  flag=[who.act fon.act]
+      =+  hav=(~(note land flag) id.act)                ::  XX: need exists scry
+      =+  new=[now.bol flag id.act]
+      %.  store-diff+!>([new %.y])
+      show(saved (put:pon saved new))
+    ::
+        %trash
+      =+  wen=`@da`wen.act
+      =+  old=[wen (got:pon saved wen)]
+      %.  store-diff+!>([old %.n])
+      show(saved +:(del:pon saved wen))
     ==
   ::
       %hari-rama
@@ -186,15 +213,7 @@
   ::
   ++  reverse
     |=  [f=flag i=@ud]
-    =-  =(our.bol author.-)
-    =/  der  (scot %p p.f)
-    =/  nam  (scot %tas q.f)
-    .^  note:d
-      %gx
-      %+  welp
-        /[or]/diary/[no]/diary
-      /[der]/[nam]/notes/note/(scot %ud i)/noun
-    ==
+    =(our.bol author:(~(note land f) i))
   --
 
 ::  +dude: handle incoming agent
@@ -233,10 +252,9 @@
       %.  wat  %~  got  by
       (malt ~(tap in (~(gut by hosts) who emt)))
     ?~  p.sig
-      =-  (show json+!>(-))
       ?:  =(0 wic)
-        (rama-only:rama-poke:enjs:c-j [%enter wat who])
-      (rama-only:rama-poke:enjs:c-j [%leave wat who])
+        (show rama-only+!>([%enter who wat]))
+      (show rama-only+!>([%leave who wat]))
     =.  hosts
       ?:  =(0 wic)
         %.  [who wat [%.n fon.old]]
@@ -245,10 +263,11 @@
       ~(put ju (~(del ju hosts) who [wat old]))
     ::
     =;  act=tape
-      ((slog leaf/"%rama can't {act}" u.p.sig) dat)
+      %.  (show hosts+!>(hosts))
+      (slog leaf/"%rama can't {act}" u.p.sig)
     %-  welp
     :-  ?:(=(0 wic) "join " "leave ")
-    "[{(scow %p who)} {(scow %tas (cat 3 wat '-paedia'))}]"
+    "[{(scow %p who)} {(scow %tas wat)}]"
   ==
   ::  +rehydrate:
   ::
@@ -262,69 +281,53 @@
   ::
   ++  rehydrate
     |=  [w=@p f=flag a=admin:actions:hari]
+    ?>  =(w p.f)
     =*  h-p
-      ~(. rama-poke:enjs:c-j [bol (~(got by hosts) w)])
+      ~(. rama-poke:enjs:c-j [bol (~(got by hosts) p.f)])
     ^+  dat
-    ?>  =(p.f w)                                        :: XX: and clean groups?
-    =/  fon  (cut 3 [0 (sub (met 3 q.f) 7)] q.f)        :: group subject
     =/  foundations=(map term [? foundation:hari])
-      (malt ~(tap in (~(gut by hosts) w ~)))
+      (malt ~(tap in (~(gut by hosts) p.f ~)))
     ?-    -.a
         %found
-      ?^  hav=(~(get by foundations) fon)  dat
-      =.  foundations
-        (~(put by foundations) fon [%.n f ~ ~ %$])
-      =+  do=dat(hosts (~(put by hosts) w foundations))
-      (show:do json+!>((rehydrate:h-p w f a)))
+      ?^  hav=(~(get by foundations) q.f)  dat
+      =-  (show(hosts -) rama-report+!>([f a]))
+      %+  ~(put by hosts)  p.f
+      (~(put by foundations) q.f [%.n f ~ ~ %$])
     ::
         %close
-      =.  foundations
-        (~(del by foundations) fon)
-      =/  do
-        ?~  foundations
-          dat(hosts (~(del by hosts) w))
-        dat(hosts (~(put by hosts) w foundations))
-      (show:do json+!>((rehydrate:h-p w f a)))
+      =-  (show(hosts -) rama-report+!>([f a]))
+      =.    foundations
+        (~(del by foundations) q.f)
+      ?~  foundations  (~(del by hosts) p.f)
+      (~(put by hosts) p.f foundations)
     ::
         %add-almoners
-      ?~  f=(~(get by foundations) fon)  dat
-      =+  do=(show json+!>((rehydrate:h-p w ^f a)))
-      %=  do
-          hosts
-        %+  ~(put by hosts)  w
-        %+  ~(put by foundations)  fon
-        [-.u.f (staff +>.a +.u.f & %alm)]
-      ==
+      ?~  hav=(~(get by foundations) q.f)  dat
+      =-  (show(hosts -) rama-report+!>([f a]))
+      %+  ~(put by hosts)  p.f
+      %+  ~(put by foundations)  q.f
+      [-.u.hav (staff +>.a +.u.hav & %alm)]
     ::
         %del-almoners
-      ?~  f=(~(get by foundations) fon)  dat
-      =+  do=(show json+!>((rehydrate:h-p w ^f a)))
-      %=  do
-          hosts
-        %+  ~(put by hosts)  w
-        %+  ~(put by foundations)  fon
-        [-.u.f (staff +>.a +.u.f | %alm)]
-      ==
+      ?~  hav=(~(get by foundations) q.f)  dat
+      =-  (show(hosts -) rama-report+!>([f a]))
+      %+  ~(put by hosts)  p.f
+      %+  ~(put by foundations)  q.f
+      [-.u.hav (staff +>.a +.u.hav | %alm)]
     ::
         %add-janitors
-      ?~  f=(~(get by foundations) fon)  dat
-      =+  do=(show json+!>((rehydrate:h-p w ^f a)))
-      %=  do
-          hosts
-        %+  ~(put by hosts)  w
-        %+  ~(put by foundations)  fon
-        [-.u.f (staff +>.a +.u.f & %jan)]
-      ==
+      ?~  hav=(~(get by foundations) q.f)  dat
+      =-  (show(hosts -) rama-report+!>([f a]))
+      %+  ~(put by hosts)  p.f
+      %+  ~(put by foundations)  q.f
+      [-.u.hav (staff +>.a +.u.hav & %jan)]
     ::
         %del-janitors
-      ?~  f=(~(get by foundations) fon)  dat
-      =+  do=(show json+!>((rehydrate:h-p w ^f a)))
-      %=  do
-          hosts
-        %+  ~(put by hosts)  w
-        %+  ~(put by foundations)  fon
-        [-.u.f (staff +>.a +.u.f | %jan)]
-      ==
+      ?~  hav=(~(get by foundations) q.f)  dat
+      =-  (show(hosts -) rama-report+!>([f a]))
+      %+  ~(put by hosts)  p.f
+      %+  ~(put by foundations)  q.f
+      [-.u.hav (staff +>.a +.u.hav | %jan)]
     ==
   ++  staff
     |=  $:  who=(set ship)
@@ -355,29 +358,40 @@
 ::    a prior version of the tlon app suite
 ::
 ++  land
-  |_  fon=term
-  +*  hu   (scot %p src.bol)
-      nam  (cat 3 fon '-paedia')
-      tit  nam
+  |_  =flag
+  +*  der  (scot %p p.flag)
+      nam  (scot %tas q.flag)
+  ::  +reverse: lookup a note by id, see if we're author
+  ::
+  ++  note
+    |=  i=@ud
+    ^-  note:d
+    .^  note:d
+      %gx
+      %+  welp
+        /[or]/diary/[no]/diary
+      /[der]/[nam]/notes/note/(scot %ud i)/noun
+    ==
   ::  +host: handle leave/join
   ::
   ++  host
-    |=  [p=@p q=?]
+    |=  wat=?
     ^+  dat
-    ~_  leaf+"bad-rama-action - cannot find {<nam>}"
+    ~_  leaf+"bad-rama-action - cannot find {<q.flag>}"
     =|  emt=(set [term [? foundation:hari]])
     =/  old=[hav=? fon=foundation:hari]
-      %.  fon
+      %.  q.flag
       %~  got  by
-      (malt ~(tap in (~(gut by hosts) p emt)))
+      (malt ~(tap in (~(gut by hosts) p.flag emt)))
     =.  hosts
-      %.  [p fon q fon.old]
-      ~(put ju (~(del ju hosts) p [fon old]))
+      %.  [p.flag q.flag wat fon.old]
+      ~(put ju (~(del ju hosts) p.flag [q.flag old]))
     ::
-    =/  pat  /hosts/(scot %p p)/[fon]/(scot %ud q)
+    =/  pat
+      /hosts/(scot %p p.flag)/[q.flag]/(scot %ud wat)
     =-  (emit %pass pat %agent dok %poke -)
-    ?.  q
-      [%group-leave !>([p nam])]
-    [%group-join !>([[p nam] %.n])]
+    ?.  wat
+      [%group-leave !>(flag)]
+    [%group-join !>([flag %.n])]
   --
 --
