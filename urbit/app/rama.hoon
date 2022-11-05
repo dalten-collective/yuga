@@ -329,17 +329,14 @@
       %-  ~(host land +.act)
       ?-(-.act %enter %.y, %leave %.n)
     ::
+      %share  (show(share +.act) share+!>(+.act))
+    ::
+      %watch  (relay:view who.act)
+    ::
         %views
       ?.  share  dat
       %-  emit
       [%pass / %agent [p.p.act %hari] %poke [mar vaz]]
-    ::
-      %share  (show(share +.act) share+!>(+.act))
-    ::
-        %watch
-      =~  [who=who.act (relay:view who.act)]
-          (metas:view who)
-      ==
     ::
         %store
       =+  flag=[who.act fon.act]
@@ -372,7 +369,6 @@
       ?>(p.perms (forward p.pak hari-schizo+!>(q.pak)))
     ::
         %fix-note
-      ~&  >  (reverse provider.u.dat item.q.pak)
       ?>  |(q.perms (reverse provider.u.dat item.q.pak))
       (forward p.pak hari-somber+!>(q.pak))
     ==
@@ -497,7 +493,7 @@
     ?-    -.a
         %found
       ?^  hav=(~(get by foundations) q.f)  dat
-      =-  (show(hosts -) rama-report+!>([f a]))
+      =-  (metas:view:(show(hosts -) rama-report+!>([f a])) w)
       %+  ~(put by hosts)  p.f
       %+  ~(put by foundations)  q.f
       [%.n f ~ ~ [%0 [%rama ~ ~ ~ ~]]]

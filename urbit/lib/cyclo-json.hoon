@@ -171,7 +171,7 @@
     ++  saved
       |=  save=((mop @da ,[flag @da]) gth)
       ^-  json
-      =-  (frond put+(frond saved+a/-))
+      =-  a/-
       %+  turn
         (bap:((on @da ,[flag @da]) gth) save)
       |=  [wen=@da wer=flag wat=@da]

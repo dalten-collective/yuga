@@ -286,7 +286,7 @@
       ?>  (~(has by foundations) q.p.act)
       (~(view meta q.p.act) q.act)
     ::
-        %admin-meta
+        %meta-admin
       ~_  leaf+"bad-admin-meta!"
       ?>  =(our.bol src.bol)
       =/  act  !<(admin:^meta vaz)
@@ -494,6 +494,7 @@
     =.  foundations
       %-  ~(put by foundations)
       [fon [our.bol fon] ~ ~ [%0 %hari [~ ~ ~ ~] [~ ~]]]
+    ~&  >>>  foundations
     maker
   ::  +check: test for existence of group
   ::
