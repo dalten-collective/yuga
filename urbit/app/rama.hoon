@@ -265,7 +265,8 @@
       ==
     ::
         [%all %rama *]
-      %=    dat
+      %.  meta-rama+!>([%0 %rama +>.r])
+      %=    show
           hosts
         %+  ~(put by hosts)  p.p
         (~(put by fauna) q.p fun(metadata [%0 %rama +>.r]))

@@ -9,7 +9,7 @@
   --
 ++  grab
   |%
-  ++  noun  admin:meta
+  ++  noun  admin:^meta
   ++  json  admin-meta:dejs:c-j
   --
 --
