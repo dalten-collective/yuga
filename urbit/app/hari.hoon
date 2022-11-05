@@ -145,6 +145,12 @@
   |=  [=report:rama all=?]
   %-  emit
   [%give %fact ?.(all ~ ~[/relay]) rama-report+!>(report)]
+::  +lupe: forward metadata to subscribers (loop them in)
+::
+++  lupe
+  |=  [=report:^meta all=?]
+  %-  emit
+  [%give %fact ?.(all ~ ~[/metas]) meta-report+!>(report)]
 ::  +behn: a behn timer
 ::
 ++  behn
@@ -180,6 +186,7 @@
   ^+  dat
   ?+    pol  dat
       [%web-ui ~]
+    ?>  =(our.bol src.bol)
     (show hari-state+!>(`state-0`state))
   ::
       [%relay ~]
@@ -193,6 +200,16 @@
         [[provider.f %add-janitors t janitors.f] |]
         [[provider.f %found t] |]
     ==
+  ::
+      [%metas ~]
+    =;  backlog=(list [report:^meta ?])
+      |-  ?~  backlog  dat
+      $(backlog t.backlog, dat (lupe i.backlog))
+    %+  turn
+      ~(tap by foundations)
+    |=  [t=term f=foundation:hari]
+    ?>  ?=([%0 %hari *] metadata.f)
+    [[provider.f [%result %all %rama public.metadata.f]] |]
   ==
 ::  +arvo: handle arvo responses
 ::
@@ -218,35 +235,35 @@
 ++  dude
   |=  [pol=(pole knot) sig=sign:agent:gall]
   |^  ^+  dat
-  ?+    pol  ~|(bad-dude-wire/pol !!)
-      [%groups ~]
-    ?+    -.sig  dat
-      %fact  (check !<(action:g q.cage.sig))
-      %kick  group:view
+    ?+    pol  ~|(bad-dude-wire/pol !!)
+        [%groups ~]
+      ?+    -.sig  dat
+        %fact  (check !<(action:g q.cage.sig))
+        %kick  group:view
+      ::
+          %watch-ack
+        %.  dat
+        ?~  p.sig  same
+        (slog leaf/"%hari cannot watch groups" u.p.sig)
+      ==
     ::
-        %watch-ack
-      %.  dat
-      ?~  p.sig  same
-      (slog leaf/"%hari cannot watch groups" u.p.sig)
+        [%close wat=@ ~]
+      =/  fon=@tas  (scot %tas wat.pol)
+      ?+    -.sig  ~|(bad-dude-sign-on/pol !!)
+          %poke-ack
+        ?^  p.sig
+          ((slog '%hari cannot close group' u.p.sig) dat)
+        %.  hari-seldon+!>([%close fon])
+        show:(dupe [[our.bol fon] %close fon] &)
+      ==
+    ::
+        [%post who=@ wen=@ ~]
+      ?+    -.sig  ~|(bad-dude-sign-on/pol !!)
+          %poke-ack
+        %.  dat
+        ?~(p.sig same (slog '%hari cannot post' u.p.sig))
+      ==
     ==
-  ::
-      [%close wat=@ ~]
-    =/  fon=@tas  (scot %tas wat.pol)
-    ?+    -.sig  ~|(bad-dude-sign-on/pol !!)
-        %poke-ack
-      ?^  p.sig
-        ((slog '%hari cannot close group' u.p.sig) dat)
-      %.  hari-seldon+!>([%close fon])
-      show:(dupe [[our.bol fon] %close fon] &)
-    ==
-  ::
-      [%post who=@ wen=@ ~]
-    ?+    -.sig  ~|(bad-dude-sign-on/pol !!)
-        %poke-ack
-      %.  dat
-      ?~(p.sig same (slog '%hari cannot post' u.p.sig))
-    ==
-  ==
   ::  +check: maybe destroy foundation, imperial mandate
   ::
   ++  check
@@ -262,70 +279,98 @@
 ++  poke
   |=  [mar=mark vaz=vase]
   |^  ^+  dat
-  ?+    mar  ~|(bad-poke-mark/mar !!)
-      %hari-seldon
-    ~_  leaf+"bad-hari-seldon from {<src.bol>}"
-    ?>  =(our.bol src.bol)
-    =/  act  !<(admin:actions:hari vaz)
-    ?-    -.act
-      %found  ~(found land +.act)  ::  dupe and show after thread
-      %close  ~(close land +.act)  ::  dupe and show after poke-ack
+    ?+    mar  ~|(bad-poke-mark/mar !!)
+        %rama-only
+      =/  act  !<(action:rama vaz)
+      ?>  ?=([%views *] act)
+      ?>  (~(has by foundations) q.p.act)
+      (~(view meta q.p.act) q.act)
     ::
-        %add-almoners
-      =-  (show:- hari-seldon+!>(act))
-      %-  dupe:(staff & %alm +.act)
-      [[[our.bol (cat 3 fon.act '-paedia')] act] &]
+        %admin-meta
+      ~_  leaf+"bad-admin-meta!"
+      ?>  =(our.bol src.bol)
+      =/  act  !<(admin:^meta vaz)
+      ?-    -.act
+          %tag
+        (~(tag meta fon.act) +>.act)
+          %folder
+        (~(folder meta fon.act) +>.act)
+      ==
     ::
-        %del-almoners
-      =-  (show:- hari-seldon+!>(act))
-      %-  dupe:(staff | %alm +.act)
-      [[[our.bol (cat 3 fon.act '-paedia')] act] &]
+        %hari-seldon
+      ~_  leaf+"bad-hari-seldon from {<src.bol>}"
+      ?>  =(our.bol src.bol)
+      =/  act  !<(admin:actions:hari vaz)
+      ?-    -.act
+        %found  ~(found land +.act)  ::  dupe and show after thread
+        %close  ~(close land +.act)  ::  dupe and show after poke-ack
+      ::
+          %add-almoners
+        =-  (show:- hari-seldon+!>(act))
+        %-  dupe:(staff & %alm +.act)
+        [[[our.bol (cat 3 fon.act '-paedia')] act] &]
+      ::
+          %del-almoners
+        =-  (show:- hari-seldon+!>(act))
+        %-  dupe:(staff | %alm +.act)
+        [[[our.bol (cat 3 fon.act '-paedia')] act] &]
+      ::
+          %add-janitors
+        =-  (show:- hari-seldon+!>(act))
+        %-  dupe:(staff & %jan +.act)
+        [[[our.bol (cat 3 fon.act '-paedia')] act] &]
+      ::
+          %del-janitors
+        =-  (show:- hari-seldon+!>(act))
+        %-  dupe:(staff | %jan +.act)
+        [[[our.bol (cat 3 fon.act '-paedia')] act] &]
+      ==
     ::
-        %add-janitors
-      =-  (show:- hari-seldon+!>(act))
-      %-  dupe:(staff & %jan +.act)
-      [[[our.bol (cat 3 fon.act '-paedia')] act] &]
-    ::
-        %del-janitors
-      =-  (show:- hari-seldon+!>(act))
-      %-  dupe:(staff | %jan +.act)
-      [[[our.bol (cat 3 fon.act '-paedia')] act] &]
-    ==
-    ::
-      %hari-schizo
-    =/  act  !<(write:actions:hari vaz)
-    ?>  ?=(%add-note -.act)
-    ~_  leaf+"bad-hari-schizo to {<fon.act>} from {<src.bol>}"
-    ?>  ?|  =(our.bol src.bol)
-            =-  (~(has in almoners:-) src.bol)
-            (~(got by foundations) fon.act)
-        ==
-    =,  act
-    (post:~(diary land fon) tit cov ver)
-    ::
-      %hari-somber
-    =/  act=clean:actions:hari  !<(clean:actions:hari vaz)
-    ~_  leaf+"bad-hari-somber to {<fon.act>} from {<src.bol>}"
-    =+  found=(~(got by foundations) fon.act)
-    =+  lands=~(diary land fon.act)
-    ?:  ?=(%fix-note -.act)
-      ?>  ?|  (~(has in janitors:found) src.bol)
-          ::
-            ?&  (~(has in almoners:found) src.bol)
-                =(author:(grab:lands item.act) src.bol)
-            ==
+        %hari-schizo
+      =/  act  !<(write:actions:hari vaz)
+      ?>  ?=(%add-note -.act)
+      ~_  leaf+"bad-hari-schizo to {<fon.act>} from {<src.bol>}"
+      ?>  ?|  =(our.bol src.bol)
+              =-  (~(has in almoners:-) src.bol)
+              (~(got by foundations) fon.act)
           ==
-      (edit:lands item.act ver.act)
-    ?>  ?|  =(our.bol src.bol)
-            (~(has in janitors:found) src.bol)
-        ::
+      =~  :-  act=act
+          =,  act
+          (post:~(diary land fon) tit cov ver)
+      ::
+        (~(edit meta fon.act) `@ud`now.bol met.act)
+      ==
+    ::
+        %hari-somber
+      =/  act=clean:actions:hari  !<(clean:actions:hari vaz)
+      ~_  leaf+"bad-hari-somber to {<fon.act>} from {<src.bol>}"
+      =+  found=(~(got by foundations) fon.act)
+      =+  lands=~(diary land fon.act)
+      =+  edits=~(edit meta fon.act)
+      ?:  ?=(%fix-note -.act)
+        ?>  ?|  (~(has in janitors:found) src.bol)
+            ::
+              ?&  (~(has in almoners:found) src.bol)
+                  =(author:(grab:lands item.act) src.bol)
+              ==
+            ==
+        =~  :-  act=act
+            %.  [item.act met.act]
+            ~(edit meta:(edit:lands item.act ver.act) fon.act)
+          ::
+            (show hari-somber+!>(act))  ::  XX: maybe send metadata state
         ==
-    ?-    -.act
-      %tag-note  dat
-      %del-note  (wipe:lands item.act)
-      %del-quip  (dust:lands item.act quip.act)
+      ?>  ?|  =(our.bol src.bol)
+              (~(has in janitors:found) src.bol)
+          ::
+          ==
+      =-  (show:- hari-somber+!>(act))
+      ?-    -.act
+        %tag-note  (~(tags meta fon.act) item.act tag.act)
+        %del-note  (wipe:lands item.act)
+        %del-quip  (dust:lands item.act quip.act)
+      ==
     ==
-  ==
   ::  +staff: modifications to janitors, almoners
   ::
   ++  staff
@@ -447,7 +492,8 @@
       dat
     ::  XX: json to frontend, success
     =.  foundations
-      (~(put by foundations) fon [[our.bol fon] ~ ~ %$])
+      %-  ~(put by foundations)
+      [fon [our.bol fon] ~ ~ [%0 %hari [~ ~ ~ ~ ~] [~ ~ ~]]]
     maker
   ::  +check: test for existence of group
   ::
@@ -462,6 +508,136 @@
           %~  tap  by
           .^(groups:g %gx /[or]/groups/[no]/groups/noun)
         |=([=flag =group:g] !=([our.bol fon] flag))
+    ==
+  --
+::  +meta: "why did i name it this interrobang"
+++  meta
+  |_  fon=@t
+  ::  +faun: get foundation from foundations
+  ::
+  ++  faun
+    ^-  foundation:hari
+    (~(got by foundations) fon)
+  ::  +metas: sometimes the only way out is through
+  ::
+  ++  metas
+    ^-  hari:states:^meta
+    =/  sat-m=[%0 state:^meta]
+      metadata:faun
+    ?>  ?=([%0 %hari *] sat-m)
+    [public:sat-m secret:sat-m]
+  ::  +view: update view count
+  ::
+  ++  view
+    |=  item=@ud
+    =/  fun=foundation:hari    faun
+    =/  met=hari:states:^meta  metas
+    =/  hav=@ud
+      ?~(h=(~(get by views.public.met) item) 1 +(u.h))
+    =.  metadata.fun
+      :+  %0  %hari
+      %=    met
+          unique-views.secret
+        (~(put ju unique-views.secret.met) item src.bol)
+      ::
+          views.public
+        (~(put by views.public.met) item hav)
+      ==
+    %-  lupe(foundations (~(put by foundations) fon fun))
+    [[provider.fun [%result %set-views (my [item hav]~)]] &]
+  ::  +tag: update allowed tags
+  ::
+  ++  tag
+    |=  [wat=? tag=term]
+    =/  fun=foundation:hari    faun
+    =/  met=hari:states:^meta  metas
+    =.  metadata.fun
+      :+  %0  %hari
+      %=    met
+          tags.public
+        ?:  wat
+          (~(put by tags.public.met) tag ~)
+        (~(del by tags.public.met) tag)
+      ::
+          proposed-tags.secret
+        (~(del in proposed-tags.secret.met) tag)
+      ==
+    =+  dis=(show meta-admin+!>([%tag fon wat tag]))
+    %.  [[provider.fun [%admin %tag fon wat tag]] &]
+    lupe:dis(foundations (~(put by foundations) fon fun))
+  ::  +folder: update allowed folders
+  ::
+  ++  folder
+    |=  [wat=? fol=term]
+    =/  fun=foundation:hari    faun
+    =/  met=hari:states:^meta  metas
+    =.  metadata.fun
+      :+  %0  %hari
+      %=    met
+          folders.public
+        ?:  wat
+          (~(put by folders.public.met) fol ~)
+        (~(del by folders.public.met) fol)
+      ==
+    =+  dis=(show meta-admin+!>([%folder fon wat fol]))
+    %.  [[provider.fun [%admin %folder fon wat fol]] &]
+    lupe:dis(foundations (~(put by foundations) fon fun))
+  ::  +tags: add a tag to a post
+  ::
+  ++  tags
+    |=  [i=@ud t=term]
+    =/  fun=foundation:hari  faun
+    =/  met=hari:states:^meta  metas
+    =.  metadata.fun
+      :+  %0  %hari
+      %=    met
+        tags.public  (~(put ju tags.public.met) t i)
+      ==
+    %.  [[provider.fun [%result %add-tag i t]] &]
+    lupe(foundations (~(put by foundations) fon fun))
+  ::  +edit: edit the folder, tags of a post (also in write)
+  ::
+  ++  edit
+    |=  [i=@ud m=[%0 write:^meta]]
+    =/  fun=foundation:hari  faun
+    =/  met=hari:states:^meta
+      =+  meat=metas
+      %=    meat
+          folders.public
+        %.  [folder.m i]  %~  put  ju
+        %-  ~(run by folders.public.meat)
+        |=(t=(set @ud) (~(del in t) i))
+      ::
+          tags.public
+        %-  ~(run by tags.public.meat)
+        |=(t=(set @ud) (~(del in t) i))
+      ::
+          proposed-tags.secret
+        (~(dif in tags.m) ~(key by tags.public.meat))
+      ==
+    ::
+    =/  lag=(list term)
+      %+  murn  ~(tap in tags.m)
+      |=  t=@tas
+      ?.((~(has in ~(key by tags.public.met)) t) ~ `t)
+    ?>  ?=([%0 %hari *] metadata.fun)
+    |-  ^+  dat
+    ?^  lag
+      %=  $
+        lag  t.lag
+      ::
+          tags.public.metadata.fun
+        (~(put ju tags.public.metadata.fun) i.lag i)
+      ==
+    =.  metadata.fun  [%0 %hari met]
+    =~  :+  r1=[provider.fun [%result %set-tags i tags.m]]
+          r2=[provider.fun [%result %set-folder i folder.m]]
+        %=    dat
+            foundations
+          (~(put by foundations) fon fun)
+        ==
+    ::
+      (lupe:(lupe r1 &) r2 &)
     ==
   --
 --

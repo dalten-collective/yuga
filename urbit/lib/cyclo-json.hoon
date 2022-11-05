@@ -30,6 +30,21 @@
         almoners+a/(turn ~(tap in almoners.fon) ships)
         janitors+a/(turn ~(tap in janitors.fon) ships)
     ==
+  ::  +meta: meta-enjs functions
+  ::
+  ++  meta
+    |%
+    ++  admin
+      |=  =admin:meta:f
+      %+  frond  ?:(wat.admin %add %rem)
+      ?-  -.admin
+          %tag
+        (pairs ~[foundation+s/fon.admin tag+s/tag.admin])
+      ::
+          %folder
+        (pairs ~[foundation+s/fon.admin folder+s/fol.admin])
+      ==
+    --
   ::  +rama: rama-enjs functions
   ::
   ++  rama
@@ -86,7 +101,7 @@
         (bap:((on @da ,[flag @da]) gth) save)
       |=  [wen=@da wer=flag wat=@da]
       %-  pairs                                         ::  XX: note we send key
-      :~  key+(numb `@ud`wen)                           ::   because of bad time
+      :~  key+(numb `@ud`wen)                            ::   because of bad time
           added+(sect wen)                              ::   conversion to unix.
           provider+(flap wer)
           id+(numb `@ud`wat)
@@ -94,7 +109,7 @@
     ::
     ++  rama-only
       |=  =action:rama:f
-      ?-    -.action
+      ?+    -.action  !!
         %watch  (frond add+(frond hosts+(ships who.action)))
       ::
           %enter
@@ -134,7 +149,7 @@
         :~  host+(ships p.f)
             name+s/q.f
             subscribed+b/%.n
-            details+(foundation [f ~ ~ %$])
+            details+(foundation [f ~ ~ [%0 [%rama ~ ~ ~ ~ ~]]])
         ==
       ::
         %close
@@ -219,20 +234,33 @@
   :: ++  ship  (su ;~(pfix sig fed:ag))
   :: ++  flag  `$-(json ^^flag)`(su flag-rule)
   :: ++  flag-rule  ;~((glue fas) ;~(pfix sig fed:ag) sym)
+  ++  time  (cu |=(i=@t (rash i dem)) so)
   ++  verses  (ar verse:dejs:d-j)
+  ++  admin-meta
+    ^-  $-(json admin:meta:f)
+    %-  of
+    :~  tag+(ot ~[fon+so wat+bo tag+so])
+        folder+(ot ~[fon+so wat+bo folder+so])
+    ==
   ++  rama-only
+    ^-  $-(json action:rama:f)
     %-  of
     :~  enter+(ot ~[who+(se %p) fon+so])
         leave+(ot ~[who+(se %p) fon+so])
         watch+(se %p)
         share+bo
-        store+(ot ~[who+(se %p) fon+so id+ni])
-        trash+ni
+        store+(ot ~[who+(se %p) fon+so id+time])
+        trash+time
+    ::
+      :-  %views
+      %+  cu
+        |=([p=@p q=@t r=@ud] [p q]^r)
+      (ot ~[who+(se %p) fon+so wat+time])
     ==
   ++  schizo
     ^-  $-(json write:actions:hari:f)
     %+  cu
-      |=  [f=@t t=@t c=@t v=(list verse:d) m=_%$]
+      |=  [f=@t t=@t c=@t v=(list verse:d) m=[%0 write:meta:f]]
       [%add-note f t c v m]
     add-note
   ++  somber
@@ -272,16 +300,28 @@
           add-note+add-note
       ==
     ==
-  ++  tag-note  (ot ~[fon+so item+ni tag+so])
-  ++  del-note  (ot ~[fon+so item+ni])
+  ++  tag-note  (ot ~[fon+so item+time tag+so])
+  ++  del-note  (ot ~[fon+so item+time])
   ++  fix-note
       %+  cu
-        |=([f=@t i=@ud v=(list verse:d)] [f i v %$])
-      (ot ~[fon+so item+ni ver+verses])
+        |=  [f=@t i=@ud v=(list verse:d) m=[@t (set @t)]]
+        [f i v [%0 m]]
+      %-  ot
+      :~  fon+so
+          item+time
+          ver+verses
+          met+(ot ~[fol+so tag+(as so)])
+      ==
   ++  add-note
     %+  cu
-      |=([f=@t t=@t c=@t v=(list verse:d)] [f t c v %$])
-    (ot ~[fon+so tit+so cov+so ver+verses])
-    
+      |=  [f=@t t=@t c=@t v=(list verse:d) m=[@t (set @t)]]
+      [f t c v [%0 m]]
+    %-  ot
+    :~  fon+so
+        tit+so
+        cov+so
+        ver+verses
+        met+(ot ~[fol+so tag+(as so)])
+    ==
   --
 --

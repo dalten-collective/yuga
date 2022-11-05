@@ -5,6 +5,58 @@
 ::
 |%
 +$  flag  (pair ship term)
+::  +meta: metadata structure
+::
+++  meta
+  |%
+  ::  $admin:meta: allow, disallow tags and folders
+  ::
+  +$  admin
+    $%  [%tag fon=term wat=? tag=term]
+        [%folder fon=term wat=? fol=term]
+    ==
+  ::
+  +$  report
+    (pair flag $%([%result result] [%admin admin]))
+  ::
+  +$  result
+    $%  [%set-views views=(map @ud @ud)]
+        [%set-folder item=@ud dest=term]
+        [%set-tags item=@ud them=(set term)]
+        [%add-tag item=@ud it=term]
+        [%all %rama rama:states]
+    ==
+  ::
+  +$  share
+    $%  [%saw @ud]
+    ==
+  ::
+  +$  write
+    [folder=term tags=(set term)]
+  ::
+  +$  state
+    $%  [%rama rama:states]
+        [%hari hari:states]
+    ==
+  ++  states
+    |%
+    +$  rama
+      $:  folders=(jug term @ud)
+          authors=(jug @p @ud)
+          views=(map @ud @ud)
+          likes=(map @ud @ud)
+          tags=(jug term @ud)
+      ==
+    +$  hari
+      $:  public=rama
+        $=  secret
+        $:  sharing=(set ship)
+            proposed-tags=(set term)
+            unique-views=(jug @ud @p)
+        ==
+      ==
+    --
+  --
 ::  +rama: client structure
 ::
 ++  rama
@@ -21,6 +73,7 @@
         [%share ?]
         [%store who=ship fon=term id=@ud]
         [%trash wen=@ud]
+        [%views (pair flag @ud)]
     ==
   ::
 
@@ -30,15 +83,9 @@
     %+  pair
       ship
     $%(write:actions:hari clean:actions:hari)
-  ::  +metadata: placeholder
-  ::
-  ++  metadata
-    |%
-    +$  diff  ~
-    --
   --
 ::  +hari: server structure
-::∂
+::
 ++  hari
   |%
   ::  $foundation:
@@ -53,13 +100,16 @@
     $:  provider=flag
         almoners=(set ship)
         janitors=(set ship)
-        metadata=%$
+        metadata=$%([%0 state:meta])
     ==
   ::
   +$  poke  poke:actions
   ::
   ++  metadata
     |%
+
+
+
     +$  meta  ~
     --
   ::
@@ -92,15 +142,21 @@
           tit=cord
           cov=cord
           ver=(list verse:diary)
-          met=%$
+          met=[%0 write:meta]
       ==
     ::  $clean - &hari-somber mark
     ::
     +$  clean
       $%  [%del-note fon=term item=@ud]
           [%tag-note fon=term item=@ud tag=term]
-          [%fix-note fon=term item=@ud ver=(list verse:diary) met=%$]
           [%del-quip fon=term item=@ud quip=@ud]
+      ::
+        $:  %fix-note
+            fon=term
+            item=@ud
+            ver=(list verse:diary)
+            met=[%0 write:meta]
+        ==
       ==
     --
   --

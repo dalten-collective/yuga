@@ -130,6 +130,16 @@
   ?>  ?=([%0 *] q.vaz)
   =.  state  !<(state-0 vaz)
   dat
+::  +peer: handle being watched
+::
+++  peer
+  |=  pol=(pole knot)
+  ^+  dat
+  ?+    pol  dat
+      [%web-ui ~]
+    ?>  =(our.bol src.bol)
+    (show rama-state+!>(`state-0`state))
+  ==
 ::  +view: handle watching things
 ::
 ++  view
@@ -140,17 +150,172 @@
     |=  p=@p
     ^+  dat
     =/  wir  /relay/(scot %p p)
-    (emit %pass wir %agent [p %hari] %watch /relay)
+    (emit [%pass wir %agent [p %hari] %watch /relay])
+  ::  +metas: watch hari on some ship, metadata
+  ++  metas
+    |=  p=@p
+    ^+  dat
+    =/  wir  /metas/(scot %p p)
+    (emit [%pass wir %agent [p %hari] %watch /metas])
   --
-::  +peer: handle being watched
+::  +meat: metadata handling
 ::
-++  peer
-  |=  pol=(pole knot)
-  ^+  dat
-  ?+    pol  dat
-      [%web-ui ~]
-    (show rama-state+!>(`state-0`state))
-  ==
+++  meat
+  |=  [w=@p report:meta]
+  ?>  =(w p.p)
+  |^  ^+  dat
+    ?-  -.q
+      %result  (results +.q)
+      %admin   (admins +.q)
+    ==
+  ++  fauna
+    ^-  (map term [? foundation:hari])
+    (~(got by hosts) p.p)
+  ++  faun
+    ^-  [? foundation:hari]
+    (~(got by fauna) q.p)
+  ++  metas
+    ^-  rama:states:meta
+    =/  sat-m=[%0 state:meta]
+      metadata:faun
+    ?>(?=([%0 %rama *] sat-m) +>.sat-m)
+  ++  admins
+    |=  a=admin:meta
+    =/  fun=[hav=? foundation:hari]  faun
+    =/  met=rama:states:meta  metas
+    ?-    -.a
+        %tag
+      =.  metadata.fun
+        :+  %0
+          %rama
+        %=    met
+            tags
+          ?.  wat.a
+            (~(del by tags.met) tag.a)
+          (~(put by tags.met) tag.a ~)
+        ==
+      %.  meta-admin+!>([%tag fon.a wat.a tag.a])
+      %=    show
+          hosts
+        (~(put by hosts) p.p (~(put by fauna) fon.a fun))
+      ==
+    ::
+        %folder
+      =.  metadata.fun
+        :+  %0
+          %rama
+        %=    met
+            folders
+          ?.  wat.a
+            (~(del by folders.met) fol.a)
+          (~(put by folders.met) fol.a ~)
+        ==
+      %.  meta-admin+!>([%folder fon.a wat.a fol.a])
+      %=    show
+          hosts
+        (~(put by hosts) p.p (~(put by fauna) fon.a fun))
+      ==
+    ==
+  ++  results
+    |=  r=result:meta
+    =/  fun=[hav=? foundation:hari]  faun
+    =/  met=rama:states:meta  metas
+    ?-    r
+        [%set-views *]
+      =.  metadata.fun
+        :+  %0  %rama
+        met(views (~(uni by views.met) views.r))
+      %=    dat
+          hosts
+        (~(put by hosts) p.p (~(put by fauna) q.p fun))
+      ==
+    ::
+        [%add-tag *]
+      =.  metadata.fun
+        :+  %0  %rama
+        met(tags (~(put ju tags.met) it.r item.r))
+      %=   dat
+          hosts
+        (~(put by hosts) p.p (~(put by fauna) q.p fun))
+      ==
+    ::
+        [%set-tags *]
+      =.  tags.met
+        =/  tug=(jug term @ud)
+          %-  ~(run by tags.met)
+          |=(t=(set @ud) (~(del in t) item.r))
+        =+  lem=~(tap in them.r)
+        |-  ?~  lem  tug
+        $(lem t.lem, tug (~(put ju tug) i.lem item.r))
+      =.  metadata.fun  [%0 %rama met]
+      %=    dat
+          hosts
+        (~(put by hosts) p.p (~(put by fauna) q.p fun))
+      ==
+    ::
+        [%set-folder *]
+      =.  folders.met
+        %.  [dest.r item.r]  %~  put  ju
+        %-  ~(run by folders.met)
+        |=(t=(set @ud) (~(del in t) item.r))
+      =.  metadata.fun  [%0 %rama met]
+      %=    dat
+          hosts
+        (~(put by hosts) p.p (~(put by fauna) q.p fun))
+      ==
+    ::
+        [%all %rama *]
+      %=    dat
+          hosts
+        %+  ~(put by hosts)  p.p
+        (~(put by fauna) q.p fun(metadata [%0 %rama +>.r]))
+      ==
+    ==
+  --
+::  +land:
+::
+::    land manages interactions with groups
+::    this naming convention is a result of
+::    a long standing misnaming of desks in
+::    a prior version of the tlon app suite
+::
+++  land
+  |_  =flag
+  +*  der  (scot %p p.flag)
+      nam  (scot %tas q.flag)
+  ::  +reverse: lookup a note by id, see if we're author
+  ::
+  ++  note
+    |=  i=@ud
+    ^-  note:d
+    .^  note:d
+      %gx
+      %+  welp
+        /[or]/diary/[no]/diary
+      /[der]/[nam]/notes/note/(scot %ud i)/noun
+    ==
+  ::  +host: handle leave/join
+  ::
+  ++  host
+    |=  wat=?
+    ^+  dat
+    ~_  leaf+"bad-rama-action - cannot find {<q.flag>}"
+    =|  emt=(set [term [? foundation:hari]])
+    =/  old=[hav=? fon=foundation:hari]
+      %.  q.flag
+      %~  got  by
+      (malt ~(tap in (~(gut by hosts) p.flag emt)))
+    =.  hosts
+      %.  [p.flag q.flag wat fon.old]
+      ~(put ju (~(del ju hosts) p.flag [q.flag old]))
+    ::
+    =/  pat
+      /hosts/(scot %p p.flag)/[q.flag]/(scot %ud wat)
+    =-  (emit %pass pat %agent dok %poke -)
+    ?.  wat
+      [%group-leave !>(flag)]
+    [%group-join !>([flag %.n])]
+  --
 ::
 ++  poke
   |=  [mar=mark vaz=vase]
@@ -164,8 +329,17 @@
       %-  ~(host land +.act)
       ?-(-.act %enter %.y, %leave %.n)
     ::
-      %watch  (relay:view who.act)
+        %views
+      ?.  share  dat
+      %-  emit
+      [%pass / %agent [p.p.act %hari] %poke [mar vaz]]
+    ::
       %share  (show(share +.act) share+!>(+.act))
+    ::
+        %watch
+      =~  [who=who.act (relay:view who.act)]
+          (metas:view who)
+      ==
     ::
         %store
       =+  flag=[who.act fon.act]
@@ -215,60 +389,93 @@
     |=  [f=flag i=@ud]
     =(our.bol author:(~(note land f) i))
   --
-
 ::  +dude: handle incoming agent
 ::
 ++  dude
   |=  [pol=(pole knot) sig=sign:agent:gall]
   |^  ^+  dat
-  ?+    pol  ~|(bad-dude-wire/pol !!)
-      [%fwd who=@ ~]
-    =/  frm=@p  (slav %p who.pol)
-    ?.  ?=(%poke-ack -.sig)  ~|(strange-sign-on/pol !!)
-    ~_  leaf+"%rama cannot send to {<frm>}"
-    %.  dat
-    ?~(p.sig same (slog leaf/"%rama trouble" u.p.sig))
-      [%relay who=@ ~]
-    =/  frm=@p  (slav %p who.pol)
-    ?+  -.sig  dat
-      %kick  (relay:view frm)
-      %fact  (rehydrate frm !<(report:rama q.cage.sig))
-        %watch-ack
+    ?+    pol  ~|(bad-dude-wire/pol !!)
+        [%fwd who=@ ~]
+      =/  frm=@p  (slav %p who.pol)
+      ?.  ?=(%poke-ack -.sig)  ~|(strange-sign-on/pol !!)
+      ~_  leaf+"%rama cannot send to {<frm>}"
       %.  dat
-      ?~  p.sig  same
-      %-  slog                                          :: XX: and clean groups?
-      :_  u.p.sig
-      leaf/"%rama cannot watch {(scow %p who.pol)}'s relay"
-    ==
-  ::
-      [%hosts who=@ wat=@ wic=@ ~]
-    ?.  ?=(%poke-ack -.sig)  ~|(strange-sign-on/pol !!)
-    ~_  leaf+"%rama bad groups - strange result"
-    =/  wic=@ud   (slav %ud wic.pol)
-    =/  who=@p    (slav %p who.pol)
-    =/  wat=@tas  (slav %tas wat.pol)
-    =|  emt=(set [term [? foundation:hari]])
-    =/  old=[hav=? fon=foundation:hari]
-      %.  wat  %~  got  by
-      (malt ~(tap in (~(gut by hosts) who emt)))
-    ?~  p.sig
-      ?:  =(0 wic)
-        (show rama-only+!>([%enter who wat]))
-      (show rama-only+!>([%leave who wat]))
-    =.  hosts
-      ?:  =(0 wic)
-        %.  [who wat [%.n fon.old]]
-        ~(put ju (~(del ju hosts) who [wat old]))
-      %.  [who wat [%.y fon.old]]
-      ~(put ju (~(del ju hosts) who [wat old]))
+      ?~(p.sig same (slog leaf/"%rama trouble" u.p.sig))
     ::
-    =;  act=tape
-      %.  (show hosts+!>(hosts))
-      (slog leaf/"%rama can't {act}" u.p.sig)
-    %-  welp
-    :-  ?:(=(0 wic) "join " "leave ")
-    "[{(scow %p who)} {(scow %tas wat)}]"
-  ==
+        [%relay who=@ ~]
+      =/  frm=@p  (slav %p who.pol)
+      ?+  -.sig  dat
+        %kick  (relay:view frm)
+        %fact  (rehydrate frm !<(report:rama q.cage.sig))
+          %watch-ack
+        %.  dat
+        ?~  p.sig  same
+        %-  slog                                        :: XX: and clean groups?
+        :_  u.p.sig
+        leaf/"%rama cannot watch {(scow %p who.pol)}'s relay"
+      ==
+    ::
+        [%metas who=@ ~]
+      =/  frm=@p  (slav %p who.pol)
+      ?+  -.sig  dat
+        %kick  (metas:view frm)
+        %fact  (meat frm !<(report:meta q.cage.sig))
+          %watch-ack
+        %.  dat
+        ?~  p.sig  same
+        %-  slog                                        :: XX: and clean groups?
+        :_  u.p.sig
+        leaf/"%rama cannot watch {(scow %p who.pol)}'s metas"
+      ==
+    ::
+        [%hosts who=@ wat=@ wic=@ ~]
+      ?.  ?=(%poke-ack -.sig)  ~|(strange-sign-on/pol !!)
+      ~_  leaf+"%rama bad groups - strange result"
+      =/  wic=@ud   (slav %ud wic.pol)
+      =/  who=@p    (slav %p who.pol)
+      =/  wat=@tas  (slav %tas wat.pol)
+      =|  emt=(set [term [? foundation:hari]])
+      =/  old=[hav=? fon=foundation:hari]
+        %.  wat  %~  got  by
+        (malt ~(tap in (~(gut by hosts) who emt)))
+      ?~  p.sig
+        ?:  =(0 wic)
+          (show rama-only+!>([%enter who wat]))
+        (show rama-only+!>([%leave who wat]))
+      =.  hosts
+        ?:  =(0 wic)
+          %.  [who wat [%.n fon.old]]
+          ~(put ju (~(del ju hosts) who [wat old]))
+        %.  [who wat [%.y fon.old]]
+        ~(put ju (~(del ju hosts) who [wat old]))
+      ::
+      =;  act=tape
+        %.  (show hosts+!>(hosts))
+        (slog leaf/"%rama can't {act}" u.p.sig)
+      %-  welp
+      :-  ?:(=(0 wic) "join " "leave ")
+      "[{(scow %p who)} {(scow %tas wat)}]"
+    ==
+  ++  staff
+    |=  $:  who=(set ship)
+            faun=foundation:hari
+            act=?
+            wat=?(%alm %jan)
+        ==
+    ^-  _faun
+    =*  del
+      |=(a=(set ship) (~(dif in a) who))
+    =*  uni
+      |=(a=(set ship) (~(uni in a) who))
+    %=    faun
+        almoners
+      ?.  ?=(%alm wat)  almoners.faun
+      ?:(act (uni almoners.faun) (del almoners.faun))
+    ::
+        janitors
+      ?.  ?=(%jan wat)  janitors.faun
+      ?:(act (uni janitors.faun) (del janitors.faun))
+    ==
   ::  +rehydrate:
   ::
   ::    rehydrate takes pokes that hari got
@@ -292,7 +499,8 @@
       ?^  hav=(~(get by foundations) q.f)  dat
       =-  (show(hosts -) rama-report+!>([f a]))
       %+  ~(put by hosts)  p.f
-      (~(put by foundations) q.f [%.n f ~ ~ %$])
+      %+  ~(put by foundations)  q.f
+      [%.n f ~ ~ [%0 [%rama ~ ~ ~ ~ ~]]]
     ::
         %close
       =-  (show(hosts -) rama-report+!>([f a]))
@@ -329,69 +537,5 @@
       %+  ~(put by foundations)  q.f
       [-.u.hav (staff +>.a +.u.hav | %jan)]
     ==
-  ++  staff
-    |=  $:  who=(set ship)
-            faun=foundation:hari
-            act=?
-            wat=?(%alm %jan)
-        ==
-    ^-  _faun
-    =*  del
-      |=(a=(set ship) (~(dif in a) who))
-    =*  uni
-      |=(a=(set ship) (~(uni in a) who))
-    %=    faun
-        almoners
-      ?.  ?=(%alm wat)  almoners.faun
-      ?:(act (uni almoners.faun) (del almoners.faun))
-    ::
-        janitors
-      ?.  ?=(%jan wat)  janitors.faun
-      ?:(act (uni janitors.faun) (del janitors.faun))
-    ==
-  --
-::  +land:
-::
-::    land manages interactions with groups
-::    this naming convention is a result of
-::    a long standing misnaming of desks in
-::    a prior version of the tlon app suite
-::
-++  land
-  |_  =flag
-  +*  der  (scot %p p.flag)
-      nam  (scot %tas q.flag)
-  ::  +reverse: lookup a note by id, see if we're author
-  ::
-  ++  note
-    |=  i=@ud
-    ^-  note:d
-    .^  note:d
-      %gx
-      %+  welp
-        /[or]/diary/[no]/diary
-      /[der]/[nam]/notes/note/(scot %ud i)/noun
-    ==
-  ::  +host: handle leave/join
-  ::
-  ++  host
-    |=  wat=?
-    ^+  dat
-    ~_  leaf+"bad-rama-action - cannot find {<q.flag>}"
-    =|  emt=(set [term [? foundation:hari]])
-    =/  old=[hav=? fon=foundation:hari]
-      %.  q.flag
-      %~  got  by
-      (malt ~(tap in (~(gut by hosts) p.flag emt)))
-    =.  hosts
-      %.  [p.flag q.flag wat fon.old]
-      ~(put ju (~(del ju hosts) p.flag [q.flag old]))
-    ::
-    =/  pat
-      /hosts/(scot %p p.flag)/[q.flag]/(scot %ud wat)
-    =-  (emit %pass pat %agent dok %poke -)
-    ?.  wat
-      [%group-leave !>(flag)]
-    [%group-join !>([flag %.n])]
   --
 --
