@@ -493,7 +493,7 @@
     ::  XX: json to frontend, success
     =.  foundations
       %-  ~(put by foundations)
-      [fon [our.bol fon] ~ ~ [%0 %hari [~ ~ ~ ~] [~ ~ ~]]]
+      [fon [our.bol fon] ~ ~ [%0 %hari [~ ~ ~ ~] [~ ~]]]
     maker
   ::  +check: test for existence of group
   ::

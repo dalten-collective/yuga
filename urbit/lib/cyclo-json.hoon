@@ -29,6 +29,10 @@
     :~  provider+(flap provider.fon)
         almoners+a/(turn ~(tap in almoners.fon) ships)
         janitors+a/(turn ~(tap in janitors.fon) ships)
+    ::
+        :-  %metadata
+        %-  hari-state:meta
+        ?>(?=([%0 %hari *] metadata.fon) metadata.fon)
     ==
   ::  +meta: meta-enjs functions
   ::
@@ -43,6 +47,76 @@
       ::
           %folder
         (pairs ~[foundation+s/fon.admin folder+s/fol.admin])
+      ==
+    ++  hari-state
+      |=  [%0 %hari hari:states:meta:f]
+      %-  pairs
+      :~  public+(rama-state [%0 %rama public])
+      ::
+        :-  %secret
+        %-  pairs
+        :~
+          :-  %proposed-tags
+          a/(turn ~(tap in proposed-tags.secret) (lead %s))
+        ::
+          :+  %unique-views  %a
+          %+  turn  ~(tap by unique-views.secret)
+          |=  [id=@ud who=(set @p)]
+          %-  pairs
+          :~  id+s/(scot %ud id)
+              post-time+(sect `@da`id)
+              who+a/(turn ~(tap in who) ships)
+          ==
+        ==
+      ==
+    ++  rama-state
+      |=  [%0 %rama rama:states:meta:f]
+      %-  pairs
+      :~
+        :+  %views  %a
+        %+  turn  ~(tap by views)
+        |=  [post=@ud views=@ud]
+        %-  pairs
+        :~  id+s/(scot %ud post)
+            post-time+(sect `@da`post)
+            views+(numb views)
+        ==
+      ::
+        :+  %folders  %a
+        %+  turn  ~(tap by folders)
+        |=  [fol=term wic=(set @ud)]
+        %-  pairs
+        :~  folder+s/fol
+        ::
+          :+  %posts  %a
+          %+  turn  ~(tap in wic)
+          |=  id=@ud
+          (pairs ~[id+s/(scot %ud id) post-time+(sect `@da`id)])
+        ==
+      ::
+        :+  %tags  %a
+        %+  turn  ~(tap by tags)
+        |=  [tag=term wic=(set @ud)]
+        %-  pairs
+        :~  tag+s/tag
+        ::
+          :+  %posts  %a
+          %+  turn  ~(tap in wic)
+          |=  id=@ud
+          (pairs ~[id+s/(scot %ud id) post-time+(sect `@da`id)])
+        ==
+      ::
+        :+  %authors  %a
+        %+  turn  ~(tap by authors)
+        |=  [who=@p wic=(set @ud)]
+        %-  pairs
+        :~  author+(ships who)
+        ::
+          :+  %posts  %a
+          %+  turn  ~(tap in wic)
+          |=  id=@ud
+          (pairs ~[id+s/(scot %ud id) post-time+(sect `@da`id)])
+        ==
       ==
     --
   ::  +rama: rama-enjs functions

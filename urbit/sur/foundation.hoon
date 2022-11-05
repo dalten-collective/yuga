@@ -49,8 +49,7 @@
     +$  hari
       $:  public=rama
         $=  secret
-        $:  sharing=(set ship)
-            proposed-tags=(set term)
+        $:  proposed-tags=(set term)
             unique-views=(jug @ud @p)
         ==
       ==
@@ -103,14 +102,6 @@
     ==
   ::
   +$  poke  poke:actions
-  ::
-  ++  metadata
-    |%
-
-
-
-    +$  meta  ~
-    --
   ::
   ++  actions
     |%
