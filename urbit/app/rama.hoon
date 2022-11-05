@@ -500,7 +500,7 @@
       =-  (show(hosts -) rama-report+!>([f a]))
       %+  ~(put by hosts)  p.f
       %+  ~(put by foundations)  q.f
-      [%.n f ~ ~ [%0 [%rama ~ ~ ~ ~ ~]]]
+      [%.n f ~ ~ [%0 [%rama ~ ~ ~ ~]]]
     ::
         %close
       =-  (show(hosts -) rama-report+!>([f a]))

@@ -44,7 +44,6 @@
       $:  folders=(jug term @ud)
           authors=(jug @p @ud)
           views=(map @ud @ud)
-          likes=(map @ud @ud)
           tags=(jug term @ud)
       ==
     +$  hari

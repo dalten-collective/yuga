@@ -54,12 +54,13 @@
     ++  store-diff
       |=  [[wen=@da flg=flag wic=@da] wat=?]
       ?.  wat
-        (frond del+(frond saved+(frond key+(numb `@ud`wen))))
+        (frond del+(frond saved+(frond key+s/(scot %ud wen))))
       =-  (frond add+(frond saved+(pairs -)))
-      :~  key+(numb `@ud`wen)
+      :~  key+s/(scot %ud wen)
           added+(sect wen)
           provider+(flap flg)
-          id+(numb `@ud`wic)
+          id+s/(scot %ud wic)
+          post-time+(sect wic)
       ==
     ::
     ++  state-0
@@ -101,10 +102,11 @@
         (bap:((on @da ,[flag @da]) gth) save)
       |=  [wen=@da wer=flag wat=@da]
       %-  pairs                                         ::  XX: note we send key
-      :~  key+(numb `@ud`wen)                            ::   because of bad time
+      :~  key+s/(scot %ud wen)                          ::   because of bad time
           added+(sect wen)                              ::   conversion to unix.
           provider+(flap wer)
-          id+(numb `@ud`wat)
+          id+s/(scot %ud wat)
+          post-time+(sect wat)
       ==
     ::
     ++  rama-only
@@ -133,11 +135,12 @@
         =-  (frond add+(frond saved+(pairs -)))
         :~  host+(ships who.action)
             name+s/fon.action
-            post+(numb id.action)
+            id+s/(scot %ud id.action)
+            post-time+(sect `@da`id.action)
         ==
       ::
           %trash
-        (frond del+(frond saved+(frond key+(numb wen.action))))
+        (frond del+(frond saved+(frond key+s/(scot %ud wen.action))))
       ==
     ::
     ++  rehydrate
@@ -149,7 +152,7 @@
         :~  host+(ships p.f)
             name+s/q.f
             subscribed+b/%.n
-            details+(foundation [f ~ ~ [%0 [%rama ~ ~ ~ ~ ~]]])
+            details+(foundation [f ~ ~ [%0 [%rama ~ ~ ~ ~]]])
         ==
       ::
         %close
