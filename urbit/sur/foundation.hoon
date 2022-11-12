@@ -131,7 +131,7 @@
           fon=term
           tit=cord
           cov=cord
-          ver=(list verse:diary)
+          ver=(list verse:diary)    :::  [%inline [<my-cord> ~]]~
           met=[%0 write:meta]
       ==
     ::  $clean - &hari-somber mark

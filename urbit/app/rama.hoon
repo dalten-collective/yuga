@@ -310,6 +310,7 @@
       %.  [p.flag q.flag wat fon.old]
       ~(put ju (~(del ju hosts) p.flag [q.flag old]))
     ::
+    ?:  =(our.bol p.flag)  dat
     =/  pat
       /hosts/(scot %p p.flag)/[q.flag]/(scot %ud wat)
     =-  (emit %pass pat %agent dok %poke -)

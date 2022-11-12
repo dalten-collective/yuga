@@ -1,22 +1,6 @@
 ::  hari - psychohistory server
 ::  by quartus, for stp
 ::
-::    notes:
-::  1. formatting should liberally utilize and inject these:
-::     https://github.com/tloncorp/landscape-apps/blob/baf391cb35d4581704024ee95a186dd40ca62a94/ui/src/types/content.ts
-::  2. diaries must exist under groups
-::  3. rough idea
-::     - create a group, add a section called term-paedia (confirm it doesn't exist)
-::     - create a diary, under the section in the group called term-paedia
-::       `join=%.y`, need image, description
-::     - create a chat, under discussion section, called general, open to all
-::  4. metrics by opt in? using rama
-::  5. poke to establish members, these are people who can post, anyone can join
-::  6. maybe members need to be per group?
-::  7. probably need sanity checker for incoming posts.
-::  8. manage transition between earthweb and urbit connected (like visor)?
-::  
-::
 /-  d=diary, g=groups, *foundation
 /+  c-j=cyclo-json, dbug, default-agent, verb
 |%
@@ -308,22 +292,22 @@
           %add-almoners
         =-  (show:- hari-seldon+!>(act))
         %-  dupe:(staff & %alm +.act)
-        [[[our.bol (cat 3 fon.act '-paedia')] act] &]
+        [[[our.bol fon.act] act] &]
       ::
           %del-almoners
         =-  (show:- hari-seldon+!>(act))
         %-  dupe:(staff | %alm +.act)
-        [[[our.bol (cat 3 fon.act '-paedia')] act] &]
+        [[[our.bol fon.act] act] &]
       ::
           %add-janitors
         =-  (show:- hari-seldon+!>(act))
         %-  dupe:(staff & %jan +.act)
-        [[[our.bol (cat 3 fon.act '-paedia')] act] &]
+        [[[our.bol fon.act] act] &]
       ::
           %del-janitors
         =-  (show:- hari-seldon+!>(act))
         %-  dupe:(staff | %jan +.act)
-        [[[our.bol (cat 3 fon.act '-paedia')] act] &]
+        [[[our.bol fon.act] act] &]
       ==
     ::
         %hari-schizo
@@ -470,7 +454,6 @@
   ++  maker
     ^+  dat
     =/  pat  /found/[fon]
-    ~&  fon
     %-  emit
     =-  [%pass pat %arvo %k %fard -]
     [%cyclo %found %noun !>([bol fon])]
@@ -494,7 +477,6 @@
     =.  foundations
       %-  ~(put by foundations)
       [fon [our.bol fon] ~ ~ [%0 %hari [~ ~ ~ ~] [~ ~]]]
-    ~&  >>>  foundations
     maker
   ::  +check: test for existence of group
   ::
