@@ -8,7 +8,7 @@
   +*  nam  (cat 3 fon '-paedia')
       des  (cat 3 nam ' Foundation')
       flg  [our.bol fon]
-      cul  (scot %ux `@ux`(shaw our.bol 24 fon))
+      cul  (scot %ux `@ux`(shaw our.bol 25 fon))
   ::  +col: a random color generator
   ::
   ++  col
