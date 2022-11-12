@@ -498,7 +498,7 @@
       =-  (metas:view:(show(hosts -) rama-report+!>([f a])) w)
       %+  ~(put by hosts)  p.f
       %+  ~(put by foundations)  q.f
-      [%.n f ~ ~ [%0 [%rama ~ ~ ~ ~]]]
+      [?:(=(our.bol w) %.y %.n) f ~ ~ [%0 [%rama ~ ~ ~ ~]]]
     ::
         %close
       =-  (show(hosts -) rama-report+!>([f a]))
