@@ -5,6 +5,7 @@
 ++  grow
   |%
   ++  noun  host
+  ++  json  (admin:hari:enjs:c-j host)
   --
 ++  grab
   |%
