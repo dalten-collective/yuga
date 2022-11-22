@@ -271,7 +271,16 @@
       |=  =admin:actions:hari:f
       ^-  json
       ?-    -.admin
-        %found  (frond add+(frond name+s/fon.admin))
+          %found
+        %+  frond  %add
+        :~  name+s/fon.admin
+            almoners+a/~
+            janitors+a/~
+        ::
+            :-  %metadata
+            %-  hari-state:meta
+            [%0 %hari [~ ~ ~ ~] ~ ~]
+        ==
         %close  (frond rem+(frond name+s/fon.admin))
       ::
           %add-almoners
