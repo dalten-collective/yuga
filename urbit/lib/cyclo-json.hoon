@@ -273,6 +273,7 @@
       ?-    -.admin
           %found
         %+  frond  %add
+        %-  pairs
         :~  name+s/fon.admin
             almoners+a/~
             janitors+a/~
@@ -281,6 +282,7 @@
             %-  hari-state:meta
             [%0 %hari [~ ~ ~ ~] ~ ~]
         ==
+      ::
         %close  (frond rem+(frond name+s/fon.admin))
       ::
           %add-almoners
