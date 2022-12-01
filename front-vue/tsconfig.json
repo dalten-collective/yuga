@@ -27,7 +27,8 @@
     "paths": {
       "@/*": [
         "src/types/*",
-        "src/*"
+        "src/*",
+        "src/store/*"
       ]
     },
     "lib": [

@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import { Foundation, Provider } from '../types';
 import { computed } from 'vue';
-import { useStore } from 'vuex';
+import { useStore } from '../store/store';
 
 interface Props {
   provider: Provider
@@ -15,11 +15,7 @@ interface Props {
 const props = defineProps<Props>()
 const store = useStore()
 
-const getFoundation = (provider: Provider): Foundation => {
-  return store.getters["foundationStore/foundationByProvider"](provider)
-}
-
-const foundation = computed(() => getFoundation(props.provider))
-
+const foundation = computed(() => store.getters.foundationByProvider(props.provider))
+console.log('found ', props.provider, foundation)
 </script>
 

@@ -1,0 +1,4 @@
+export enum MutationTypes {
+  FOUNDATIONS_SET = 'FOUNDATIONS_SET',
+  FOUNDATIONS_ADD = 'FOUNDATIONS_ADD',
+}

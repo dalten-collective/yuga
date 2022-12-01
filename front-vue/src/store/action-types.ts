@@ -1,0 +1,4 @@
+export enum ActionTypes {
+  FOUNDATION_SET = 'FOUNDATION_SET',
+  FOUNDATION_ADD = 'FOUNDATION_ADD',
+}
