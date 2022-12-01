@@ -11,41 +11,33 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { computed, onMounted, onUnmounted } from 'vue';
 import AddAlmoners from '@/components/AddAlmoners.vue'
 import Foundation from '@/components/Foundation.vue'
 import NewFoundationForm from '@/components/NewFoundationForm.vue'
 
-import { mapState } from 'vuex';
+import { useStore } from '@/store/store'
+import {ActionTypes} from '@/store/action-types';
 
-export default defineComponent({
-  mounted() {
-    const deskname = "hari"
-    this.startAirlock(deskname);
-  },
-  unmounted() {
-    this.closeAirlocks();
-  },
+const store = useStore()
 
-  computed: {
-    ...mapState("foundationStore", ["foundations"])
-  },
+onMounted(() => {
+  startAirlock(deskname)
+})
 
-  methods: {
-    startAirlock(deskname: string) {
-      this.$store.dispatch("ship/openAirlockToAgent", deskname);
-    },
-    closeAirlocks() {
-      this.$store.dispatch("ship/closeAgentAirlocks");
-    },
-  },
+const deskname = "hari"
+const foundations = computed(() => store.state.foundations)
 
-  components: {
-    AddAlmoners,
-    Foundation,
-    NewFoundationForm,
-  }
+const startAirlock = (deskname: string) => {
+  store.dispatch(ActionTypes.AIRLOCK_OPEN, deskname)
+}
+const closeAirlocks = () => {
+  store.dispatch(ActionTypes.AIRLOCK_CLOSE);
+}
+
+onUnmounted(() => {
+  closeAirlocks()
 })
 </script>
 
