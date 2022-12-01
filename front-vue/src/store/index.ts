@@ -1,7 +1,7 @@
 import { createStore as createVuexStore } from "vuex";
 
-import ship from "./ship";
-import foundationStore from "./foundationStore";
+import ship from "@/store/ship";
+import foundationStore from "@/store/foundationStore";
 
 export const createStore = () => {
   return createVuexStore({

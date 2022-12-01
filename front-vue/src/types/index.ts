@@ -1,4 +1,9 @@
-export type Ship = `~${ string }`
+export interface AgentSubscription {
+  agentName: string;
+  subscriptionNumber: number;
+};
+
+export type Ship = `~${ string }` | null
 export type FoundationName = string
 export type Provider = `${ Ship }/${ FoundationName }`
 
@@ -22,6 +27,19 @@ export interface Foundation {
   janitors: Array<any>; // TODO
 }
 
+export interface StateFoundation {
+  foundation: Foundation;
+  name: FoundationName;
+}
+
+export interface FoundationWithName {
+  provider: Provider;
+  metadata: Metadata;
+  almoners: Array<any>; // TODO
+  janitors: Array<any>; // TODO
+  name?: FoundationName;
+}
+
 //// Responses
 
 export interface InitialStateResponse {
@@ -31,4 +49,29 @@ export interface InitialStateResponse {
       name: FoundationName
     }>
   }
+}
+
+export interface AddFoundationResponse {
+  add: FoundationWithName
+}
+
+export interface NameAndAlmoners {
+  name: FoundationName;
+  almoners: Array<Ship>;
+}
+
+export interface AddAlmonersResponse {
+  add: NameAndAlmoners;
+}
+
+export type GallResponse = InitialStateResponse | AddFoundationResponse | AddAlmonersResponse
+
+export const IsInitialStateResponse = (r: GallResponse): r is InitialStateResponse => {
+  return ('put' in r)
+}
+export const IsAddFoundationResponse = (r: GallResponse): r is AddFoundationResponse => {
+  return ('add' in r)
+}
+export const IsAddAlmonersResponse = (r: GallResponse): r is AddAlmonersResponse => {
+  return (('add' in r) && 'almoners' in r.add)
 }

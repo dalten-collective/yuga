@@ -1,29 +1,27 @@
 import airlock from "../api";
 
-import {
-  AgentSubscription, InitialStateResponse,
-} from "@/types";
+import * as T from "@/types"
 
 export default {
   namespaced: true,
   state() {
     return {
-      subscriptions: [] as Array<AgentSubscription>,
+      subscriptions: [] as Array<T.AgentSubscription>,
     };
   },
 
   getters: {
-    agentSubscriptions(state): Array<AgentSubscription> | [] {
+    agentSubscriptions(state): Array<T.AgentSubscription> | [] {
       return state.subscriptions
     },
   },
 
   mutations: {
-    addSubscription(state, payload: AgentSubscription) {
+    addSubscription(state, payload: T.AgentSubscription) {
       state.subscriptions.push(payload);
     },
 
-    unsetSubscription(state, subscription: AgentSubscription) {
+    unsetSubscription(state, subscription: T.AgentSubscription) {
       const sub = state.subscriptions.find((s) => s === subscription);
       state.subscriptions = state.subscriptions.filter((s) => s != sub);
     },
@@ -33,11 +31,17 @@ export default {
     openAirlockToAgent(ctx, agentName: string) {
       airlock.openAirlockTo(
         agentName,
-        (data: InitialStateResponse) => {
+        (data: T.GallResponse) => {
           console.log("agentName ", agentName);
           console.log("response ", data);
-          if ('put' in data) {
+          if (T.IsInitialStateResponse(data)) {
             ctx.dispatch("foundationStore/setFoundations", data.put.foundations, { root: true })
+          }
+          if (T.IsAddFoundationResponse(data)) {
+            ctx.dispatch("foundationStore/addFoundation", data.add, { root: true })
+          }
+          if (T.IsAddAlmonersResponse(data)) {
+            ctx.dispatch("foundationStore/addAlmoners", data.add as T.NameAndAlmoners, { root: true })
           }
         },
         (subscriptionNumber: number) => {
@@ -45,19 +49,19 @@ export default {
           ctx.dispatch("addSubscription", {
             agentName,
             subscriptionNumber,
-          } as AgentSubscription);
+          } as T.AgentSubscription);
         }
       );
     },
 
-    removeSubscription({ commit }, subscription: AgentSubscription) {
+    removeSubscription({ commit }, subscription: T.AgentSubscription) {
       commit("unsetSubscription", subscription);
     },
 
-    addSubscription({ state, commit, dispatch }, payload: AgentSubscription) {
+    addSubscription({ state, commit, dispatch }, payload: T.AgentSubscription) {
       const existing:
-        | Array<AgentSubscription>
-        | [] = state.subscriptions.filter((s: AgentSubscription) => {
+        | Array<T.AgentSubscription>
+        | [] = state.subscriptions.filter((s: T.AgentSubscription) => {
         return s.agentName === payload.agentName;
       });
       existing.forEach((sub) => {
@@ -67,7 +71,7 @@ export default {
     },
 
     closeAgentAirlocks({ commit, getters }) {
-      const agentSubscriptions: Array<AgentSubscription> | [] =
+      const agentSubscriptions: Array<T.AgentSubscription> | [] =
         getters.agentSubscriptions;
       agentSubscriptions.forEach((sub) => {
         airlock.closeAirlock(sub.subscriptionNumber, [

@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { Foundation, Provider } from '../types';
-import { computed, defineProps } from 'vue';
+import { computed } from 'vue';
 import { useStore } from 'vuex';
 
 interface Props {
