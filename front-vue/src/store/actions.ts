@@ -42,35 +42,33 @@ export interface Actions {
     { commit }: AugmentedActionContext,
     payload: T.FoundationWithName
   ): void;
+  [ActionTypes.ALMONERS_ADD](
+    { commit }: AugmentedActionContext,
+    payload: T.NameAndAlmoners
+  ): void;
 }
 
 export const actions: ActionTree<State, State> & Actions = {
-  [ActionTypes.AIRLOCK_CLOSE]( { commit, getters }) {
-    const agentSubscriptions: Array<T.AgentSubscription> | [] =
-      getters.agentSubscriptions;
-    agentSubscriptions.forEach((sub) => {
-      airlock.closeAirlock(sub.subscriptionNumber, [
-        commit(MutationTypes.SUBSCRIPTION_REMOVE, sub),
-      ]);
-    });
-  },
   [ActionTypes.AIRLOCK_OPEN]({ commit, dispatch }, payload: string) {
     const agentName = payload;
     airlock.openAirlockTo(
       agentName,
+
+      // Main all-responses-handler
       (data: T.GallResponse) => {
         console.log("agentName ", agentName);
         console.log("response ", data);
         if (T.IsInitialStateResponse(data)) {
-          dispatch(ActionTypes.FOUNDATION_SET, data.put.foundations);
+          dispatch(ActionTypes.FOUNDATION_SET, data.put.foundations as Array<T.StateFoundation>);
         }
         if (T.IsAddFoundationResponse(data)) {
-          dispatch(ActionTypes.FOUNDATION_ADD, data.add);
+          dispatch(ActionTypes.FOUNDATION_ADD, data.add as T.FoundationWithName);
         }
-        //if (T.IsAddAlmonersResponse(data)) {
-        //  ctx.dispatch("foundationStore/addAlmoners", data.add as T.NameAndAlmoners, { root: true })
-        //}
+        if (T.IsAddAlmonersResponse(data)) {
+          dispatch(ActionTypes.ALMONERS_ADD, data.add as T.NameAndAlmoners)
+        }
       },
+
       (subscriptionNumber: number) => {
         console.log("got subscription number ", subscriptionNumber);
         dispatch(ActionTypes.SUBSCRIPTION_ADD, {
@@ -80,6 +78,19 @@ export const actions: ActionTree<State, State> & Actions = {
       }
     );
   },
+
+  [ActionTypes.AIRLOCK_CLOSE]( { commit, getters }) {
+    const agentSubscriptions: Array<T.AgentSubscription> | [] =
+      getters.agentSubscriptions;
+    agentSubscriptions.forEach((sub) => {
+      airlock.closeAirlock(sub.subscriptionNumber, [
+        commit(MutationTypes.SUBSCRIPTION_REMOVE, sub),
+      ]);
+    });
+  },
+
+  //// Subscriptions
+
   [ActionTypes.SUBSCRIPTION_ADD](
     { state, commit, dispatch },
     payload: T.AgentSubscription
@@ -94,6 +105,9 @@ export const actions: ActionTree<State, State> & Actions = {
     });
     commit(MutationTypes.SUBSCRIPTION_REMOVE, payload);
   },
+
+  //// Foundations
+
   [ActionTypes.FOUNDATION_SET](
     { commit },
     foundations: Array<T.StateFoundation>
@@ -105,6 +119,23 @@ export const actions: ActionTree<State, State> & Actions = {
     { commit },
     foundation: T.FoundationWithName
   ) {
-    commit(MutationTypes.FOUNDATIONS_ADD, foundation);
+    let temp = foundation
+    let foundName = temp.name
+    let {name, ...otherFields} = temp
+    let newFoundation: T.Foundation = temp
+    const toAdd = {
+      foundation: newFoundation,
+      name: foundName
+    } as T.StateFoundation
+    commit(MutationTypes.FOUNDATIONS_ADD, toAdd)
+  },
+
+  //// Almoners
+
+  [ActionTypes.ALMONERS_ADD](
+    { commit },
+    payload: T.NameAndAlmoners
+  ) {
+    commit(MutationTypes.ALMONERS_ADD, payload)
   },
 };

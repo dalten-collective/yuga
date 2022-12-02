@@ -16,6 +16,8 @@ import { defineProps, ref } from 'vue';
 import * as T from '@/types'
 import * as fAPI from "@/api/foundationAPI";
 
+import { sigShip } from "@/helpers";
+
 interface Props {
   foundation: StateFoundation
 }
@@ -23,13 +25,6 @@ const props = defineProps<Props>()
 // const store = useStore()
 
 const newAlmoners = ref('')
-
-const sigShip = (ship: string): T.Ship => {
-  if (ship[0] === "~") {
-    return ship as T.Ship;
-  }
-  return `~${ship}`;
-}
 
 const addAlmoners = () => {
   if (newAlmoners.value === '') {

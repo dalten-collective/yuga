@@ -40,14 +40,11 @@ export interface FoundationWithName {
   name?: FoundationName;
 }
 
-//// Responses
+//// Response types
 
 export interface InitialStateResponse {
   put: {
-    foundations: Array<{
-      foundation: Foundation;
-      name: FoundationName
-    }>
+    foundations: Array<StateFoundation>
   }
 }
 
@@ -64,14 +61,21 @@ export interface AddAlmonersResponse {
   add: NameAndAlmoners;
 }
 
+// Response identifiers
+
 export type GallResponse = InitialStateResponse | AddFoundationResponse | AddAlmonersResponse
 
-export const IsInitialStateResponse = (r: GallResponse): r is InitialStateResponse => {
+export const IsInitialStateResponse = (r: GallResponse):
+  r is InitialStateResponse => {
   return ('put' in r)
 }
-export const IsAddFoundationResponse = (r: GallResponse): r is AddFoundationResponse => {
-  return ('add' in r)
+
+export const IsAddFoundationResponse = (r: GallResponse):
+r is AddFoundationResponse => {
+  return (('add' in r) && !('almoners' in r.add))
 }
-export const IsAddAlmonersResponse = (r: GallResponse): r is AddAlmonersResponse => {
+
+export const IsAddAlmonersResponse = (r: GallResponse):
+r is AddAlmonersResponse => {
   return (('add' in r) && 'almoners' in r.add)
 }

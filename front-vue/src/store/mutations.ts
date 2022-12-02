@@ -2,6 +2,7 @@ import { MutationTree } from "vuex";
 import { MutationTypes } from "./mutation-types";
 import { State } from "./state";
 import * as T from "@/types";
+import { sigShip } from "@/helpers"
 
 export type Mutations<S = State> = {
   [MutationTypes.FOUNDATIONS_SET](
@@ -10,8 +11,14 @@ export type Mutations<S = State> = {
   ): void;
   [MutationTypes.FOUNDATIONS_ADD](
     state: S,
-    payload: T.Foundation
+    payload: T.StateFoundation
   ): void;
+
+  [MutationTypes.ALMONERS_ADD](
+    state: S,
+    payload: T.NameAndAlmoners
+  ): void;
+
   [MutationTypes.SUBSCRIPTION_ADD](
     state: S,
     payload: T.AgentSubscription
@@ -29,9 +36,21 @@ export const mutations: MutationTree<State> & Mutations = {
   ) {
     state.foundations = payload;
   },
-  [MutationTypes.FOUNDATIONS_ADD](state, payload: T.Foundation) {
+  [MutationTypes.FOUNDATIONS_ADD](state, payload: T.StateFoundation) {
     state.foundations = state.foundations.concat(payload);
   },
+
+  [MutationTypes.ALMONERS_ADD](state, payload: T.NameAndAlmoners) {
+    const haveFoundation = state.foundations.find((sf: T.StateFoundation) => {
+      return sf.name === payload.name
+    })
+    if (!haveFoundation) {
+      return
+    }
+
+    haveFoundation.foundation.almoners.push(...payload.almoners.map(ship => sigShip(ship)))
+  },
+
   [MutationTypes.SUBSCRIPTION_ADD](
     state,
     payload: T.AgentSubscription
