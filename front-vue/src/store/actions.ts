@@ -34,6 +34,7 @@ export interface Actions {
     { commit }: AugmentedActionContext,
     payload: T.AgentSubscription
   ): void;
+
   [ActionTypes.FOUNDATION_SET](
     { commit }: AugmentedActionContext,
     payload: Array<T.StateFoundation>
@@ -42,9 +43,15 @@ export interface Actions {
     { commit }: AugmentedActionContext,
     payload: T.FoundationWithName
   ): void;
+
   [ActionTypes.ALMONERS_ADD](
     { commit }: AugmentedActionContext,
     payload: T.NameAndAlmoners
+  ): void;
+
+  [ActionTypes.JANITORS_ADD](
+    { commit }: AugmentedActionContext,
+    payload: T.NameAndJanitors
   ): void;
 }
 
@@ -66,6 +73,10 @@ export const actions: ActionTree<State, State> & Actions = {
         }
         if (T.IsAddAlmonersResponse(data)) {
           dispatch(ActionTypes.ALMONERS_ADD, data.add as T.NameAndAlmoners)
+        }
+
+        if (T.IsAddJanitorsResponse(data)) {
+          dispatch(ActionTypes.JANITORS_ADD, data.add as T.NameAndJanitors)
         }
       },
 
@@ -137,5 +148,14 @@ export const actions: ActionTree<State, State> & Actions = {
     payload: T.NameAndAlmoners
   ) {
     commit(MutationTypes.ALMONERS_ADD, payload)
+  },
+
+  //// Janitors
+
+  [ActionTypes.JANITORS_ADD](
+    { commit },
+    payload: T.NameAndJanitors
+  ) {
+    commit(MutationTypes.JANITORS_ADD, payload)
   },
 };

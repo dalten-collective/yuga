@@ -61,9 +61,18 @@ export interface AddAlmonersResponse {
   add: NameAndAlmoners;
 }
 
+export interface NameAndJanitors {
+  name: FoundationName;
+  janitors: Array<Ship>;
+}
+
+export interface AddJanitorsResponse {
+  add: NameAndJanitors;
+}
+
 // Response identifiers
 
-export type GallResponse = InitialStateResponse | AddFoundationResponse | AddAlmonersResponse
+export type GallResponse = InitialStateResponse | AddFoundationResponse | AddAlmonersResponse | AddJanitorsResponse
 
 export const IsInitialStateResponse = (r: GallResponse):
   r is InitialStateResponse => {
@@ -72,10 +81,15 @@ export const IsInitialStateResponse = (r: GallResponse):
 
 export const IsAddFoundationResponse = (r: GallResponse):
 r is AddFoundationResponse => {
-  return (('add' in r) && !('almoners' in r.add))
+  return (('add' in r) && ('metadata' in r.add))
 }
 
 export const IsAddAlmonersResponse = (r: GallResponse):
 r is AddAlmonersResponse => {
   return (('add' in r) && 'almoners' in r.add)
+}
+
+export const IsAddJanitorsResponse = (r: GallResponse):
+r is AddJanitorsResponse => {
+  return (('add' in r) && 'janitors' in r.add)
 }

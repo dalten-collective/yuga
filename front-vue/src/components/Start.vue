@@ -4,6 +4,7 @@
       <div v-for="f in foundations" :key="f.foundation.provider">
         <Foundation :provider="f.foundation.provider" :key="f.foundation.provider" />
         <AddAlmoners :foundation="f" />
+        <AddJanitors :foundation="f" />
       </div>
     </div>
 
@@ -14,6 +15,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted } from 'vue';
 import AddAlmoners from '@/components/AddAlmoners.vue'
+import AddJanitors from '@/components/AddJanitors.vue'
 import Foundation from '@/components/Foundation.vue'
 import NewFoundationForm from '@/components/NewFoundationForm.vue'
 
