@@ -5,6 +5,7 @@ import { Mutations } from "./mutations";
 import { ActionTypes } from "./action-types";
 import { MutationTypes } from "./mutation-types";
 import * as T from "@/types";
+import * as R from "@/types/rama-types";
 import airlock from "@/api";
 
 type AugmentedActionContext = {
@@ -28,7 +29,8 @@ export interface Actions {
     payload: string
   ): void;
   [ActionTypes.AIRLOCK_CLOSE](
-    { commit, getters }: AugmentedActionContext
+    { commit, getters }: AugmentedActionContext,
+    payload: T.AgentSubscription | null
   ): void;
   [ActionTypes.SUBSCRIPTION_ADD](
     { commit }: AugmentedActionContext,
@@ -53,6 +55,11 @@ export interface Actions {
     { commit }: AugmentedActionContext,
     payload: T.NameAndJanitors
   ): void;
+
+  [ActionTypes.TAG_ADD](
+    { commit }: AugmentedActionContext,
+    payload: T.NameAndTag
+  ): void;
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -64,19 +71,32 @@ export const actions: ActionTree<State, State> & Actions = {
       // Main all-responses-handler
       (data: T.GallResponse) => {
         console.log("agentName ", agentName);
-        console.log("response ", data);
-        if (T.IsInitialStateResponse(data)) {
-          dispatch(ActionTypes.FOUNDATION_SET, data.put.foundations as Array<T.StateFoundation>);
-        }
-        if (T.IsAddFoundationResponse(data)) {
-          dispatch(ActionTypes.FOUNDATION_ADD, data.add as T.FoundationWithName);
-        }
-        if (T.IsAddAlmonersResponse(data)) {
-          dispatch(ActionTypes.ALMONERS_ADD, data.add as T.NameAndAlmoners)
+        if (agentName === 'hari') {
+          console.log("hari response ", data);
+          if (T.IsInitialStateResponse(data)) {
+            dispatch(ActionTypes.FOUNDATION_SET, data.put.foundations as Array<T.StateFoundation>);
+          }
+          if (T.IsAddFoundationResponse(data)) {
+            dispatch(ActionTypes.FOUNDATION_ADD, data.add as T.FoundationWithName);
+          }
+          if (T.IsAddAlmonersResponse(data)) {
+            dispatch(ActionTypes.ALMONERS_ADD, data.add as T.NameAndAlmoners)
+          }
+
+          if (T.IsAddJanitorsResponse(data)) {
+            dispatch(ActionTypes.JANITORS_ADD, data.add as T.NameAndJanitors)
+          }
+
+          if (T.IsAddTagResponse(data)) {
+            dispatch(ActionTypes.TAG_ADD, data.add as T.NameAndTag)
+          }
         }
 
-        if (T.IsAddJanitorsResponse(data)) {
-          dispatch(ActionTypes.JANITORS_ADD, data.add as T.NameAndJanitors)
+        if (agentName === 'rama') {
+          console.log("rama response ", data);
+          if (R.IsInitialStateResponse(data)) {
+            console.log('got an r')
+          }
         }
       },
 
@@ -90,14 +110,22 @@ export const actions: ActionTree<State, State> & Actions = {
     );
   },
 
-  [ActionTypes.AIRLOCK_CLOSE]( { commit, getters }) {
-    const agentSubscriptions: Array<T.AgentSubscription> | [] =
-      getters.agentSubscriptions;
-    agentSubscriptions.forEach((sub) => {
-      airlock.closeAirlock(sub.subscriptionNumber, [
-        commit(MutationTypes.SUBSCRIPTION_REMOVE, sub),
-      ]);
-    });
+  [ActionTypes.AIRLOCK_CLOSE](
+    { commit, getters },
+    sub: T.AgentSubscription | null
+  ) {
+    console.log('closing airlock ', sub)
+    if (sub) {
+      const agentSubscriptions: Array<T.AgentSubscription> | [] =
+        getters.agentSubscriptions;
+      agentSubscriptions.forEach((sub) => {
+        airlock.closeAirlock(sub.subscriptionNumber, [
+          commit(MutationTypes.SUBSCRIPTION_REMOVE, sub)
+        ]);
+      });
+    } else {
+      commit(MutationTypes.SUBSCRIPTION_REMOVE, null)
+    }
   },
 
   //// Subscriptions
@@ -112,9 +140,9 @@ export const actions: ActionTree<State, State> & Actions = {
       return s.agentName === payload.agentName;
     });
     existing.forEach((sub) => {
-      dispatch(ActionTypes.SUBSCRIPTION_REMOVE, sub);
+      dispatch(MutationTypes.SUBSCRIPTION_REMOVE, sub);
     });
-    commit(MutationTypes.SUBSCRIPTION_REMOVE, payload);
+    commit(MutationTypes.SUBSCRIPTION_ADD, payload);
   },
 
   //// Foundations
@@ -157,5 +185,14 @@ export const actions: ActionTree<State, State> & Actions = {
     payload: T.NameAndJanitors
   ) {
     commit(MutationTypes.JANITORS_ADD, payload)
+  },
+
+  //// Tags
+
+  [ActionTypes.TAG_ADD](
+    { commit },
+    payload: T.NameAndTag
+  ) {
+    commit(MutationTypes.TAG_ADD, payload)
   },
 };

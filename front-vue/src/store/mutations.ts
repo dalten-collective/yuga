@@ -24,13 +24,18 @@ export type Mutations<S = State> = {
     payload: T.NameAndJanitors
   ): void;
 
+  [MutationTypes.TAG_ADD](
+    state: S,
+    payload: T.NameAndTag
+  ): void;
+
   [MutationTypes.SUBSCRIPTION_ADD](
     state: S,
     payload: T.AgentSubscription
   ): void;
   [MutationTypes.SUBSCRIPTION_REMOVE](
     state: S,
-    payload: T.AgentSubscription
+    payload: T.AgentSubscription | null
   ): void;
 };
 
@@ -67,17 +72,26 @@ export const mutations: MutationTree<State> & Mutations = {
     haveFoundation.foundation.janitors.push(...payload.janitors.map(ship => sigShip(ship)))
   },
 
+  [MutationTypes.TAG_ADD](state, payload: T.NameAndTag) {
+    // TODO:
+  },
+
   [MutationTypes.SUBSCRIPTION_ADD](
     state,
     payload: T.AgentSubscription
   ) {
-    state.subscriptions.push(payload);
+    state.subscriptions.push(payload)
   },
+
   [MutationTypes.SUBSCRIPTION_REMOVE](
     state,
-    payload: T.AgentSubscription
+    payload: T.AgentSubscription | null
   ) {
-    const sub = state.subscriptions.find((s) => s === payload);
-    state.subscriptions = state.subscriptions.filter((s) => s != sub);
+    if (payload === null) {
+      state.subscriptions = []
+    } else {
+      const sub = state.subscriptions.find((s) => s === payload);
+      state.subscriptions = state.subscriptions.filter((s) => s != sub);
+    }
   },
 };

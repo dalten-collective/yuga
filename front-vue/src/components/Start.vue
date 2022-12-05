@@ -5,9 +5,12 @@
         <Foundation :provider="f.foundation.provider" :key="f.foundation.provider" />
         <AddAlmoners :foundation="f" />
         <AddJanitors :foundation="f" />
+        <AddTag :foundation="f" />
+        <AddFolder :foundation="f" />
       </div>
     </div>
 
+    <button @click="closeAirlocks">close</button>
     <NewFoundationForm />
   </div>
 </template>
@@ -16,6 +19,8 @@
 import { computed, onMounted, onUnmounted } from 'vue';
 import AddAlmoners from '@/components/AddAlmoners.vue'
 import AddJanitors from '@/components/AddJanitors.vue'
+import AddTag from '@/components/AddTag.vue'
+import AddFolder from '@/components/AddFolder.vue'
 import Foundation from '@/components/Foundation.vue'
 import NewFoundationForm from '@/components/NewFoundationForm.vue'
 
@@ -25,16 +30,17 @@ import {ActionTypes} from '@/store/action-types';
 const store = useStore()
 
 onMounted(() => {
-  startAirlock(deskname)
+  startAirlock("hari")
+  startAirlock("rama")
 })
 
-const deskname = "hari"
 const foundations = computed(() => store.state.foundations)
 
 const startAirlock = (deskname: string) => {
   store.dispatch(ActionTypes.AIRLOCK_OPEN, deskname)
 }
 const closeAirlocks = () => {
+  console.log('closing...')
   store.dispatch(ActionTypes.AIRLOCK_CLOSE);
 }
 

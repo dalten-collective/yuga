@@ -1,6 +1,8 @@
 import urbitAPI from "./urbitAPI";
-const ADMIN_MARK = 'hari-seldon'
 import * as T from '@/types';
+
+const ADMIN_MARK = 'hari-seldon'
+const META_ADMIN_MARK = 'meta-admin'
 
 export function createFoundation(
   prefix: string
@@ -51,6 +53,48 @@ export function addJanitors(
       "add-janitors": {
         fon: args.prefix,
         who: args.ships
+      },
+    },
+  }).then((r) => {
+    return r
+  })
+}
+
+export function addTag(
+  args: {
+    prefix: T.FoundationName,
+    tag: string,
+  }
+) {
+  urbitAPI.poke({
+    app: 'hari',
+    mark: META_ADMIN_MARK,
+    json: {
+      "tag": {
+        fon: args.prefix,
+        tag: args.tag,
+        wat: true
+      },
+    },
+  }).then((r) => {
+    return r
+  })
+}
+
+export function addFolder(
+  args: {
+    prefix: T.FoundationName,
+    folder: string,
+  }
+) {
+  urbitAPI.poke({
+    app: 'hari',
+    mark: META_ADMIN_MARK,
+    json: {
+      "folder": {
+        fon: args.prefix,
+        folder: args.folder,
+        wat: true
       },
     },
   }).then((r) => {

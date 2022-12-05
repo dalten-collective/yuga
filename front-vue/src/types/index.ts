@@ -7,24 +7,43 @@ export type Ship = `~${ string }` | null
 export type FoundationName = string
 export type Provider = `${ Ship }/${ FoundationName }`
 
+export type Post = string;  // TODO:
+
+export type AuthorsMeta = Array<{
+  author: Ship;
+  posts: Array<Post>;
+}>
+export type FoldersMeta = Array<{
+  folder: string;
+  posts: Array<Post>;
+}>
+export type TagsMeta = Array<{
+  tag: string;
+  posts: Array<Post>;
+}>
+export type ViewsMeta = Array<{
+  post: string;
+  views: number;
+}>
+
 export interface Metadata {
   public: {
-    authors: Array<string>;
-    folders: Array<string>;
-    tags:    Array<string>;
-    views:   Array<any>;    // TODO
+    authors: AuthorsMeta;
+    folders: FoldersMeta;
+    tags: TagsMeta;
+    views: ViewsMeta;
   }
   secret: {
-    "proposed-tags": Array<any>; // TODO
-    "unique-views":  Array<any>; // TODO
+    "proposed-tags": Array<string>;
+    "unique-views":  number;  // TODO: true? or an array?
   }
 }
 
 export interface Foundation {
   provider: Provider;
   metadata: Metadata;
-  almoners: Array<any>; // TODO
-  janitors: Array<any>; // TODO
+  almoners: Array<Ship>;
+  janitors: Array<Ship>;
 }
 
 export interface StateFoundation {
@@ -35,8 +54,8 @@ export interface StateFoundation {
 export interface FoundationWithName {
   provider: Provider;
   metadata: Metadata;
-  almoners: Array<any>; // TODO
-  janitors: Array<any>; // TODO
+  almoners: Array<Ship>;
+  janitors: Array<Ship>;
   name?: FoundationName;
 }
 
@@ -70,9 +89,22 @@ export interface AddJanitorsResponse {
   add: NameAndJanitors;
 }
 
+export interface NameAndTag {
+  name: FoundationName;
+  tag: string;
+}
+
+export interface AddTagResponse {
+  add: NameAndTag;
+}
+
 // Response identifiers
 
-export type GallResponse = InitialStateResponse | AddFoundationResponse | AddAlmonersResponse | AddJanitorsResponse
+export type GallResponse = InitialStateResponse |
+  AddFoundationResponse |
+  AddAlmonersResponse |
+  AddJanitorsResponse |
+  AddTagResponse
 
 export const IsInitialStateResponse = (r: GallResponse):
   r is InitialStateResponse => {
@@ -92,4 +124,9 @@ r is AddAlmonersResponse => {
 export const IsAddJanitorsResponse = (r: GallResponse):
 r is AddJanitorsResponse => {
   return (('add' in r) && 'janitors' in r.add)
+}
+
+export const IsAddTagResponse = (r: GallResponse):
+r is AddTagResponse => {
+  return (('add' in r) && 'tag' in r.add)
 }

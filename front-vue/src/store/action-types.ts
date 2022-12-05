@@ -11,4 +11,6 @@ export enum ActionTypes {
   ALMONERS_ADD = 'ALMONERS_ADD',
 
   JANITORS_ADD = 'JANITORS_ADD',
+
+  TAG_ADD = 'TAG_ADD',
 }
