@@ -5,6 +5,13 @@
 ++  enjs
   =,  enjs:format
   |%
+  ++  said
+    |=  s=said:d
+    ^-  json
+    %-  pairs
+    :~  flag/(flag p.s)
+        outline/(outline q.s)
+    ==
   ++  outline
     |=  o=outline:d
     %-  pairs
@@ -194,6 +201,8 @@
     ?-  -.i
         %break
       ~
+    ::
+        %ship  s/(scot %p p.i)
     ::
         ?(%code %tag %inline-code)
       s+p.i

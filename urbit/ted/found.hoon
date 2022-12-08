@@ -1,34 +1,42 @@
 /-  spider, g=groups, d=diary
-/+  *strandio
+/+  *strandio, c=color
 =,  strand=strand:spider
 =>
 |%
 ++  make
   |_  [bol=bowl:gall fon=term]
-  +*  nam  (cat 3 fon '-paedia')
-      des  (cat 3 nam ' Foundation')
+  +*  nam  `@t`(cat 3 fon '-paedia')
+      des  `@t`(cat 3 nam ' Foundation')
       flg  [our.bol fon]
-      cul  (scot %ux `@ux`(shaw our.bol 25 fon))
-  ::  +col: a random color generator
+      cul  `@ux`(shaw our.bol 25 fon)
+  ::  +lor: a random color generator
   ::
-  ++  col
-    ^-  cord
-    =-  (crip ['#' (welp -)])
-    %+  rash
-      cul
-    ;~((glue dot) ;~(pfix (jest '0x') (star aln)) (star aln))
+  ++  lor
+    ^-  [hot=cord not=cord]
+    =+  hsl=`get:c`lo-abet:(lo-abed:color:c hex+cul %hsl)
+    =;  [a=get:c b=get:c]
+      ?>(&(?=(%web -.a) ?=(%web -.b)) [+.a +.b])
+    :-  lo-abet:(lo-abed:color:c hsl %web)
+    ?>  ?=([%hsl [h=@rd s=@rd l=@rd]] hsl)
+    ?:  (gth:rd .~0.5 s.hsl)
+      =+  sat=`@rd`(add:rd .~0.3 s.hsl)
+      lo-abet:(lo-sats:(lo-abed:color:c hsl %web) sat)
+    ~&  >  [s.hsl hsl(s .~10.1)]
+    =+  sat=`@rd`(sub s.hsl .~0.3)
+    lo-abet:(lo-sats:(lo-abed:color:c hsl %web) sat)
   ::
   ++  group
+    ~&  >>  now.bol
     ^-  cage
     :-  %group-create
     !>  ^-  create:g
-    [fon des '' col col [%open ~ ~] ~]
+    [fon nam des hot:lor not:lor [%open ~ ~] ~ %|]
   ::
   ++  zone
     ^-  cage
-    :-  %group-action
+    :-  %group-action-0
     !>  ^-  action:g
-    [flg now.bol %zone nam %add nam des col col]
+    [flg now.bol %zone nam %add nam des hot:lor not:lor]
   ::
   ++  diary
     ^-  cage
@@ -66,7 +74,9 @@
 ;<  ~  bind:m  (gro zone:mak)
 ;<  ~  bind:m  (not diary:mak)
 ::
-;<  ~  bind:m  (sleep ~s1)
-;<  ~  bind:m  (gro section:mak)
-;<  ~  bind:m  (gro default:mak)
+;<  ~       bind:m  (sleep ~s1)
+;<  nu=@da  bind:m  get-time
+=.  now.dish.details  nu
+;<  ~       bind:m  (gro section:mak)
+;<  ~       bind:m  (gro default:mak)
 (pure:m !>(~))
