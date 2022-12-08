@@ -1,9 +1,7 @@
-/-  g=groups, c=cite, zer=diary-0
+/-  g=groups, c=cite, graph-store, e=epic
+/-  metadata-store
+/+  lib-graph=graph-store
 |%
-++  old
-  |%
-  ++  zero  zer
-  --
 ::  $flag: identifier for a diary channel
 +$  flag  (pair ship term)
 ::  $feel: either an emoji identifier like :diff or a URL for custom
@@ -13,7 +11,15 @@
 ::  $sort: the persisted sort type for a diary
 +$  sort  ?(%alpha %time)
 ::  $shelf: my ship's diaries
-+$  shelf  (map flag:g diary)
++$  shelf  (map flag diary)
+::  $said: used for references
++$  said  (pair flag outline)
+::  $plan: index into diary state
+::    p: Note being referred to
+::    q: Quip being referred to, if any
+::    
++$  plan
+  (pair time (unit time))
 ::
 ::  $diary: written longform communication
 ::
@@ -186,6 +192,7 @@
       [%strike p=(list inline)]
       [%blockquote p=(list inline)]
       [%inline-code p=cord]
+      [%ship p=ship]
       [%block p=@ud q=cord]
       [%code p=cord]
       [%tag p=cord]
@@ -217,7 +224,7 @@
       [%add-sects p=(set sect:g)]
       [%del-sects p=(set sect:g)]
     ::
-      [%create p=perm]
+      [%create p=perm q=notes]
       [%view p=view]
       [%sort p=sort]
     ::
@@ -225,15 +232,12 @@
 ::
 ::  $net: an indicator of whether I'm a host or subscriber
 ::
-::    %load: initiating diary join
 ::    %pub: am publisher/host with fresh log
-::    %sub: subscribed to the ship
+::    %sub: subscribed to the ship at saga
 ::
 +$  net
-  $~  [%load ~]
-  $%  [%sub p=ship]
+  $%  [%sub p=ship load=_| =saga:e]
       [%pub ~] :: TODO: permissions?
-      [%load ~]
   ==
 ::
 ::  $briefs: a map of diary unread information
@@ -293,9 +297,12 @@
       readers=(set sect:g)
       writers=(set sect:g)
   ==
-::  $state-0: initial version
-+$  state-0
-  $:  %0
-      =shelf
-  ==
++$  import  [writers=(set ship) =association:met =update-log:gra =graph:gra]
+::
++$  imports  (map flag import)
+::
+++  gra  graph-store
+++  orm-gra  orm:lib-graph
+++  orm-log-gra  orm-log:lib-graph
+++  met  metadata-store
 --
