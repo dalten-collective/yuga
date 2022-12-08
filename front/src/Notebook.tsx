@@ -389,7 +389,7 @@ function Notebook(props: NotebookProps) {
 						</Box>
 					)}
 				</Row>
-				<Row className="row-1 text-center" justifyContent={"center"} alignItems="center">
+				<Row className="text-center row-1" justifyContent={"center"} alignItems="center">
 					<Box>
 						<StatelessTextInput
 							fontFamily={"Inter"}

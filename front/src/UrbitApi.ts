@@ -20,6 +20,7 @@ export const connectUrbit = async (ship, url, code) => {
 	return urbit;
 }
 
+// TODO: remove? deprecated?
 async function doPoke(ship, code) {
 	const urbit = await Urbit.authenticate({
 		ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
@@ -39,6 +40,7 @@ async function doPoke(ship, code) {
 	});
 }
 
+// TODO: remove? deprecated?
 async function doScry() {
 	const urbit = await Urbit.authenticate({
 		ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
@@ -53,13 +55,16 @@ async function doScry() {
 
 }
 
+// TODO: remove? deprecated?
 async function runThread(ship) {
+
 	const urbit = await Urbit.authenticate({
 		ship: "lorweb-fognem-binput-posnec--monhex-bolsug-dilnev-binzod",
 		url: "http://localhost:80",
 		code: "siller-fammep-narner-moptug",
 		verbose: true
 	});
+
 	urbit.desk = "landscape";
 	console.log('Connected!');
 	console.log(urbit);
