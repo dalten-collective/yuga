@@ -5,7 +5,7 @@
 ++  grow
   |%
   ++  noun  meta
-  ++  json  admin:meta:enjs:c-j
+  ++  json  (admin:meta:enjs:c-j meta)
   --
 ++  grab
   |%
