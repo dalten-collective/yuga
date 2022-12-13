@@ -73,7 +73,33 @@ export const mutations: MutationTree<State> & Mutations = {
   },
 
   [MutationTypes.TAG_ADD](state, payload: T.NameAndTag) {
-    // TODO:
+    const haveFoundation = state.foundations.find((sf: T.StateFoundation) => {
+      return sf.name === payload.foundation
+    })
+    if (!haveFoundation) {
+      return
+    }
+
+    const tagWithPosts = {
+      tag: payload.tag,
+      posts: []
+    }
+    haveFoundation.foundation.metadata.public.tags.push(tagWithPosts)
+  },
+
+  [MutationTypes.FOLDER_ADD](state, payload: T.NameAndFolder) {
+    const haveFoundation = state.foundations.find((sf: T.StateFoundation) => {
+      return sf.name === payload.foundation
+    })
+    if (!haveFoundation) {
+      return
+    }
+
+    const folderWithPosts = {
+      folder: payload.folder,
+      posts: []
+    }
+    haveFoundation.foundation.metadata.public.folders.push(folderWithPosts)
   },
 
   [MutationTypes.SUBSCRIPTION_ADD](

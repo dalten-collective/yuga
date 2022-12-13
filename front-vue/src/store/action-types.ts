@@ -13,4 +13,6 @@ export enum ActionTypes {
   JANITORS_ADD = 'JANITORS_ADD',
 
   TAG_ADD = 'TAG_ADD',
+
+  FOLDER_ADD = 'FOLDER_ADD',
 }

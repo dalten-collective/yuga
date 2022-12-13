@@ -90,7 +90,7 @@ export interface AddJanitorsResponse {
 }
 
 export interface NameAndTag {
-  name: FoundationName;
+  foundation: FoundationName;
   tag: string;
 }
 
@@ -98,13 +98,24 @@ export interface AddTagResponse {
   add: NameAndTag;
 }
 
+export interface NameAndFolder {
+  foundation: FoundationName;
+  folder: string;
+}
+
+export interface AddFolderResponse {
+  add: NameAndFolder;
+}
+
+
 // Response identifiers
 
 export type GallResponse = InitialStateResponse |
   AddFoundationResponse |
   AddAlmonersResponse |
   AddJanitorsResponse |
-  AddTagResponse
+  AddTagResponse |
+  AddFolderResponse
 
 export const IsInitialStateResponse = (r: GallResponse):
   r is InitialStateResponse => {
@@ -129,4 +140,9 @@ r is AddJanitorsResponse => {
 export const IsAddTagResponse = (r: GallResponse):
 r is AddTagResponse => {
   return (('add' in r) && 'tag' in r.add)
+}
+
+export const IsAddFolderResponse = (r: GallResponse):
+r is AddFolderResponse => {
+  return (('add' in r) && 'folder' in r.add)
 }

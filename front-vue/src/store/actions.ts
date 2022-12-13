@@ -90,6 +90,10 @@ export const actions: ActionTree<State, State> & Actions = {
           if (T.IsAddTagResponse(data)) {
             dispatch(ActionTypes.TAG_ADD, data.add as T.NameAndTag)
           }
+
+          if (T.IsAddFolderResponse(data)) {
+            dispatch(ActionTypes.FOLDER_ADD, data.add as T.NameAndFolder)
+          }
         }
 
         if (agentName === 'rama') {
@@ -194,5 +198,14 @@ export const actions: ActionTree<State, State> & Actions = {
     payload: T.NameAndTag
   ) {
     commit(MutationTypes.TAG_ADD, payload)
+  },
+
+  //// Foldes
+
+  [ActionTypes.FOLDER_ADD](
+    { commit },
+    payload: T.NameAndFolder
+  ) {
+    commit(MutationTypes.FOLDER_ADD, payload)
   },
 };
