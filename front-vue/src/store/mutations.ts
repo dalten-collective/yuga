@@ -18,6 +18,10 @@ export type Mutations<S = State> = {
     state: S,
     payload: T.NameAndAlmoners
   ): void;
+  [MutationTypes.ALMONERS_REM](
+    state: S,
+    payload: T.NameAndAlmoners
+  ): void;
 
   [MutationTypes.JANITORS_ADD](
     state: S,
@@ -59,6 +63,18 @@ export const mutations: MutationTree<State> & Mutations = {
     }
 
     haveFoundation.foundation.almoners.push(...payload.almoners.map(ship => sigShip(ship)))
+  },
+  [MutationTypes.ALMONERS_REM](state, payload: T.NameAndAlmoners) {
+    const haveFoundation = state.foundations.find((sf: T.StateFoundation) => {
+      return sf.name === payload.name
+    })
+    if (!haveFoundation) {
+      return
+    }
+
+    haveFoundation.foundation.almoners = haveFoundation.foundation.almoners.filter((exist: T.Ship) => {
+      return !payload.almoners.map((a: T.Ship) => sigShip(a)).includes(sigShip(exist))
+    })
   },
 
   [MutationTypes.JANITORS_ADD](state, payload: T.NameAndJanitors) {

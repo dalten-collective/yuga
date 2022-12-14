@@ -79,6 +79,9 @@ export interface NameAndAlmoners {
 export interface AddAlmonersResponse {
   add: NameAndAlmoners;
 }
+export interface RemAlmonerResponse {
+  rem: NameAndAlmoners;
+}
 
 export interface NameAndJanitors {
   name: FoundationName;
@@ -112,7 +115,7 @@ export interface AddFolderResponse {
 
 export type GallResponse = InitialStateResponse |
   AddFoundationResponse |
-  AddAlmonersResponse |
+  AddAlmonersResponse | RemAlmonerResponse |
   AddJanitorsResponse |
   AddTagResponse |
   AddFolderResponse
@@ -130,6 +133,11 @@ r is AddFoundationResponse => {
 export const IsAddAlmonersResponse = (r: GallResponse):
 r is AddAlmonersResponse => {
   return (('add' in r) && 'almoners' in r.add)
+}
+
+export const IsRemAlmonerResponse = (r: GallResponse):
+r is RemAlmonerResponse => {
+  return (('rem' in r) && 'almoners' in r.rem)
 }
 
 export const IsAddJanitorsResponse = (r: GallResponse):

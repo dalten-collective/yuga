@@ -1,26 +1,22 @@
 <template>
   <div>
     <div>
-      <div v-for="f in foundations" :key="f.foundation.provider">
+      <NewFoundationForm />
+    </div>
+
+    <hr />
+
+    <div class="flex flex-col">
+      <div class="mb-4" v-for="f in foundations" :key="f.foundation.provider">
         <Foundation :provider="f.foundation.provider" :key="f.foundation.provider" />
-        <AddAlmoners :foundation="f" />
-        <AddJanitors :foundation="f" />
-        <AddTag :foundation="f" />
-        <AddFolder :foundation="f" />
       </div>
     </div>
 
-    <button @click="closeAirlocks">close</button>
-    <NewFoundationForm />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted } from 'vue';
-import AddAlmoners from '@/components/AddAlmoners.vue'
-import AddJanitors from '@/components/AddJanitors.vue'
-import AddTag from '@/components/AddTag.vue'
-import AddFolder from '@/components/AddFolder.vue'
 import Foundation from '@/components/Foundation.vue'
 import NewFoundationForm from '@/components/NewFoundationForm.vue'
 

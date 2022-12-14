@@ -40,6 +40,26 @@ export function addAlmoners(
   })
 }
 
+export function removeAlmoners(
+  args: {
+    prefix: T.FoundationName,
+    ships: Array<T.Ship>,
+  }
+) {
+  urbitAPI.poke({
+    app: 'hari',
+    mark: ADMIN_MARK,
+    json: {
+      "del-almoners": {
+        fon: args.prefix,
+        who: args.ships
+      },
+    },
+  }).then((r) => {
+    return r
+  })
+}
+
 export function addJanitors(
   args: {
     prefix: T.FoundationName,

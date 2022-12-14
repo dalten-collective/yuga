@@ -79,8 +79,12 @@ export const actions: ActionTree<State, State> & Actions = {
           if (T.IsAddFoundationResponse(data)) {
             dispatch(ActionTypes.FOUNDATION_ADD, data.add as T.FoundationWithName);
           }
+
           if (T.IsAddAlmonersResponse(data)) {
             dispatch(ActionTypes.ALMONERS_ADD, data.add as T.NameAndAlmoners)
+          }
+          if (T.IsRemAlmonerResponse(data)) {
+            dispatch(ActionTypes.ALMONERS_REM, data.rem as T.NameAndAlmoners)
           }
 
           if (T.IsAddJanitorsResponse(data)) {
@@ -180,6 +184,12 @@ export const actions: ActionTree<State, State> & Actions = {
     payload: T.NameAndAlmoners
   ) {
     commit(MutationTypes.ALMONERS_ADD, payload)
+  },
+  [ActionTypes.ALMONERS_REM](
+    { commit },
+    payload: T.NameAndAlmoners
+  ) {
+    commit(MutationTypes.ALMONERS_REM, payload)
   },
 
   //// Janitors

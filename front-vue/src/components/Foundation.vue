@@ -1,6 +1,63 @@
 <template>
   <div>
-    {{ foundation }}
+    <h1 class="text-xl">{{ foundation.name }}</h1>
+    <div>
+      Provider: {{ foundation.foundation.provider }}
+    </div>
+
+    <div>
+      <h2>Almoners</h2>
+      <ul>
+        <li v-for="a in foundation.foundation.almoners" :key="a">
+          <div class="flex flex-row">
+            {{ a }}
+            <RemoveAlmoner :foundation="foundation" :almoner="a" />
+          </div>
+        </li>
+      </ul>
+      <AddAlmoners :foundation="foundation" />
+    </div>
+
+    <div>
+      <h2>Janitors</h2>
+      <ul>
+        <li v-for="j in foundation.foundation.janitors" :key="j">
+          {{ j }}
+        </li>
+      </ul>
+      <AddJanitors :foundation="foundation" />
+    </div>
+
+    <div>
+      <h2>Accepted Tags</h2>
+      <ul>
+        <li v-for="t in foundation.foundation.metadata.public.tags" :key="t.tag">
+          {{ t }}
+        </li>
+      </ul>
+      <AddTag :foundation="foundation" />
+    </div>
+
+    <div>
+      <h2>Folders</h2>
+      <ul>
+        <li v-for="f in foundation.foundation.metadata.public.folders" :key="f.folder">
+          {{ f }}
+        </li>
+      </ul>
+      <AddFolder :foundation="foundation" />
+    </div>
+
+    <div>
+      <h2>Secret TODO</h2>
+      {{ foundation.foundation.metadata.secret }}
+    </div>
+
+    <div>
+      <h2>Public TODO</h2>
+      {{ foundation.foundation.metadata.public }}
+    </div>
+
   </div>
 </template>
 
@@ -9,6 +66,12 @@ import * as T from "../types";
 import { computed } from "vue";
 import { useStore } from "../store/store";
 import { GetterTypes } from "@/store/getter-types";
+
+import AddAlmoners from '@/components/AddAlmoners.vue'
+import RemoveAlmoner from '@/components/RemoveAlmoner.vue'
+import AddJanitors from '@/components/AddJanitors.vue'
+import AddTag from '@/components/AddTag.vue'
+import AddFolder from '@/components/AddFolder.vue'
 
 interface Props {
   provider: T.Provider;

@@ -1,11 +1,17 @@
 import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } from "vue-router";
-import Home from "../views/Home.vue";
+import Admin from "../views/Admin.vue";
+import Explore from "../views/Explore.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
-    name: "home",
-    component: Home,
+    path: "/", // TODO: make explore the root
+    name: "admin",
+    component: Admin,
+  },
+  {
+    path: "/explore",  // TODO: make explore the root
+    name: "explore",
+    component: Explore,
   },
   //{
   //path: "/about",
@@ -19,7 +25,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory('/apps/cyclo/'),
   routes,
 });
 
