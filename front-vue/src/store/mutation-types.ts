@@ -6,6 +6,7 @@ export enum MutationTypes {
   ALMONERS_REM = 'ALMONERS_REM',
 
   JANITORS_ADD = 'JANITORS_ADD',
+  JANITORS_REM = 'JANITORS_REM',
 
   TAG_ADD = 'TAG_ADD',
 

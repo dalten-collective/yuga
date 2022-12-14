@@ -79,6 +79,25 @@ export function addJanitors(
     return r
   })
 }
+export function removeJanitors(
+  args: {
+    prefix: T.FoundationName,
+    ships: Array<T.Ship>,
+  }
+) {
+  urbitAPI.poke({
+    app: 'hari',
+    mark: ADMIN_MARK,
+    json: {
+      "del-janitors": {
+        fon: args.prefix,
+        who: args.ships
+      },
+    },
+  }).then((r) => {
+    return r
+  })
+}
 
 export function addTag(
   args: {

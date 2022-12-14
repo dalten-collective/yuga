@@ -90,6 +90,9 @@ export const actions: ActionTree<State, State> & Actions = {
           if (T.IsAddJanitorsResponse(data)) {
             dispatch(ActionTypes.JANITORS_ADD, data.add as T.NameAndJanitors)
           }
+          if (T.IsRemJanitorResponse(data)) {
+            dispatch(ActionTypes.JANITORS_REM, data.rem as T.NameAndJanitors)
+          }
 
           if (T.IsAddTagResponse(data)) {
             dispatch(ActionTypes.TAG_ADD, data.add as T.NameAndTag)
@@ -200,6 +203,12 @@ export const actions: ActionTree<State, State> & Actions = {
   ) {
     commit(MutationTypes.JANITORS_ADD, payload)
   },
+  [ActionTypes.JANITORS_REM](
+    { commit },
+    payload: T.NameAndAlmoners
+  ) {
+    commit(MutationTypes.JANITORS_REM, payload)
+  },
 
   //// Tags
 
@@ -210,7 +219,7 @@ export const actions: ActionTree<State, State> & Actions = {
     commit(MutationTypes.TAG_ADD, payload)
   },
 
-  //// Foldes
+  //// Folders
 
   [ActionTypes.FOLDER_ADD](
     { commit },

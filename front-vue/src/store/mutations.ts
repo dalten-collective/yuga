@@ -87,6 +87,18 @@ export const mutations: MutationTree<State> & Mutations = {
 
     haveFoundation.foundation.janitors.push(...payload.janitors.map(ship => sigShip(ship)))
   },
+  [MutationTypes.JANITORS_REM](state, payload: T.NameAndJanitors) {
+    const haveFoundation = state.foundations.find((sf: T.StateFoundation) => {
+      return sf.name === payload.name
+    })
+    if (!haveFoundation) {
+      return
+    }
+
+    haveFoundation.foundation.janitors = haveFoundation.foundation.janitors.filter((exist: T.Ship) => {
+      return !payload.janitors.map((a: T.Ship) => sigShip(a)).includes(sigShip(exist))
+    })
+  },
 
   [MutationTypes.TAG_ADD](state, payload: T.NameAndTag) {
     const haveFoundation = state.foundations.find((sf: T.StateFoundation) => {

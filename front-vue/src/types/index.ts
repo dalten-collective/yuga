@@ -91,6 +91,9 @@ export interface NameAndJanitors {
 export interface AddJanitorsResponse {
   add: NameAndJanitors;
 }
+export interface RemJanitorResponse {
+  rem: NameAndJanitors;
+}
 
 export interface NameAndTag {
   foundation: FoundationName;
@@ -116,7 +119,7 @@ export interface AddFolderResponse {
 export type GallResponse = InitialStateResponse |
   AddFoundationResponse |
   AddAlmonersResponse | RemAlmonerResponse |
-  AddJanitorsResponse |
+  AddJanitorsResponse | RemJanitorResponse |
   AddTagResponse |
   AddFolderResponse
 
@@ -134,7 +137,6 @@ export const IsAddAlmonersResponse = (r: GallResponse):
 r is AddAlmonersResponse => {
   return (('add' in r) && 'almoners' in r.add)
 }
-
 export const IsRemAlmonerResponse = (r: GallResponse):
 r is RemAlmonerResponse => {
   return (('rem' in r) && 'almoners' in r.rem)
@@ -143,6 +145,10 @@ r is RemAlmonerResponse => {
 export const IsAddJanitorsResponse = (r: GallResponse):
 r is AddJanitorsResponse => {
   return (('add' in r) && 'janitors' in r.add)
+}
+export const IsRemJanitorResponse = (r: GallResponse):
+r is RemJanitorResponse => {
+  return (('rem' in r) && 'janitors' in r.rem)
 }
 
 export const IsAddTagResponse = (r: GallResponse):

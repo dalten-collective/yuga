@@ -22,7 +22,10 @@
       <h2>Janitors</h2>
       <ul>
         <li v-for="j in foundation.foundation.janitors" :key="j">
-          {{ j }}
+          <div class="flex flex-row">
+            {{ j }}
+            <RemoveJanitor :foundation="foundation" :janitor="j" />
+          </div>
         </li>
       </ul>
       <AddJanitors :foundation="foundation" />
@@ -69,7 +72,10 @@ import { GetterTypes } from "@/store/getter-types";
 
 import AddAlmoners from '@/components/AddAlmoners.vue'
 import RemoveAlmoner from '@/components/RemoveAlmoner.vue'
+
 import AddJanitors from '@/components/AddJanitors.vue'
+import RemoveJanitor from '@/components/RemoveJanitor.vue'
+
 import AddTag from '@/components/AddTag.vue'
 import AddFolder from '@/components/AddFolder.vue'
 
