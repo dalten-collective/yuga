@@ -73,6 +73,7 @@
       ==
     ++  rama-state
       |=  [%0 %rama rama:states:meta:f]
+      ^-  json
       %-  pairs
       :~
         :+  %views  %a
@@ -97,15 +98,12 @@
         ==
       ::
         :+  %tags  %a
-        =-  ~&  >>  -  [s/'test' s/'this' ~]
-        ^-  (list json)
         %+  turn  ~(tap by tags)
-        |=  [tag=@tas wic=(set @ud)]
+        |=  [tag=term wic=(set @ud)]
         %-  pairs
-        :~  [%tag s/tag]
+        :~  tag+s/tag
         ::
           :+  %posts  %a
-          ^-  (list json)
           %+  turn  ~(tap in wic)
           |=  id=@ud
           (pairs ~[id+s/(scot %ud id) post-time+(sect `@da`id)])
