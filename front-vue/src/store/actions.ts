@@ -36,6 +36,10 @@ export interface Actions {
     { commit }: AugmentedActionContext,
     payload: T.AgentSubscription
   ): void;
+  // [ActionTypes.SUBSCRIPTION_REMOVE](
+  //   { commit }: AugmentedActionContext,
+  //   payload: T.AgentSubscription
+  // ): void;
 
   [ActionTypes.FOUNDATION_SET](
     { commit }: AugmentedActionContext,
@@ -70,6 +74,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
       // Main all-responses-handler
       (data: T.GallResponse) => {
+        console.log('gall response ', data)
         console.log("agentName ", agentName);
         if (agentName === 'hari') {
           console.log("hari response ", data);
@@ -150,9 +155,10 @@ export const actions: ActionTree<State, State> & Actions = {
       | [] = state.subscriptions.filter((s: T.AgentSubscription) => {
       return s.agentName === payload.agentName;
     });
-    existing.forEach((sub) => {
-      dispatch(MutationTypes.SUBSCRIPTION_REMOVE, sub);
-    });
+    // TODO: not sure sub handling is done right / nor matters, though.
+    // existing.forEach((sub) => {
+    //   dispatch(ActionTypes.SUBSCRIPTION_REMOVE, sub);
+    // });
     commit(MutationTypes.SUBSCRIPTION_ADD, payload);
   },
 

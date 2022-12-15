@@ -27,7 +27,6 @@ const store = useStore()
 
 onMounted(() => {
   startAirlock("hari")
-  startAirlock("rama")
 })
 
 const foundations = computed(() => store.state.foundations)

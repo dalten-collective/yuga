@@ -1,10 +1,16 @@
 import * as T from './index';
 
 export type Host = T.Ship;
+
 export interface SubFoundation {
   name: string;
   subscribed: boolean;
   details: T.Metadata["public"]
+}
+
+export interface HostObject {
+  host: Host;
+  foundations: Array<SubFoundation>;
 }
 
 export interface Saved {
@@ -18,7 +24,7 @@ export interface Saved {
 export interface InitialStateResponse {
   put: {
     hosts: { // TODO: double-nested in the dejs
-      hosts: Array<T.Ship>;
+      hosts: Array<HostObject>;
     };
     saved: Array<Saved>;
     share: boolean;
