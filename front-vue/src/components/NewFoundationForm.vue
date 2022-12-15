@@ -1,7 +1,7 @@
 <template>
   <div>
     New Foundation
-    <form ref="form" @submit="create">
+    <form ref="form" @submit.prevent="create">
       <label for="prefix">
         Prefix
         <input id="prefix" type="text" v-model="prefix" />
