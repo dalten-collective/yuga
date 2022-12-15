@@ -1,6 +1,6 @@
-/-  *foundation
+/-  f=foundation
 /+  c-j=cyclo-json
-|_  state-0=rama:states:meta
+|_  state-0=rama:states:meta:f
 ++  grad  %noun
 ++  grow
   |%
@@ -12,6 +12,6 @@
   --
 ++  grab
   |%
-  ++  noun  rama:states:meta
+  ++  noun  rama:states:meta:f
   --
 --

@@ -31,8 +31,10 @@
         janitors+a/(turn ~(tap in janitors.fon) ships)
     ::
         :-  %metadata
-        %-  hari-state:meta
-        ?>(?=([%0 %hari *] metadata.fon) metadata.fon)
+        ?:  ?=([%0 %hari *] metadata.fon)
+          (hari-state:meta metadata.fon)
+        ?>  ?=([%0 %rama *] metadata.fon)
+          (rama-state:meta metadata.fon)
     ==
   ::  +meta: meta-enjs functions
   ::
@@ -71,6 +73,7 @@
       ==
     ++  rama-state
       |=  [%0 %rama rama:states:meta:f]
+      ^-  json
       %-  pairs
       :~
         :+  %views  %a
@@ -151,7 +154,6 @@
     ++  hosts
       |=  host=(jug @p [term [? foundation:hari:f]])
       ^-  json
-      %+  frond  %hosts
       :-  %a
       %+  turn  ~(tap by host)
       |=  (pair @p (set [t=term [h=? f=foundation:hari:f]]))
@@ -226,7 +228,12 @@
         :~  host+(ships p.f)
             name+s/q.f
             subscribed+b/%.n
-            details+(foundation [f ~ ~ [%0 [%rama ~ ~ ~ ~]]])
+        ::
+            :-  %details
+            %-  foundation
+            :^  f  ~  ~ 
+            :-  %0
+            `state:meta:^f`[%rama *rama:states:meta:^f]
         ==
       ::
         %close
