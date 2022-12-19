@@ -17,4 +17,7 @@ export enum ActionTypes {
   TAG_ADD = 'TAG_ADD',
 
   FOLDER_ADD = 'FOLDER_ADD',
+
+  HOSTS_SET = 'HOSTS_SET',
+  HOSTS_ADD = 'HOSTS_ADD',
 }

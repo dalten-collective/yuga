@@ -2,6 +2,7 @@ import { MutationTree } from "vuex";
 import { MutationTypes } from "./mutation-types";
 import { State } from "./state";
 import * as T from "@/types";
+import * as R from "@/rama-types";
 import { sigShip } from "@/helpers"
 
 export type Mutations<S = State> = {
@@ -40,6 +41,15 @@ export type Mutations<S = State> = {
   [MutationTypes.SUBSCRIPTION_REMOVE](
     state: S,
     payload: T.AgentSubscription | null
+  ): void;
+
+  [MutationTypes.HOSTS_SET](
+    state: S,
+    payload: Array<R.HostObject>
+  ): void;
+  [MutationTypes.HOSTS_ADD](
+    state: S,
+    payload: Array<R.HostObject>
   ): void;
 };
 
@@ -147,5 +157,19 @@ export const mutations: MutationTree<State> & Mutations = {
       const sub = state.subscriptions.find((s) => s === payload);
       state.subscriptions = state.subscriptions.filter((s) => s != sub);
     }
+  },
+
+  [MutationTypes.HOSTS_SET](
+    state,
+    payload: Array<R.HostObject>
+  ) {
+    state.hosts = payload
+  },
+  [MutationTypes.HOSTS_ADD](
+    state,
+    payload: Array<R.HostObject>
+  ) {
+    // TODO: check for dupes / use a Set
+    state.hosts.push(payload)
   },
 };

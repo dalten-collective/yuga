@@ -73,9 +73,10 @@ export const actions: ActionTree<State, State> & Actions = {
       agentName,
 
       // Main all-responses-handler
-      (data: T.GallResponse) => {
+      (data: T.GallResponse | R.GallResponse) => {
         console.log('gall response ', data)
         console.log("agentName ", agentName);
+
         if (agentName === 'hari') {
           console.log("hari response ", data);
           if (T.IsInitialStateResponse(data)) {
@@ -111,7 +112,12 @@ export const actions: ActionTree<State, State> & Actions = {
         if (agentName === 'rama') {
           console.log("rama response ", data);
           if (R.IsInitialStateResponse(data)) {
-            console.log('got an r')
+            dispatch(ActionTypes.HOSTS_SET, data.put.hosts as Array<R.HostObject>)
+          }
+
+          if (R.IsAddJanitorsResponse(data)) {
+            console.log('got jan add ', data)
+            // dispatch(ActionTypes.HOSTS_SET, data.put.hosts as Array<R.HostObject>)
           }
         }
       },
@@ -142,6 +148,24 @@ export const actions: ActionTree<State, State> & Actions = {
     } else {
       commit(MutationTypes.SUBSCRIPTION_REMOVE, null)
     }
+  },
+
+  //// Explore
+
+  ////// Hosts
+
+  [ActionTypes.HOSTS_SET](
+    { state, commit, dispatch },
+    payload: Array<R.HostObject>
+  ) {
+    commit(MutationTypes.HOSTS_SET, payload);
+  },
+  [ActionTypes.HOSTS_ADD](
+    { state, commit, dispatch },
+    payload: Array<R.HostObject>
+  ) {
+    console.log('hosts ', payload)
+    commit(MutationTypes.HOSTS_ADD, payload);
   },
 
   //// Subscriptions
