@@ -129,7 +129,7 @@
     ++  share  `$-(? json)`|=(a=? ((lead %b) a))
     ::
     ++  store-diff
-      |=  [[wen=@da flg=flag wic=@da] wat=?]
+      |=  [[wen=@da flg=flag wic=@ud] wat=?]
       ?.  wat
         (frond del+(frond saved+(frond key+s/(scot %ud wen))))
       =-  (frond add+(frond saved+(pairs -)))
@@ -137,13 +137,13 @@
           added+(sect wen)
           provider+(flap flg)
           id+s/(scot %ud wic)
-          post-time+(sect wic)
+          post-time+(sect `@da`wic)
       ==
     ::
     ++  state-0
       |=  $:  %0
-              hos=(jug @p [@t [? foundation:hari:f]])
-              sav=((mop @da ,[flag @da]) gth)
+              hos=(jug @p [term [? foundation:hari:f]])
+              sav=((mop @da ,[flag @ud]) gth)
               sha=?
           ==
       ^-  json
@@ -171,18 +171,18 @@
       ==
     ::
     ++  saved
-      |=  save=((mop @da ,[flag @da]) gth)
+      |=  save=((mop @da ,[flag @ud]) gth)
       ^-  json
       =-  a/-
       %+  turn
-        (bap:((on @da ,[flag @da]) gth) save)
-      |=  [wen=@da wer=flag wat=@da]
+        (bap:((on @da ,[flag @ud]) gth) save)
+      |=  [wen=@da wer=flag wat=@ud]
       %-  pairs                                         ::  XX: note we send key
       :~  key+s/(scot %ud wen)                          ::   because of bad time
           added+(sect wen)                              ::   conversion to unix.
           provider+(flap wer)
           id+s/(scot %ud wat)
-          post-time+(sect wat)
+          post-time+(sect `@da`wat)
       ==
     ::
     ++  rama-only
@@ -344,13 +344,13 @@
         leave+(ot ~[who+(se %p) fon+so])
         watch+(se %p)
         share+bo
-        store+(ot ~[who+(se %p) fon+so id+time])
-        trash+time
+        store+(ot ~[who+(se %p) fon+so id+(se %ud)])
+        trash+(se %ud)
     ::
       :-  %views
       %+  cu
         |=([p=@p q=@t r=@ud] [p q]^r)
-      (ot ~[who+(se %p) fon+so wat+time])
+      (ot ~[who+(se %p) fon+so wat+(se %ud)])
     ==
   ++  schizo
     ^-  $-(json write:actions:hari:f)
