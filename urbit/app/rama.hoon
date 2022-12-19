@@ -310,14 +310,11 @@
   ++  host
     |=  wat=?
     ^+  dat
-    ~_  leaf+"bad-rama-action - cannot find {<q.flag>}"
-    =|  emt=(set [term [? foundation:hari]])
-    =/  old=[hav=? fon=foundation:hari]
-      %.  q.flag
-      %~  got  by
-      (malt ~(tap in (~(gut by hosts) p.flag emt)))
+    ~_  leaf+"bad-rama-action - cannot find {<flag>}"
+    =+  hav=(~(get ju hosts) p.flag)
+    =+  old=(~(got by hav) q.flag)
     =.  hosts
-      %.  [p.flag q.flag wat fon.old]
+      %.  [p.flag q.flag wat +.old]
       ~(put ju (~(del ju hosts) p.flag [q.flag old]))
     ::
     ?:  =(our.bol p.flag)  dat
