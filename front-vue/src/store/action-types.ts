@@ -20,4 +20,8 @@ export enum ActionTypes {
 
   HOSTS_SET = 'HOSTS_SET',
   HOSTS_ADD = 'HOSTS_ADD',
+
+  RAMA_SCRY_STATE = 'RAMA_SCRY_STATE',
+
+  SAVED_SET = 'SAVED_SET',
 }

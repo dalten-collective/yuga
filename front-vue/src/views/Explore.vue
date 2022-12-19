@@ -17,11 +17,12 @@ import Host from '@/components/Host.vue'
 import { onMounted, computed } from 'vue';
 import { useStore } from '@/store/store'
 import {ActionTypes} from '@/store/action-types';
+import * as ramaAPI from '@/api/ramaAPI'
 
 const store = useStore()
 
 onMounted(() => {
-  startAirlock("rama")
+  store.dispatch(ActionTypes.RAMA_SCRY_STATE)
 })
 
 const hosts = computed(() => store.state.hosts)

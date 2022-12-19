@@ -17,4 +17,6 @@ export enum MutationTypes {
 
   HOSTS_SET = 'HOSTS_SET',
   HOSTS_ADD = 'HOSTS_ADD',
+
+  SAVED_SET = 'SAVED_SET',
 }

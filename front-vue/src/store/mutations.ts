@@ -51,6 +51,11 @@ export type Mutations<S = State> = {
     state: S,
     payload: Array<R.HostObject>
   ): void;
+
+  [MutationTypes.SAVED_SET](
+    state: S,
+    payload: Array<R.Saved>
+  ): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -171,5 +176,12 @@ export const mutations: MutationTree<State> & Mutations = {
   ) {
     // TODO: check for dupes / use a Set
     state.hosts.push(payload)
+  },
+
+  [MutationTypes.SAVED_SET](
+    state,
+    payload: Array<R.Saved>
+  ) {
+    state.saved = payload
   },
 };

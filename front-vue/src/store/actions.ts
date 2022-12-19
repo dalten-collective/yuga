@@ -7,6 +7,7 @@ import { MutationTypes } from "./mutation-types";
 import * as T from "@/types";
 import * as R from "@/types/rama-types";
 import airlock from "@/api";
+import ramaAPI from "@/api";
 
 type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
@@ -111,14 +112,16 @@ export const actions: ActionTree<State, State> & Actions = {
 
         if (agentName === 'rama') {
           console.log("rama response ", data);
-          if (R.IsInitialStateResponse(data)) {
-            dispatch(ActionTypes.HOSTS_SET, data.put.hosts as Array<R.HostObject>)
-          }
+          // TODO: going to ignore sub responses for Rama for now
+          // if (R.IsInitialStateResponse(data)) {
+          //   dispatch(ActionTypes.HOSTS_SET, data.put.hosts as Array<R.HostObject>)
+          // }
 
-          if (R.IsAddJanitorsResponse(data)) {
-            console.log('got jan add ', data)
-            // dispatch(ActionTypes.HOSTS_SET, data.put.hosts as Array<R.HostObject>)
-          }
+          // TODO: going to ignore sub responses for Rama for now
+          // if (R.IsAddJanitorsResponse(data)) {
+          //   console.log('got jan add ', data)
+          //   // dispatch(ActionTypes.HOSTS_SET, data.put.hosts as Array<R.HostObject>)
+          // }
         }
       },
 
@@ -152,6 +155,16 @@ export const actions: ActionTree<State, State> & Actions = {
 
   //// Explore
 
+  ////// Scries
+
+  [ActionTypes.RAMA_SCRY_STATE]({ dispatch }) {
+    ramaAPI.scryState().then((data: R.InitialStateResponse) => {
+      console.log('rrrrr ', data)
+      dispatch(ActionTypes.HOSTS_SET, data.put.hosts as Array<R.HostObject>)
+      dispatch(ActionTypes.SAVED_SET, data.put.saved as Array<R.Saved>)
+    })
+  },
+
   ////// Hosts
 
   [ActionTypes.HOSTS_SET](
@@ -166,6 +179,15 @@ export const actions: ActionTree<State, State> & Actions = {
   ) {
     console.log('hosts ', payload)
     commit(MutationTypes.HOSTS_ADD, payload);
+  },
+
+  ////// Saved
+
+  [ActionTypes.SAVED_SET](
+    { state, commit, dispatch },
+    payload: Array<R.Saved>
+  ) {
+    commit(MutationTypes.SAVED_SET, payload);
   },
 
   //// Subscriptions

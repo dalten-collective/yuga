@@ -15,13 +15,19 @@
 import * as ramaAPI from "@/api/ramaAPI";
 import { ref } from 'vue';
 
+import { useStore } from '@/store/store'
+import {ActionTypes} from '@/store/action-types';
+
+const store = useStore()
+
 const ship = ref('')
 
-const watch = () => {
+const watch = async () => {
   if (!ship) {
     return
   }
   // TODO: validate this.$refs
-  ramaAPI.startWatching(ship.value)
+  await ramaAPI.startWatching(ship.value)
+  store.dispatch(ActionTypes.RAMA_SCRY_STATE)
 }
 </script>
