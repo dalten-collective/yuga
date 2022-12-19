@@ -4,8 +4,8 @@
 
     <div>
       subscribed: {{ foundation.subscribed }}
-      <button @click="enter">Subscribe</button>
-      <button @click="leave">Leave</button>
+      <button class="p-2 text-white bg-blue-300 border rounded-md" @click="enter">Subscribe</button>
+      <button class="p-2 text-white bg-blue-300 border rounded-md" @click="leave">Leave</button>
     </div>
 
     <div>

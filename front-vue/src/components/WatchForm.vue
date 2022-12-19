@@ -28,6 +28,8 @@ const watch = async () => {
   }
   // TODO: validate this.$refs
   await ramaAPI.startWatching(ship.value)
+  // TOOD: wait longer?
+  // Or get on subscription....
   store.dispatch(ActionTypes.RAMA_SCRY_STATE)
 }
 </script>
