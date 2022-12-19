@@ -137,8 +137,7 @@
   ^-  (unit (unit cage))
   ?+    pol  !!
       [%x %state ~]
-    ~&  >>>  (state-0:rama:enjs:c-j `state-0`state)
-    ``noun+!>('test')
+    ``rama-state+!>(`state-0`state)
   ==
 ::  +peer: handle being watched
 ::

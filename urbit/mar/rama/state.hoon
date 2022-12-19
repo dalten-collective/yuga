@@ -11,7 +11,7 @@
 ++  grow
   |%
   ++  noun  state
-  ++  json  [%s 'test']  ::(state-0:rama:enjs:c-j state)
+  ++  json  (state-0:rama:enjs:c-j state)
   --
 ++  grab
   |%
