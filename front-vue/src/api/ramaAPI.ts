@@ -18,3 +18,11 @@ export function startWatching (
     return r
   })
 }
+
+// export function scryState () {
+//   return urbitAPI.scry('state')
+//     .then((r) => {
+//       console.log('scry rama ', r)
+//       return r
+//     })
+// }
