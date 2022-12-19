@@ -70,10 +70,10 @@
     [cards this]
   ::
   ++  on-peek
-    |=  =path
+    |=  pat=path
     ~>  %bout.[0 '%rama +on-peek']
     ^-  (unit (unit cage))
-    [~ ~]
+    (peek:gen pat)
   ::
   ++  on-arvo
     |=  [wir=wire sig=sign-arvo]
@@ -130,6 +130,16 @@
   ?>  ?=([%0 *] q.vaz)
   =.  state  !<(state-0 vaz)
   dat
+::  +peek: handle scries
+::
+++  peek
+  |=  pol=(pole knot)
+  ^-  (unit (unit cage))
+  ?+    pol  !!
+      [%x %state ~]
+    ~&  >>>  (state-0:rama:enjs:c-j `state-0`state)
+    ``noun+!>('test')
+  ==
 ::  +peer: handle being watched
 ::
 ++  peer
