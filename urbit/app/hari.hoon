@@ -29,13 +29,13 @@
   |_  =bowl:gall
   +*  this  .
       def   ~(. (default-agent this %|) bowl)
-      gen   ~(. +> [bowl ~])
+      eng   ~(. +> [bowl ~])
   ::
   ++  on-init
     ^-  (quip card _this)
     ~>  %bout.[0 '%hari +on-init']
     =^  cards  state
-      abet:init:gen
+      abet:init:eng
     [cards this]
   ::
   ++  on-save
@@ -48,7 +48,7 @@
     ~>  %bout.[0 '%hari +on-load']
     ^-  (quip card _this)
     =^  cards  state
-      abet:(load:gen ole)
+      abet:(load:eng ole)
     [cards this]
   ::
   ++  on-poke
@@ -56,7 +56,7 @@
     ~>  %bout.[0 '%hari +on-poke']
     ^-  (quip card _this)
     =^  cards  state
-      abet:(poke:gen mar vaz)
+      abet:(poke:eng mar vaz)
     [cards this]
   ::
   ++  on-peek
@@ -70,7 +70,7 @@
     ~>  %bout.[0 '%hari +on-arvo']
     ^-  (quip card _this)
     =^  cards  state
-      abet:(arvo:gen wir sig)
+      abet:(arvo:eng wir sig)
     [cards this]
   ::
   ++  on-agent
@@ -78,7 +78,7 @@
     ~>  %bout.[0 '%hari +on-agent']
     ^-  (quip card _this)
     =^  cards  state
-      abet:(dude:gen wir sig)
+      abet:(dude:eng wir sig)
     [cards this]
   ::
   ++  on-watch
@@ -86,7 +86,7 @@
   ~>  %bout.[0 '%hari +on-watch']
   ^-  (quip card _this)
   =^  cards  state
-    abet:(peer:gen pat)
+    abet:(peer:eng pat)
   [cards this]
   ::
   ++  on-fail
@@ -134,7 +134,9 @@
 ++  lupe
   |=  [=report:^meta all=?]
   %-  emit
-  [%give %fact ?.(all ~ ~[/metas]) meta-report+!>(report)]
+  :+  %give  %fact
+  :_  meta-report+!>(report)
+  ?.(all ~ ~[/metas/(scot %tas q.p.report)])
 ::  +behn: a behn timer
 ::
 ++  behn
@@ -180,20 +182,16 @@
     %-  zing  %+  turn
       ~(tap by foundations)
     |=  [t=term f=foundation:hari]
-    :~  [[provider.f %add-almoners t almoners.f] |]
+    :~  [[provider.f %found t] |]
+        [[provider.f %add-almoners t almoners.f] |]
         [[provider.f %add-janitors t janitors.f] |]
-        [[provider.f %found t] |]
     ==
   ::
-      [%metas ~]
-    =;  backlog=(list [report:^meta ?])
-      |-  ?~  backlog  dat
-      $(backlog t.backlog, dat (lupe i.backlog))
-    %+  turn
-      ~(tap by foundations)
-    |=  [t=term f=foundation:hari]
-    ?>  ?=([%0 %hari *] metadata.f)
-    [[provider.f [%result %all %rama public.metadata.f]] |]
+      [%meta fon=@ ~]
+    =+  fon=(~(got by foundations) (slav %tas fon.pol))
+    ?>  ?=([%0 %hari *] metadata.fon)
+    %-  lupe
+    [[provider.fon [%result %all %rama public.metadata.fon]] |]
   ==
 ::  +arvo: handle arvo responses
 ::
