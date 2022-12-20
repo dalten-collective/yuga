@@ -39,12 +39,12 @@
   |_  =bowl:gall
   +*  this  .
       def   ~(. (default-agent this %|) bowl)
-      gen   ~(. +> [bowl ~])
+      eng   ~(. +> [bowl ~])
   ++  on-init
     ^-  (quip card _this)
     ~>  %bout.[0 '%rama +on-init']
     =^  cards  state
-      abet:init:gen
+      abet:init:eng
     [cards this]
       
   ::
@@ -58,7 +58,7 @@
     ~>  %bout.[0 '%rama +on-load']
     ^-  (quip card _this)
     =^  cards  state
-      abet:(load:gen ole)
+      abet:(load:eng ole)
     [cards this]
   ::
   ++  on-poke
@@ -66,14 +66,14 @@
     ~>  %bout.[0 '%rama +on-poke']
     ^-  (quip card _this)
     =^  cards  state
-      abet:(poke:gen cag)
+      abet:(poke:eng cag)
     [cards this]
   ::
   ++  on-peek
     |=  pat=path
     ~>  %bout.[0 '%rama +on-peek']
     ^-  (unit (unit cage))
-    (peek:gen pat)
+    (peek:eng pat)
   ::
   ++  on-arvo
     |=  [wir=wire sig=sign-arvo]
@@ -86,14 +86,14 @@
     ~>  %bout.[0 '%rama +on-agent']
     ^-  (quip card _this)
     =^  cards  state
-      abet:(dude wir sig)
+      abet:(dude:eng wir sig)
     [cards this]
   ::
   ++  on-watch
   |=  pat=path
   ~>  %bout.[0 '%rama +on-watch']
   =^  cards  state
-    abet:(peer pat)
+    abet:(peer:eng pat)
   [cards this]
   ::
   ++  on-fail
@@ -310,7 +310,8 @@
     |=  wat=?
     ^+  dat
     ~_  leaf+"bad-rama-action - cannot find {<flag>}"
-    =+  hav=(~(get ju hosts) p.flag)
+    =/  hav=(map term [? foundation:hari])
+      (~(get ju hosts) p.flag)
     =+  old=(~(got by hav) q.flag)
     =.  hosts
       %.  [p.flag q.flag wat +.old]
