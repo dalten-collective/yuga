@@ -1,6 +1,9 @@
 <template>
   <div>
     <h1 class="text-xl">{{ foundation.name }}</h1>
+    <input type="text" v-model="title" />
+    <textarea v-model="content" />
+    <button @click="sendPost">Post</button>
     <div>
       Provider: {{ foundation.foundation.provider }}
     </div>
@@ -66,9 +69,11 @@
 
 <script setup lang="ts">
 import * as T from "../types";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "../store/store";
 import { GetterTypes } from "@/store/getter-types";
+import { sigShip } from "@/helpers";
+import * as diaryAPI from '@/api/diaryAPI'
 
 import AddAlmoners from '@/components/AddAlmoners.vue'
 import RemoveAlmoner from '@/components/RemoveAlmoner.vue'
@@ -85,7 +90,19 @@ interface Props {
 const props = defineProps<Props>();
 const store = useStore();
 
-const foundation = computed(() =>
-  store.getters[GetterTypes.FOUNDATION_BY_PROVIDER](props.provider)
-);
+const title = ref('');
+const content = ref('');
+
+const sendPost = () => {
+  diaryAPI.createNote({
+    flag: props.provider,
+    author: sigShip(window.ship),
+    title: title.value,
+    content: content.value,
+  })
+}
+
+const foundation = computed<T.StateFoundation>(() => {
+  return store.getters[GetterTypes.FOUNDATION_BY_PROVIDER](props.provider)
+});
 </script>

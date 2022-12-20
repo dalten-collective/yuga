@@ -1,4 +1,5 @@
 <template>
+  DEBUG/TODO: Ship: {{ ourShip }}
   <nav>
     <router-link class="text-blue-500 underline" :to="{ name: 'admin' }">Admin</router-link>
     <router-link class="text-blue-500 underline" :to="{ name: 'explore' }">Explore</router-link>
@@ -8,10 +9,10 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 
-export default defineComponent({
-})
+const ourShip = ref(window.ship);
+
 </script>
 
