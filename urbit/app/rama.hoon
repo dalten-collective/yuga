@@ -162,10 +162,11 @@
     (emit [%pass wir %agent [p %hari] %watch /relay])
   ::  +metas: watch hari on some ship, metadata
   ++  metas
-    |=  p=@p
+    |=  f=flag
     ^+  dat
-    =/  wir  /metas/(scot %p p)
-    (emit [%pass wir %agent [p %hari] %watch /metas])
+    =/  wir  /metas/(scot %p p.f)/(scot %tas q.f)
+    %-  emit
+    [%pass wir %agent [p.f %hari] %watch /metas/(scot %tas q.f)]
   --
 ::  +meat: metadata handling
 ::
@@ -179,6 +180,7 @@
     ==
   ++  fauna
     ^-  (map term [? foundation:hari])
+    ~&  >  (~(got by (~(got by hosts) p.p)) %another-rus-joint)
     (~(got by hosts) p.p)
   ++  faun
     ^-  [? foundation:hari]
@@ -411,7 +413,9 @@
       =/  frm=@p  (slav %p who.pol)
       ?+  -.sig  dat
         %kick  (relay:view frm)
-        %fact  (rehydrate frm !<(report:rama q.cage.sig))
+        %fact  
+        ~&  >>>  !<(report:rama q.cage.sig)
+        (rehydrate frm !<(report:rama q.cage.sig))
           %watch-ack
         %.  dat
         ?~  p.sig  same
@@ -420,10 +424,11 @@
         leaf/"%rama cannot watch {(scow %p who.pol)}'s relay"
       ==
     ::
-        [%metas who=@ ~]
-      =/  frm=@p  (slav %p who.pol)
+        [%metas who=@ wat=@ ~]
+      =/  frm=@p    (slav %p who.pol)
+      =/  fon=@tas  (slav %tas wat.pol)
       ?+  -.sig  dat
-        %kick  (metas:view frm)
+        %kick  (metas:view frm fon)
         %fact  (meat frm !<(report:meta q.cage.sig))
           %watch-ack
         %.  dat
@@ -501,8 +506,9 @@
       (malt ~(tap in (~(gut by hosts) p.f ~)))
     ?-    -.a
         %found
+      ~&  >>  [%receiving %found q.f]
       ?^  hav=(~(get by foundations) q.f)  dat
-      =-  (metas:view:(show(hosts -) rama-report+!>([f a])) w)
+      =-  (metas:view:(show(hosts -) rama-report+!>([f a])) f)
       %+  ~(put by hosts)  p.f
       %+  ~(put by foundations)  q.f
       [?:(=(our.bol w) %.y %.n) f ~ ~ [%0 [%rama ~ ~ ~ ~]]]
