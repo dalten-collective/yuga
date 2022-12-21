@@ -388,23 +388,28 @@ This will send, to the front end, upon successfully joining the group (not immed
 #### Add Note / Create a post
 
 ```json
-mark: 'hari-schizo', app: hari
+mark: 'hari-rama', app: rama
 
 {
-  fon: 'name-of-foundation',
-  tit: 'Title for Post',
-  cov: 'https://images.com/image-url-for-cover.jpg',
-  ver: [
-    {
-      inline: [
-        "# The Post Content\n\nAs **one big cord**"
-      ]
+  who: '~sampel-palnet', // the host of the foundation!
+  wat: {
+    'add-note' {
+      fon: 'name-of-foundation',
+      tit: 'Title for Post',
+      cov: 'https://images.com/image-url-for-cover.jpg',
+      ver: [
+        {
+          inline: [
+            "# The Post Content\n\nAs **one big cord**"
+          ]
+        }
+      ],
+      met: {
+        fol: 'folder-name',
+        tag: ['array', 'of', 'tagnames']
+      },
     }
-  ],
-  met: {
-    fol: 'folder-name',
-    tag: ['array', 'of', 'tagnames']
-  },
+  }
 }
 ```
 

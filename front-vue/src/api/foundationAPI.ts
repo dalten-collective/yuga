@@ -3,6 +3,7 @@ import * as T from '@/types';
 
 const ADMIN_MARK = 'hari-seldon'
 const META_ADMIN_MARK = 'meta-admin'
+const HARI_SCHIZO_MARK = "hari-schizo";
 
 export function createFoundation(
   prefix: string
@@ -140,3 +141,4 @@ export function addFolder(
     return r
   })
 }
+

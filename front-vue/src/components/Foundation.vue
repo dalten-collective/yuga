@@ -1,11 +1,10 @@
 <template>
   <div>
     <h1 class="text-xl">{{ foundation.name }}</h1>
-    <input type="text" v-model="title" />
-    <textarea v-model="content" />
-    <button @click="sendPost">Post</button>
+    <CreateNote :host="hostShip" :foundation="foundation.name" />
     <div>
       Provider: {{ foundation.foundation.provider }}
+      host shipt: {{ hostShip }}
     </div>
 
     <div>
@@ -84,23 +83,17 @@ import RemoveJanitor from '@/components/RemoveJanitor.vue'
 import AddTag from '@/components/AddTag.vue'
 import AddFolder from '@/components/AddFolder.vue'
 
+import CreateNote from '@/components/CreateNote.vue'
+
 interface Props {
   provider: T.Provider;
 }
 const props = defineProps<Props>();
 const store = useStore();
 
-const title = ref('');
-const content = ref('');
-
-const sendPost = () => {
-  diaryAPI.createNote({
-    flag: props.provider,
-    author: sigShip(window.ship),
-    title: title.value,
-    content: content.value,
-  })
-}
+const hostShip = computed<T.Ship>(() => {
+  return foundation.value.foundation.provider.split('/')[0]
+})
 
 const foundation = computed<T.StateFoundation>(() => {
   return store.getters[GetterTypes.FOUNDATION_BY_PROVIDER](props.provider)

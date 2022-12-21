@@ -17,6 +17,13 @@
       </ul>
     </div>
 
+    <div>
+      <h3>TODO: Add post:</h3>
+      <div>
+        <CreateNote :host="host" :foundation="foundation.name" />
+      </div>
+    </div>
+
     <div v-if="false">
       <pre>{{ foundation }}</pre>
     </div>
@@ -26,6 +33,7 @@
 
 <script setup lang="ts">
 import Post from "@/components/Post.vue"
+import CreateNote from '@/components/CreateNote.vue'
 
 import * as R from "../types/rama-types";
 import * as D from "../types/diary-types";
