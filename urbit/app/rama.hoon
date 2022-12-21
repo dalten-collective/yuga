@@ -232,6 +232,15 @@
     =/  fun=[hav=? foundation:hari]  faun
     =/  met=rama:states:meta  metas
     ?-    r
+        [%set-author *]
+      =.  metadata.fun
+        :+  %0  %rama
+        met(authors (~(put ju authors.met) them.r item.r))
+      %=    dat
+          hosts
+        (~(put by hosts) p.p (~(put by fauna) q.p fun))
+      ==
+    ::
         [%set-views *]
       =.  metadata.fun
         :+  %0  %rama
