@@ -39,12 +39,12 @@
   |_  =bowl:gall
   +*  this  .
       def   ~(. (default-agent this %|) bowl)
-      gen   ~(. +> [bowl ~])
+      eng   ~(. +> [bowl ~])
   ++  on-init
     ^-  (quip card _this)
     ~>  %bout.[0 '%rama +on-init']
     =^  cards  state
-      abet:init:gen
+      abet:init:eng
     [cards this]
       
   ::
@@ -58,7 +58,7 @@
     ~>  %bout.[0 '%rama +on-load']
     ^-  (quip card _this)
     =^  cards  state
-      abet:(load:gen ole)
+      abet:(load:eng ole)
     [cards this]
   ::
   ++  on-poke
@@ -66,14 +66,14 @@
     ~>  %bout.[0 '%rama +on-poke']
     ^-  (quip card _this)
     =^  cards  state
-      abet:(poke:gen cag)
+      abet:(poke:eng cag)
     [cards this]
   ::
   ++  on-peek
     |=  pat=path
     ~>  %bout.[0 '%rama +on-peek']
     ^-  (unit (unit cage))
-    (peek:gen pat)
+    (peek:eng pat)
   ::
   ++  on-arvo
     |=  [wir=wire sig=sign-arvo]
@@ -86,14 +86,14 @@
     ~>  %bout.[0 '%rama +on-agent']
     ^-  (quip card _this)
     =^  cards  state
-      abet:(dude wir sig)
+      abet:(dude:eng wir sig)
     [cards this]
   ::
   ++  on-watch
   |=  pat=path
   ~>  %bout.[0 '%rama +on-watch']
   =^  cards  state
-    abet:(peer pat)
+    abet:(peer:eng pat)
   [cards this]
   ::
   ++  on-fail
@@ -162,10 +162,11 @@
     (emit [%pass wir %agent [p %hari] %watch /relay])
   ::  +metas: watch hari on some ship, metadata
   ++  metas
-    |=  p=@p
+    |=  f=flag
     ^+  dat
-    =/  wir  /metas/(scot %p p)
-    (emit [%pass wir %agent [p %hari] %watch /metas])
+    =/  wir  /metas/(scot %p p.f)/(scot %tas q.f)
+    %-  emit
+    [%pass wir %agent [p.f %hari] %watch /metas/(scot %tas q.f)]
   --
 ::  +meat: metadata handling
 ::
@@ -179,6 +180,7 @@
     ==
   ++  fauna
     ^-  (map term [? foundation:hari])
+    ~&  >  (~(got by (~(got by hosts) p.p)) %another-rus-joint)
     (~(got by hosts) p.p)
   ++  faun
     ^-  [? foundation:hari]
@@ -230,6 +232,15 @@
     =/  fun=[hav=? foundation:hari]  faun
     =/  met=rama:states:meta  metas
     ?-    r
+        [%set-author *]
+      =.  metadata.fun
+        :+  %0  %rama
+        met(authors (~(put ju authors.met) them.r item.r))
+      %=    dat
+          hosts
+        (~(put by hosts) p.p (~(put by fauna) q.p fun))
+      ==
+    ::
         [%set-views *]
       =.  metadata.fun
         :+  %0  %rama
@@ -309,14 +320,12 @@
   ++  host
     |=  wat=?
     ^+  dat
-    ~_  leaf+"bad-rama-action - cannot find {<q.flag>}"
-    =|  emt=(set [term [? foundation:hari]])
-    =/  old=[hav=? fon=foundation:hari]
-      %.  q.flag
-      %~  got  by
-      (malt ~(tap in (~(gut by hosts) p.flag emt)))
+    ~_  leaf+"bad-rama-action - cannot find {<flag>}"
+    =/  hav=(map term [? foundation:hari])
+      (~(get ju hosts) p.flag)
+    =+  old=(~(got by hav) q.flag)
     =.  hosts
-      %.  [p.flag q.flag wat fon.old]
+      %.  [p.flag q.flag wat +.old]
       ~(put ju (~(del ju hosts) p.flag [q.flag old]))
     ::
     ?:  =(our.bol p.flag)  dat
@@ -413,7 +422,9 @@
       =/  frm=@p  (slav %p who.pol)
       ?+  -.sig  dat
         %kick  (relay:view frm)
-        %fact  (rehydrate frm !<(report:rama q.cage.sig))
+        %fact  
+        ~&  >>>  !<(report:rama q.cage.sig)
+        (rehydrate frm !<(report:rama q.cage.sig))
           %watch-ack
         %.  dat
         ?~  p.sig  same
@@ -422,10 +433,11 @@
         leaf/"%rama cannot watch {(scow %p who.pol)}'s relay"
       ==
     ::
-        [%metas who=@ ~]
-      =/  frm=@p  (slav %p who.pol)
+        [%metas who=@ wat=@ ~]
+      =/  frm=@p    (slav %p who.pol)
+      =/  fon=@tas  (slav %tas wat.pol)
       ?+  -.sig  dat
-        %kick  (metas:view frm)
+        %kick  (metas:view frm fon)
         %fact  (meat frm !<(report:meta q.cage.sig))
           %watch-ack
         %.  dat
@@ -503,8 +515,9 @@
       (malt ~(tap in (~(gut by hosts) p.f ~)))
     ?-    -.a
         %found
+      ~&  >>  [%receiving %found q.f]
       ?^  hav=(~(get by foundations) q.f)  dat
-      =-  (metas:view:(show(hosts -) rama-report+!>([f a])) w)
+      =-  (metas:view:(show(hosts -) rama-report+!>([f a])) f)
       %+  ~(put by hosts)  p.f
       %+  ~(put by foundations)  q.f
       [?:(=(our.bol w) %.y %.n) f ~ ~ [%0 [%rama ~ ~ ~ ~]]]
