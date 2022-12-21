@@ -180,7 +180,6 @@
     ==
   ++  fauna
     ^-  (map term [? foundation:hari])
-    ~&  >  (~(got by (~(got by hosts) p.p)) %another-rus-joint)
     (~(got by hosts) p.p)
   ++  faun
     ^-  [? foundation:hari]
