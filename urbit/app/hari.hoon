@@ -320,6 +320,9 @@
           =,  act
           (post:~(diary land fon) tit cov ver)
       ::
+        :-  act=act
+        (~(auth meta fon.act) src.bol `@ud`now.bol)
+      ::
         (~(edit meta fon.act) `@ud`now.bol met.act)
       ==
     ::
@@ -349,8 +352,14 @@
       =-  (show:- hari-somber+!>(act))
       ?-    -.act
         %tag-note  (~(tags meta fon.act) item.act tag.act)
-        %del-note  (wipe:lands item.act)
         %del-quip  (dust:lands item.act quip.act)
+      ::
+          %del-note
+        =~  :+  act=act  lands=lands
+            (~(kill meta fon.act) item.act)
+        ::
+            (wipe:lands item.act)
+        ==
       ==
     ==
   ::  +staff: modifications to janitors, almoners
@@ -507,6 +516,48 @@
       metadata:faun
     ?>  ?=([%0 %hari *] sat-m)
     [public:sat-m secret:sat-m]
+  ::  +kill: remove all indications of a note
+  ::
+  ++  kill
+    |=  i=@ud
+    =/  fun=foundation:hari    faun
+    =/  met=hari:states:^meta  metas
+    =.  metadata.fun
+      :+  %0  %hari
+      %=    met
+        views.public  (~(del by views.public.met) i)
+      ::
+          authors.public
+        =+  aut=authors.public.met
+        %-  ~(rep by authors.public.met)
+        |=  [[p=@p s=(set @ud)] a=_aut]
+        ?.((~(has in s) i) a (~(del ju a) p i))
+      ::
+          folders.public
+        =+  fol=folders.public.met
+        %-  ~(rep by folders.public.met)
+        |=  [[t=term s=(set @ud)] f=_fol]
+        ?.((~(has in s) i) f (~(del ju f) t s))
+      ::
+          tags.public
+        =+  tag=tags.public.met
+        %-  ~(rep by tags.public.met)
+        |=  [[t=term s=(set @ud)] g=_tag]
+        ?.((~(has in s) i) g (~(del ju g) t s))
+      ==
+    %-  lupe(foundations (~(put by foundations) fon fun))
+    [[provider.fun [%result %all %rama public.met]] &]
+  ::  +auth: set an author
+  ::
+  ++  auth
+    |=  [p=@p i=@ud]
+    =/  fun=foundation:hari    faun
+    =/  met=hari:states:^meta  metas
+    =.  metadata.fun
+      :+  %0  %hari
+      met(authors.public (~(put ju authors.public.met) p i))
+    %-  lupe(foundations (~(put by foundations) fon fun))
+    [[provider.fun [%result %set-author p i]] &]
   ::  +view: update view count
   ::
   ++  view
