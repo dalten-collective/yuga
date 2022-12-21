@@ -383,6 +383,32 @@ This will send, to the front end, upon successfully joining the group (not immed
 }
 ```
 
+### Posts / Notes / Comments
+
+#### Add Note / Create a post
+
+```json
+mark: 'hari-schizo', app: hari
+
+{
+  fon: 'name-of-foundation',
+  tit: 'Title for Post',
+  cov: 'https://images.com/image-url-for-cover.jpg',
+  ver: [
+    {
+      inline: [
+        "# The Post Content\n\nAs **one big cord**"
+      ]
+    }
+  ],
+  met: {
+    fol: 'folder-name',
+    tag: ['array', 'of', 'tagnames']
+  },
+}
+```
+
+
 ## Rama's User Experience
 
 The most likely thing to do here is to get the scry from diary of the resource in question of the most recent 10 posts in outline format to display, with a scry like this:
