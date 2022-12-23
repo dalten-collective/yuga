@@ -2,52 +2,49 @@
   <div>
     <h1 class="text-xl">{{ foundation.name }}</h1>
     <CreateNote :host="hostShip" :foundation="foundation.name" />
-    <div>
-      Provider: {{ foundation.foundation.provider }}
-      host shipt: {{ hostShip }}
+    <div class="p-2 border rounded-sm">
+      <div>
+        <h2>Almoners</h2>
+        <ul>
+          <li v-for="a in foundation.foundation.almoners" :key="a">
+            <div class="flex flex-row">
+              {{ a }}
+              <RemoveAlmoner :foundation="foundation" :almoner="a" />
+            </div>
+          </li>
+        </ul>
+        <AddAlmoners :foundation="foundation" />
+      </div>
+
+      <div>
+        <h2>Janitors</h2>
+        <ul>
+          <li v-for="j in foundation.foundation.janitors" :key="j">
+            <div class="flex flex-row">
+              {{ j }}
+              <RemoveJanitor :foundation="foundation" :janitor="j" />
+            </div>
+          </li>
+        </ul>
+        <AddJanitors :foundation="foundation" />
+      </div>
+
+      <div>
+        <h2>Accepted Tags</h2>
+        <ul>
+          <li v-for="t in foundation.foundation.metadata.public.tags" :key="t.tag">
+            {{ t }}
+          </li>
+        </ul>
+        <AddTag :foundation="foundation" />
+      </div>
     </div>
 
     <div>
-      <h2>Almoners</h2>
-      <ul>
-        <li v-for="a in foundation.foundation.almoners" :key="a">
-          <div class="flex flex-row">
-            {{ a }}
-            <RemoveAlmoner :foundation="foundation" :almoner="a" />
-          </div>
-        </li>
-      </ul>
-      <AddAlmoners :foundation="foundation" />
-    </div>
-
-    <div>
-      <h2>Janitors</h2>
-      <ul>
-        <li v-for="j in foundation.foundation.janitors" :key="j">
-          <div class="flex flex-row">
-            {{ j }}
-            <RemoveJanitor :foundation="foundation" :janitor="j" />
-          </div>
-        </li>
-      </ul>
-      <AddJanitors :foundation="foundation" />
-    </div>
-
-    <div>
-      <h2>Accepted Tags</h2>
-      <ul>
-        <li v-for="t in foundation.foundation.metadata.public.tags" :key="t.tag">
-          {{ t }}
-        </li>
-      </ul>
-      <AddTag :foundation="foundation" />
-    </div>
-
-    <div>
-      <h2>Folders</h2>
+      <h2>Posts</h2>
       <ul>
         <li v-for="f in foundation.foundation.metadata.public.folders" :key="f.folder">
-          {{ f }}
+          <PostFolder :folder="f" :host="hostShip" :foundation="foundation.name" />
         </li>
       </ul>
       <AddFolder :foundation="foundation" />
@@ -84,6 +81,7 @@ import AddTag from '@/components/AddTag.vue'
 import AddFolder from '@/components/AddFolder.vue'
 
 import CreateNote from '@/components/CreateNote.vue'
+import PostFolder from '@/components/PostFolder.vue'
 
 interface Props {
   provider: T.Provider;

@@ -42,6 +42,16 @@ export default {
     },
 
     addAlmoners(ctx, payload: T.NameAndAlmoners) {
+      console.log('adding new ', foundation)
+      let temp = foundation
+      let foundName = temp.name
+      let {name, ...otherFields} = temp
+      let newFoundation: T.Foundation = temp
+      const toAdd = {
+        foundation: newFoundation,
+        name: foundName
+      }
+      ctx.commit("addFoundation", toAdd)
     },
 
   },

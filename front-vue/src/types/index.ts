@@ -9,29 +9,29 @@ export type Provider = `${ Ship }/${ FoundationName }`
 
 export type Post = string;  // TODO:
 
-export type AuthorsMeta = Array<{
+export interface AuthorsMeta {
   author: Ship;
   posts: Array<Post>;
-}>
-export type FoldersMeta = Array<{
+}
+export interface FoldersMeta {
   folder: string;
   posts: Array<Post>;
-}>
-export type TagsMeta = Array<{
+}
+export interface TagsMeta {
   tag: string;
   posts: Array<Post>;
-}>
-export type ViewsMeta = Array<{
+}
+export interface ViewsMeta {
   post: string;
   views: number;
-}>
+}
 
 export interface Metadata {
   public: {
-    authors: AuthorsMeta;
-    folders: FoldersMeta;
-    tags: TagsMeta;
-    views: ViewsMeta;
+    authors: Array<AuthorsMeta>;
+    folders: Array<FoldersMeta>;
+    tags: Array<TagsMeta>;
+    views: Array<ViewsMeta>;
   }
   secret: {
     "proposed-tags": Array<string>;
@@ -57,6 +57,16 @@ export interface FoundationWithName {
   almoners: Array<Ship>;
   janitors: Array<Ship>;
   name?: FoundationName;
+}
+
+export interface FolderPost {
+  'post-time': number;
+  id: string;
+}
+
+export interface Folder {
+  folder: string;
+  posts: Array<FolderPost>
 }
 
 //// Response types

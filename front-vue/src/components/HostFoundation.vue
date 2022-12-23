@@ -15,6 +15,12 @@
           <Post :post="p" :foundationHost="host" :foundationName="foundation.name" />
         </li>
       </ul>
+      <ul>
+        <h1>fOLDERS</h1>
+        <li v-for="f in foundation.details.metadata.folders" :key="f.folder">
+          <PostFolder :folder="f" :host="host" :foundation="foundation.name" />
+        </li>
+      </ul>
     </div>
 
     <div>
@@ -34,6 +40,7 @@
 <script setup lang="ts">
 import Post from "@/components/Post.vue"
 import CreateNote from '@/components/CreateNote.vue'
+import PostFolder from '@/components/PostFolder.vue'
 
 import * as R from "../types/rama-types";
 import * as D from "../types/diary-types";

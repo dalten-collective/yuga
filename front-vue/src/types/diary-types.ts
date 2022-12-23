@@ -4,9 +4,9 @@ export interface PostContent {
   inline: Array<string | Object>
 }
 
-export type PostList = Array<{ [key: string]: Post }>
+export type PostList = Array<{ [key: string]: PostOutline }>
 
-export interface Post {
+export interface PostOutline {
   quippers: Array<T.Ship>;
   author: T.Ship;
   image: string;
@@ -16,7 +16,7 @@ export interface Post {
   content: Array<PostContent>;
 }
 
-export interface PostWithID {
+export interface PostOutlineWithID {
   id: string;
   quippers: Array<T.Ship>;
   author: T.Ship;
@@ -25,4 +25,24 @@ export interface PostWithID {
   send: number;
   quipCount: number;
   content: Array<PostContent>;
+}
+
+export interface Seal {
+  feels: Object;
+  quips: Object;
+  time: number;
+}
+
+export interface Essay {
+  author: T.Ship;
+  content: Array<PostContent>;
+  image: string;
+  sent: number;
+  title: string;
+}
+
+export interface PostAsSealEssay {
+  id?: string;
+  essay: Essay;
+  seal: Seal;
 }

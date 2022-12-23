@@ -5,7 +5,9 @@ export type Host = T.Ship;
 export interface SubFoundation {
   name: string;
   subscribed: boolean;
-  details: T.Metadata["public"]
+  details: {
+    metadata: T.Metadata["public"]
+  }
 }
 
 export interface HostObject {
