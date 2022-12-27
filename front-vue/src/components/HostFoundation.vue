@@ -6,24 +6,21 @@
       subscribed: {{ foundation.subscribed }}
       <button class="p-2 text-white bg-blue-300 border rounded-md" @click="enter">Subscribe</button>
       <button class="p-2 text-white bg-blue-300 border rounded-md" @click="leave">Leave</button>
+      <pre>Am Janitor? {{ amJanitor }}</pre>
+      <pre>Am Almoner? {{ amAlmoner }}</pre>
     </div>
 
     <div>
       <h3 class="text-lg">Posts:</h3>
-      <ul class="list-disc">
-        <li v-for="p in postsWithIDs" :key="p.id">
-          <Post :post="p" :foundationHost="host" :foundationName="foundation.name" />
-        </li>
-      </ul>
       <ul>
-        <h1>fOLDERS</h1>
+        <h1>FOLDERS</h1>
         <li v-for="f in foundation.details.metadata.folders" :key="f.folder">
           <PostFolder :folder="f" :host="host" :foundation="foundation.name" />
         </li>
       </ul>
     </div>
 
-    <div>
+    <div v-if="amAlmoner">
       <h3>TODO: Add post:</h3>
       <div>
         <CreateNote :host="host" :foundation="foundation.name" />
@@ -47,6 +44,7 @@ import * as D from "../types/diary-types";
 import { computed, onMounted, ref, Ref } from "vue";
 import { useStore } from "../store/store";
 import { GetterTypes } from "@/store/getter-types";
+import { sigShip } from '@/helpers'
 
 import urbitAPI from "@/api/urbitAPI"
 import * as ramaAPI from "@/api/ramaAPI"
@@ -86,6 +84,23 @@ const leave = () => {
     fond: props.foundation.name
   })
 }
+
+const theFoundation = computed<R.SubFoundation | null>(() => {
+  return store.getters[GetterTypes.HOSTED_FOUNDATION_BY_PROVIDER](`${ props.host }/${ props.foundation.name }`)
+})
+
+const amJanitor = computed(() => {
+  if (!theFoundation || !theFoundation.value) {
+    return false
+  }
+  return theFoundation.value.details.janitors.includes(sigShip(window.ship))
+})
+const amAlmoner = computed(() => {
+  if (!theFoundation || !theFoundation.value) {
+    return false
+  }
+  return theFoundation.value.details.almoners.includes(sigShip(window.ship))
+})
 
 onMounted(() => {
   if (!props.foundation.subscribed) {

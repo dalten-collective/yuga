@@ -2,7 +2,7 @@
   <div>
     <pre>
       show folder: {{ showFolder }}
-      post: {{ post }}
+      tags: {{ currentTags }}
     </pre>
 
     <h1 class="text-2xl">{{ post.title }}</h1>
@@ -18,11 +18,43 @@
       </li>
     </ul>
     <button @click="getNote" class="p-2 text-white bg-blue-300 border rounded-md">get more</button>
-    <a :href="postLink">Visit</a>
     <pre v-if="('value' in more)">{{ more }}</pre>
+
+    <pre>
+      am janitor? {{ amJanitor }}
+      am almoner? {{ amAlmoner }}
+    </pre>
 
     <div v-if="amJanitor">
       <h1>janitor area</h1>
+      <!--
+      <pre>tags: {{ tags }}</pre>
+      -->
+      <pre>current: {{ currentFolder }}</pre>
+      <select v-model="selectedFolder">
+        <option v-for="name in folderNames" :key="name" :value="name">
+          {{ name === '' ? 'No Folder' : name }}
+        </option>
+      </select>
+      <button @click="moveToFolder">Move</button>
+
+      <h2 class="text-xl">Tags</h2>
+      <ul>
+        <li v-for="tag in currentTags" :key="tag">
+          {{ tag }}
+        </li>
+      </ul>
+      <select v-model="selectedTag">
+        <option disabled value="">Choose a tag</option>
+        <option v-for="tagName in potentialTags" :key="tagName" :value="tagName">
+          {{ tagName }}
+        </option>
+      </select>
+      <button @click="addTag">Add Tag</button>
+    </div>
+
+    <div v-if="amAlmoner">
+      <h1>almoner area</h1>
       <!--
       <pre>tags: {{ tags }}</pre>
       -->
@@ -61,6 +93,7 @@ const props = defineProps<Props>();
 const store = useStore();
 const more = reactive({})
 const selectedFolder = ref('')
+const selectedTag = ref('')
 
 onMounted(() => {
   selectedFolder.value = currentFolder.value
@@ -84,15 +117,21 @@ const amJanitor = computed(() => {
   }
   return theFoundation.value.details.janitors.includes(sigShip(window.ship))
 })
+const amAlmoner = computed(() => {
+  if (!theFoundation || !theFoundation.value) {
+    return false
+  }
+  return theFoundation.value.details.almoners.includes(sigShip(window.ship))
+})
 
-const folders = computed<Array<T.FoldersMeta> | []>(() => {
+const foundationFolders = computed<Array<R.FoldersMeta> | []>(() => {
   if (!theFoundation) {
     return []
   }
   return store.getters[GetterTypes.HOSTED_FOLDERS_BY_PROVIDER](`${ props.foundationHost }/${ props.foundationName }`)
 })
 
-const tags = computed<Array<T.TagsMeta>>(() => {
+const foundationTags = computed<Array<R.TagsMeta>>(() => {
   if (!theFoundation) {
     return false
   }
@@ -100,20 +139,48 @@ const tags = computed<Array<T.TagsMeta>>(() => {
 })
 
 const currentFolder = computed<string>(() => {
-  return folders.value.filter((f: T.FoldersMeta) => {
-    return f.posts.find(pm => pm.id === props.post.id)
-  }).folder
+  const folder = foundationFolders.value.find((fm: R.FoldersMeta) => {
+    const post = fm.posts.find((pm: R.RamaPost) => pm.id === props.post.id)
+    if (post) {
+      return true
+    }
+    return false
+  })
+  if (folder) {
+    return folder.folder
+  }
+  return ''
 })
 
-const currentTags = computed<string>(() => {
-  return tags.value.filter((f: T.FoldersMeta) => {
-    return f.posts.find(pm => pm.id === props.post.id)
-  }).tag
+const currentTags = computed<Array<string> | []>(() => {
+  const ct = foundationTags.value.filter((tm: R.TagsMeta) => {
+    return tm.posts.find((rp: R.RamaPost) => rp.id === props.post.id)
+  })
+  return ct.map(t => t.tag)
 })
 
 const folderNames = computed(() => {
-  return folders.value.map(f => f.folder)
+  return foundationFolders.value.map((fm: R.FoldersMeta) => fm.folder)
 })
+
+const potentialTags = computed<Array<string>>(() => {
+  return foundationTags.value.map(t => t.tag).filter((tag: string) => {
+    return !currentTags.value.includes(tag)
+  })
+})
+
+const addTag = () => {
+  const newTags = currentTags.value || []
+  newTags.push(selectedTag.value)
+
+  ramaAPI.addTagToNote({
+    foundation: props.foundationName,
+    who: sigShip(props.foundationHost),
+    folder: currentFolder.value,
+    tags: newTags,
+    post: props.post,
+  })
+}
 
 const getNote = () => {
   diaryAPI.getNote({
@@ -130,7 +197,7 @@ const moveToFolder = () => {
     foundation: props.foundationName,
     who: sigShip(props.foundationHost),
     folder: selectedFolder.value,
-    tags: ['fixme', 'pls'],
+    tags: [], // TODO: current tags strings
     post: props.post,
   })
 }

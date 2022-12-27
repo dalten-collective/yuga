@@ -10,6 +10,15 @@ export interface SubFoundation {
   }
 }
 
+export interface FoldersMeta {
+  folder: string;
+  posts: Array<RamaPost>;
+}
+export interface TagsMeta {
+  tag: string;
+  posts: Array<RamaPost>;
+}
+
 export interface HostObject {
   host: Host;
   foundations: Array<SubFoundation>;
@@ -21,6 +30,11 @@ export interface Saved {
   provider: T.Provider;
   id: string;
   "post-time": number;
+}
+
+export interface RamaPost {
+  "post-time": number;
+  id: string;
 }
 
 export interface InitialStateResponse {

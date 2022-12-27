@@ -4,7 +4,7 @@
     <div>
       <h2>Posts</h2>
       <li v-for="p in posts" :key="p.id">
-        <Post :post="p" :showFolder="false" :foundationHost="host" :foundationName="foundation.name" />
+        <Post :post="p" :showFolder="false" :foundationHost="host" :foundationName="foundation" />
       </li>
     </div>
   </div>

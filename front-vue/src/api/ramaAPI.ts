@@ -94,6 +94,43 @@ export function moveToFolder(args: {
     });
 }
 
+export function addTagToNote(args: {
+  foundation: T.FoundationName;
+  who: T.Ship;
+  folder: string;
+  tags: Array<string>;
+  post: D.PostOutlineWithID;
+}) {
+  const { who, foundation, folder, tags } = args
+  const content = args.post.content
+  const item = makePatDa(args.post.id)
+
+  const addTagJson = {
+    fon: foundation,
+    item,
+    ver: content,
+    met: {
+      fol: folder,
+      tag: tags,
+    }
+  }
+
+  urbitAPI
+    .poke({
+      app: "rama",
+      mark: HARI_RAMA_MARK,
+      json: {
+        who,
+        wat: {
+          'fix-note': addTagJson
+        }
+      },
+    })
+    .then((r) => {
+      return r;
+    });
+}
+
 export function addNote(args: {
   foundation: T.FoundationName;
   who: T.Ship;
