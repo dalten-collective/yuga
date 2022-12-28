@@ -6,10 +6,20 @@ export interface SubFoundation {
   name: string;
   subscribed: boolean;
   details: {
-    metadata: T.Metadata["public"]
+    metadata: Metadata;
   }
 }
 
+export interface Metadata {
+  authors: Array<AuthorsMeta>;
+  folders: Array<FoldersMeta>;
+  tags: Array<TagsMeta>;
+}
+
+export interface AuthorsMeta {
+  author: string;
+  posts: Array<RamaPost>;
+}
 export interface FoldersMeta {
   folder: string;
   posts: Array<RamaPost>;

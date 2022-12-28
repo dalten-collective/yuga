@@ -11,11 +11,19 @@
     </div>
 
     <div>
-      <h3 class="text-lg">Posts:</h3>
+      <h3 class="text-xl">Posts:</h3>
       <ul>
-        <h1>FOLDERS</h1>
         <li v-for="f in foundation.details.metadata.folders" :key="f.folder">
           <PostFolder :folder="f" :host="host" :foundation="foundation.name" />
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="text-xl">Authors:</h3>
+      <ul>
+        <li v-for="a in foundation.details.metadata.authors" :key="a.author">
+          <AuthorFolder :author="a" :host="host" :foundation="foundation.name" />
         </li>
       </ul>
     </div>
@@ -38,6 +46,7 @@
 import Post from "@/components/Post.vue"
 import CreateNote from '@/components/CreateNote.vue'
 import PostFolder from '@/components/PostFolder.vue'
+import AuthorFolder from '@/components/AuthorFolder.vue'
 
 import * as R from "../types/rama-types";
 import * as D from "../types/diary-types";
