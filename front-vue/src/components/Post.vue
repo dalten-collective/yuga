@@ -8,7 +8,12 @@
     <h1 class="text-2xl">{{ post.title }}</h1>
     <h1 class="text-lg">by: {{ post.author }}</h1>
     <h1 class="">comments {{ post.quipCount }}</h1>
-
+    <div v-if="showFolder">
+      <pre>folder: {{ currentFolder === '' ? 'No Folder' : currentFolder }}</pre>
+    </div>
+    <div>
+      <pre>tags: {{ currentTags }}</pre>
+    </div>
     <p>
       TODO PREVIEW?: {{ post.content[0].inline[0] }}...
     </p>
@@ -27,9 +32,6 @@
 
     <div v-if="amJanitor">
       <h1>janitor area</h1>
-      <!--
-      <pre>tags: {{ tags }}</pre>
-      -->
       <pre>current: {{ currentFolder }}</pre>
       <select v-model="selectedFolder">
         <option v-for="name in folderNames" :key="name" :value="name">
@@ -42,6 +44,9 @@
       <ul>
         <li v-for="tag in currentTags" :key="tag">
           {{ tag }}
+          <div v-if="amJanitor">
+            <button class="p-2 text-white bg-red-400 rounded-md" @click="removeTag(tag)">Remove</button>
+          </div>
         </li>
       </ul>
       <select v-model="selectedTag">
@@ -173,7 +178,20 @@ const addTag = () => {
   const newTags = currentTags.value || []
   newTags.push(selectedTag.value)
 
-  ramaAPI.addTagToNote({
+  ramaAPI.editNoteTags({
+    foundation: props.foundationName,
+    who: sigShip(props.foundationHost),
+    folder: currentFolder.value,
+    tags: newTags,
+    post: props.post,
+  })
+}
+
+const removeTag = (tag: string) => {
+  const prevTags = currentTags.value || []
+  const newTags = prevTags.filter((t: string) => t != tag)
+
+  ramaAPI.editNoteTags({
     foundation: props.foundationName,
     who: sigShip(props.foundationHost),
     folder: currentFolder.value,

@@ -94,7 +94,7 @@ export function moveToFolder(args: {
     });
 }
 
-export function addTagToNote(args: {
+export function editNoteTags(args: {
   foundation: T.FoundationName;
   who: T.Ship;
   folder: string;
@@ -105,7 +105,7 @@ export function addTagToNote(args: {
   const content = args.post.content
   const item = makePatDa(args.post.id)
 
-  const addTagJson = {
+  const editTagJson = {
     fon: foundation,
     item,
     ver: content,
@@ -122,7 +122,7 @@ export function addTagToNote(args: {
       json: {
         who,
         wat: {
-          'fix-note': addTagJson
+          'fix-note': editTagJson
         }
       },
     })
