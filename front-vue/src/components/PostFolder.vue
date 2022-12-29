@@ -3,8 +3,9 @@
     <h1>{{ folder.folder === '' ? "No folder" : folder.folder }}</h1>
     <div>
       <h2>Posts</h2>
+      <pre>rama: {{ rama }}</pre>
       <li v-for="p in posts" :key="p.id">
-        <Post :post="p" :showFolder="false" :foundationHost="host" :foundationName="foundation" />
+        <RamaPostPreview :post="p" :showFolder="false" :foundationHost="host" :foundationName="foundation" />
       </li>
     </div>
   </div>
@@ -16,12 +17,14 @@ import * as D from "@/types/diary"
 import { onMounted, ref } from 'vue';
 import * as diaryAPI from '@/api/diaryAPI'
 
-import Post from '@/components/Post.vue'
+// import Post from '@/components/Post.vue'
+import RamaPostPreview from '@/components/RamaPostPreview.vue'
 
 interface Props {
   folder: T.Folder;
   host: T.Ship;
   foundation: T.FoundationName;
+  rama: boolean;
 }
 
 const props = defineProps<Props>();

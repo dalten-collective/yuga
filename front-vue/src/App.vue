@@ -10,9 +10,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useStore } from '@/store/store'
+import {ActionTypes} from '@/store/action-types';
+
+const store = useStore();
 
 const ourShip = ref(window.ship);
+
+onMounted(() => {
+  store.dispatch(ActionTypes.RAMA_SCRY_STATE)
+})
 
 </script>
 

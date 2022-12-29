@@ -158,7 +158,7 @@ export const actions: ActionTree<State, State> & Actions = {
   ////// Scries
 
   [ActionTypes.RAMA_SCRY_STATE]({ dispatch }) {
-    ramaAPI.scryState().then((data: R.InitialStateResponse) => {
+    return ramaAPI.scryState().then((data: R.InitialStateResponse) => {
       console.log('rrrrr ', data)
       dispatch(ActionTypes.HOSTS_SET, data.put.hosts as Array<R.HostObject>)
       dispatch(ActionTypes.SAVED_SET, data.put.saved as Array<R.Saved>)

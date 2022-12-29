@@ -6,6 +6,10 @@
       <h2>Foundations offered</h2>
       <div class="flex flex-col">
         <div v-for="f in theHost.foundations" :key="f.name">
+          <RouterLink class="text-blue-500 underline" :to="{ name: 'hostFoundationShow', params: { foundationName: f.name, foundationHost: theHost.host } }">
+            {{ f.name }}
+            {{ theHost.host }}
+          </RouterLink>
           <HostFoundation :foundation="f" :host="theHost.host" />
         </div>
       </div>
@@ -16,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import HostFoundation from "@/components/HostFoundation.vue"
+import HostFoundation from "@/views/HostFoundation.vue"
 
 import * as R from "../types/rama-types";
 import { computed, onMounted } from "vue";
