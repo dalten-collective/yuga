@@ -3,7 +3,8 @@
     <div v-if="post && ('essay' in post)">
       <article>
         <header class="flex flex-col">
-          <div>
+          <div class="flex flex-col">
+            <img v-if="post.essay.image" :src="post.essay.image" class="object-contain w-full h-64" />
             <h1 class="text-2xl">{{ post.essay.title }}</h1>
           </div>
           <div class="flex flex-row justify-between">
@@ -23,20 +24,16 @@
         </header>
 
         <main>
-          <div>
-            {{ bodyContent }}
+          <div class="rendered-markdown" v-html="bodyMarkedSafe">
           </div>
         </main>
 
         <aside>
+          comments:
           {{ post.seal.quips }}
         </aside>
 
       </article>
-
-      <pre>
-        post: {{ post }}
-      </pre>
     </div>
 
     <div v-else>
@@ -59,6 +56,9 @@ import { sigShip } from '@/helpers'
 // import urbitAPI from "@/api/urbitAPI"
 import * as diaryAPI from "@/api/diaryAPI"
 import * as ramaAPI from "@/api/ramaAPI"
+
+import { marked } from 'marked'
+import * as DOMPurify from 'dompurify'
 
 interface Props {
   postID: string;
@@ -86,6 +86,16 @@ const bodyContent = computed(() => {
     return ""
   }
   return post.value.essay.content[0].inline[0]
+})
+
+const bodyMarked = computed(() => {
+  return marked(bodyContent.value)
+})
+
+const bodyMarkedSafe = computed(() => {
+  // let clean = DOMPurify.sanitize(bodyMarked.value) // TODO: not working.
+  let clean = bodyMarked.value
+  return clean
 })
 
 const postLink = computed(() => {
