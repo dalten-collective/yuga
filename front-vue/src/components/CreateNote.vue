@@ -1,12 +1,32 @@
 <template>
-  <div>
-    <input type="text" v-model="cover" />
-    <div class="w-48">
-      <img :src="cover" class="object-contain w-full h-48" />
+  <div class="flex flex-col">
+    <div class="flex flex-row">
+      <label for="cover-field">
+        Cover image URL
+        <input id="cover-field" placeholder="http://image.com/picture.png" type="text" v-model="cover" />
+      </label>
+
+      <div class="w-48">
+        cover preview:
+        <img :src="cover" class="object-contain w-full h-48" />
+      </div>
     </div>
-    <input type="text" v-model="title" />
-    <textarea v-model="content" />
-    <button @click="sendPost">Post</button>
+
+    <div>
+      <label for="title-field">
+        Post title
+        <input placeholder="" id="title-field" type="text" v-model="title" />
+      </label>
+    </div>
+
+    <div>
+      <label for="body-field">
+        Post body
+        <textarea rows="10" class="w-full" v-model="content" />
+      </label>
+    </div>
+
+    <button @click="sendPost" class="action-btn">Post</button>
   </div>
 </template>
 

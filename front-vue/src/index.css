@@ -38,6 +38,13 @@ input[type="text"] {
   @apply bg-gray-100;
 }
 
+textarea {
+  @apply p-1;
+  @apply border;
+  @apply rounded-sm;
+  @apply bg-gray-100;
+}
+
 label {
   @apply text-gray-800;
 }

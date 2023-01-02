@@ -66,8 +66,8 @@
         </div>
 
         <div v-if="amAlmoner">
-          <h3>TODO: Add post:</h3>
-          <div>
+          <div class="p-2 my-2 border rounded-md">
+            <h2 class="text-2xl">Add a post in {{ foundationName }}</h2>
             <CreateNote :host="host" :foundation="foundationName" />
           </div>
         </div>
