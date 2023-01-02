@@ -73,6 +73,11 @@ button.action-btn {
 button.cancel-btn {
   @apply bg-red-500;
 }
+button.loading-btn {
+  @apply bg-gray-300;
+  @apply text-gray-700;
+  @apply opacity-75;
+}
 
 ul.list-disc li {
   @apply ml-4;
