@@ -30,3 +30,43 @@
 .rendered-markdown li {
   @apply ml-4;
 }
+
+input[type="text"] {
+  @apply p-1;
+  @apply border;
+  @apply rounded-sm;
+  @apply bg-gray-100;
+}
+
+label {
+  @apply text-gray-800;
+}
+
+button {
+  @apply font-bold;
+  @apply p-2;
+  @apply border;
+  @apply rounded-md;
+  @apply bg-blue-400;
+  @apply text-white;
+}
+
+button[type="submit"] {
+  @apply font-bold;
+  @apply p-2;
+  @apply border;
+  @apply rounded-md;
+  @apply bg-blue-400;
+  @apply text-white;
+}
+
+button.action-btn {
+  @apply bg-green-500;
+}
+button.cancel-btn {
+  @apply bg-red-500;
+}
+
+ul.list-disc li {
+  @apply ml-4;
+}

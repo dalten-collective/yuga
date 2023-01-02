@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@extractus/article-extractor": "^7.2.8-rc1",
     "@types/dompurify": "^2.4.0",
     "@types/marked": "^4.0.8",
     "@urbit/api": "^2.1.0",
@@ -15,6 +16,7 @@
     "core-js": "^3.8.3",
     "dompurify": "^2.4.1",
     "marked": "^4.2.5",
+    "turndown": "^7.1.1",
     "typescript-vue-plugin": "^1.0.10",
     "vue": "^3.2.25",
     "vue-router": "^4.0.3",

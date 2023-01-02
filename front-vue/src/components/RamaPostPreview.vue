@@ -1,75 +1,79 @@
 <template>
   <div>
-    <h1 class="text-2xl">
-      <router-link class="text-blue-500 underline" :to="{ name: 'ramaPostShow', params: { host: foundationHost, foundationName, postID: post.id } }">
-        {{ post.title }}
-      </router-link>
-    </h1>
-    <h1 class="text-lg">by: {{ post.author }} TODO: link to author page</h1>
-    <h1 class="">comments {{ post.quipCount }}</h1>
-    <div v-if="showFolder">
-      <pre>folder: {{ currentFolder === '' ? 'No Folder' : currentFolder }}</pre>
-    </div>
-    <div>
-      <pre>tags: {{ currentTags }}</pre>
-    </div>
-    <p>
-      TODO PREVIEW?: {{ post.content[0].inline[0] }}...
-    </p>
-    <ul>
-      <li>
-        posted on TODO: {{ (new Date(post.sent)).toLocaleString() }}
-      </li>
-    </ul>
-    <button @click="getNote" class="p-2 text-white bg-blue-300 border rounded-md">get more</button>
-    <pre v-if="('value' in more)">{{ more }}</pre>
+    <div class="flex flex-row items-center justify-between">
+      <header class="flex flex-col">
+        <h1 class="text-2xl">
+          <router-link class="text-blue-500 underline" :to="{ name: 'ramaPostShow', params: { host: foundationHost, foundationName, postID: post.id } }">
+            {{ post.title }}
+          </router-link>
+        </h1>
+        <span class="">by: {{ post.author }} on {{ (new Date(post.seal.time)).toLocaleString() }}</span>
+      </header>
 
-    <pre>
-      am janitor? {{ amJanitor }}
-      am almoner? {{ amAlmoner }}
-    </pre>
-
-    <div v-if="amJanitor">
-      <h1>janitor area</h1>
-      <pre>current: {{ currentFolder }}</pre>
-      <select v-model="selectedFolder">
-        <option v-for="name in folderNames" :key="name" :value="name">
-          {{ name === '' ? 'No Folder' : name }}
-        </option>
-      </select>
-      <button @click="moveToFolder">Move</button>
-
-      <h2 class="text-xl">Tags</h2>
-      <ul>
-        <li v-for="tag in currentTags" :key="tag">
-          {{ tag }}
-          <div v-if="amJanitor">
-            <button class="p-2 text-white bg-red-400 rounded-md" @click="removeTag(tag)">Remove</button>
-          </div>
-        </li>
-      </ul>
-      <select v-model="selectedTag">
-        <option disabled value="">Choose a tag</option>
-        <option v-for="tagName in potentialTags" :key="tagName" :value="tagName">
-          {{ tagName }}
-        </option>
-      </select>
-      <button @click="addTag">Add Tag</button>
+      <aside class="flex flex-row justify-between">
+        <div class="text-right">
+          <h1 class="">{{ post.quipCount }} comments</h1>
+          <ul class="flex flex-row">
+            <li v-for="tag in currentTags" class="px-2 py-1 ml-2 text-sm font-bold text-blue-400 bg-blue-100 border border-blue-300 rounded-lg">
+              {{ tag }}
+            </li>
+          </ul>
+        </div>
+      </aside>
     </div>
 
-    <div v-if="amAlmoner">
-      <h1>almoner area</h1>
-      <!--
-      <pre>tags: {{ tags }}</pre>
-      -->
-      <pre>current: {{ currentFolder }}</pre>
-      <select v-model="selectedFolder">
-        <option v-for="name in folderNames" :key="name" :value="name">
-          {{ name === '' ? 'No Folder' : name }}
-        </option>
-      </select>
-      <button @click="moveToFolder">Move</button>
+    <div v-if="amJanitor" class="text-right">
+      <div class="mt-2 mb-4">
+        <span @click="toolsExpanded = true" class="text-blue-500 underline cursor-pointer" v-if="!toolsExpanded">Show Janitor Tools</span>
+        <span @click="toolsExpanded = false" class="text-blue-500 underline cursor-pointer" v-if="toolsExpanded">Close Janitor Tools</span>
+      </div>
+
+      <div v-if="toolsExpanded" class="flex flex-col justify-end">
+        <div class="self-end w-1/3 pb-2 mb-4 border-b">
+          <select v-model="selectedFolder" class="p-2 mr-2 rounded-md">
+            <option v-for="name in folderNames" :key="name" :value="name">
+              {{ name === '' ? 'No Folder' : name }}
+            </option>
+          </select>
+          <button class="action-btn" @click="moveToFolder">Move to folder</button>
+        </div>
+
+        <ul>
+          <li v-for="tag in currentTags" :key="tag" class="mb-1">
+            <span class="px-2 py-1 ml-2 text-sm font-bold text-blue-400 bg-blue-100 border border-blue-300 rounded-lg">
+              {{ tag }}
+            </span>
+            <span v-if="amJanitor" @click="removeTag(tag)" class="p-1 text-sm font-bold text-red-400 underline cursor-pointer">remove</span>
+          </li>
+        </ul>
+        <div class="my-2">
+          <select v-model="selectedTag" class="p-2 mr-2 rounded-md">
+            <option disabled value="">Add a tag</option>
+            <option v-for="tagName in potentialTags" :key="tagName" :value="tagName">
+              {{ tagName }}
+            </option>
+          </select>
+          <button @click="addTag" class="action-btn">Add Tag</button>
+        </div>
+      </div>
     </div>
+
+    <div v-if="false"> <!-- TODO -->
+      <div v-if="amAlmoner">
+        <h1>almoner area</h1>
+        <!--
+        <pre>tags: {{ tags }}</pre>
+        -->
+        <select v-model="selectedFolder">
+          <option v-for="name in folderNames" :key="name" :value="name">
+            {{ name === '' ? 'No Folder' : name }}
+          </option>
+        </select>
+        <button @click="moveToFolder">Move</button>
+      </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -98,6 +102,7 @@ const store = useStore();
 const more = reactive({})
 const selectedFolder = ref('')
 const selectedTag = ref('')
+const toolsExpanded = ref(false);
 
 onMounted(() => {
   selectedFolder.value = currentFolder.value

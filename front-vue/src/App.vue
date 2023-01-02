@@ -1,11 +1,25 @@
 <template>
-  DEBUG/TODO: Ship: {{ ourShip }}
-  <nav>
-    <router-link class="text-blue-500 underline" :to="{ name: 'admin' }">Admin</router-link>
-    <router-link class="text-blue-500 underline" :to="{ name: 'explore' }">Explore</router-link>
-  </nav>
-  <div>
-    <router-view />
+  <pre>
+  DEBUG
+  window.ship: {{ ourShip }}
+  </pre>
+
+  <div class="container mx-auto">
+    <nav class="p-2 border">
+      <div class="flex flex-row justify-start">
+        <ul class="flex flex-row">
+          <li class="mr-4">
+        <router-link class="text-blue-500 underline" :to="{ name: 'admin' }">Admin</router-link>
+          </li>
+          <li class="mr-4">
+        <router-link class="text-blue-500 underline" :to="{ name: 'explore' }">Explore</router-link>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div>
+      <router-view />
+    </div>
   </div>
 </template>
 

@@ -1,13 +1,24 @@
 <template>
   <div>
-    <h1>{{ folder.folder === '' ? "No folder" : folder.folder }}</h1>
-    <div>
-      <h2>Posts</h2>
-      <pre>rama: {{ rama }}</pre>
-      <li v-for="p in posts" :key="p.id">
+    <header>
+      <h1 class="flex flex-row justify-start text-xl">
+        <div>
+          {{ folder.folder === '' ? "No folder" : folder.folder }}
+          <span class="text-gray-400 text-md">({{ posts.length }} posts)</span>
+        </div>
+        <div class="ml-2">
+          <span v-if="!expanded" @click="expanded = true" class="text-blue-500 underline cursor-pointer">Open</span>
+          <span v-if="expanded" @click="expanded = false" class="text-blue-500 underline cursor-pointer">Close</span>
+        </div>
+      </h1>
+    </header>
+
+    <div v-show="expanded">
+      <li v-for="p in posts" class="p-2 my-4 border rounded-md shadow-sm" :key="p.id">
         <RamaPostPreview :post="p" :showFolder="false" :foundationHost="host" :foundationName="foundation" />
       </li>
     </div>
+
   </div>
 </template>
 
@@ -29,6 +40,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const posts = ref<Array<D.PostWithID>>([])
+const expanded = ref(false);
 
 onMounted(() => {
   getPosts()
@@ -50,7 +62,8 @@ const getPosts = (): void => {
       // TODO: extract a seal+essay -> PostWithID converter
       p.id = postIDs[i]
       p.quippers = [] // TODO:
-      p.quipCount = 0 // TODO:
+      const quipCount = Object.keys(p.seal.quips).length
+      p.quipCount = quipCount
       p.author = p.essay.author
       p.image = p.essay.image
       p.title = p.essay.title

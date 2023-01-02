@@ -1,10 +1,15 @@
 <template>
   <div>
-    This is the explore view
-    <WatchForm />
+    <div class="my-2">
+      <WatchForm />
+    </div>
+
     <div class="flex flex-col">
-      <div class="mb-4" v-for="h in hosts" :key="h.host">
+      <div v-if="hosts.length > 0" class="mb-4" v-for="h in hosts" :key="h.host">
         <Host :host="h" />
+      </div>
+      <div v-else>
+        You aren't watching any hosts yet. Add one above.
       </div>
     </div>
   </div>

@@ -1,17 +1,17 @@
 <template>
-  <div>
+  <div class="p-2 border rounded-lg shadow-inner">
     <h1 class="text-xl">{{ theHost.host }}</h1>
 
     <div>
-      <h2>Foundations offered</h2>
+      <h2>Foundations offered:</h2>
       <div class="flex flex-col">
-        <div v-for="f in theHost.foundations" :key="f.name">
-          <RouterLink class="text-blue-500 underline" :to="{ name: 'hostFoundationShow', params: { foundationName: f.name, foundationHost: theHost.host } }">
-            {{ f.name }}
-            {{ theHost.host }}
-          </RouterLink>
-          <HostFoundation :foundation="f" :host="theHost.host" />
-        </div>
+        <ul class="list-disc">
+          <li v-for="f in theHost.foundations" :key="f.name">
+            <RouterLink class="text-blue-500 underline" :to="{ name: 'hostFoundationShow', params: { foundationName: f.name, foundationHost: theHost.host } }">
+              {{ f.name }}
+            </RouterLink>
+          </li>
+        </ul>
       </div>
 
     </div>

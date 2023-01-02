@@ -1,10 +1,10 @@
 <template>
-  <div>
-    Start watching
+  <div class="p-4 border border-dashed">
+    Enter a ship here to begin watching for foundations they publish:
     <form ref="form" @submit.prevent="watch">
-      <label for="ship">
+      <label for="ship" class="mr-2">
         Ship
-        <input id="ship" type="text" v-model="ship" />
+        <input id="ship" placeholder="~sampel-palnet" type="text" v-model="ship" />
       </label>
       <button type="submit">Watch</button>
     </form>

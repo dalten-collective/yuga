@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="text-xl">{{ author.author }}</h1>
-    <div>
+    <div v-show="expanded">
       <h2>Posts</h2>
       <li v-for="p in posts" :key="p.id">
         <PostPreview :post="p" :showFolder="true" :showAuthor="false" :foundationHost="host" :foundationName="foundation" />
@@ -27,6 +27,7 @@ interface Props {
 
 const props = defineProps<Props>();
 const posts = ref<Array<D.PostWithID>>([])
+const expanded = ref(false);
 
 onMounted(() => {
   getPosts()
