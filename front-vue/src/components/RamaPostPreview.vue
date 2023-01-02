@@ -14,7 +14,7 @@
         <div class="text-right">
           <h1 class="">{{ post.quipCount }} comments</h1>
           <ul class="flex flex-row">
-            <li v-for="tag in currentTags" class="mr-2 tag">
+            <li v-for="tag in currentTags" class="ml-2 tag">
               {{ tag }}
             </li>
           </ul>

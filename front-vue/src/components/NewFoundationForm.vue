@@ -1,12 +1,16 @@
 <template>
-  <div>
-    New Foundation
+  <div class="p-2 border rounded-sm dark:border-stone-500">
     <form ref="form" @submit.prevent="create">
-      <label for="prefix">
-        Prefix
-        <input class="focus:ring-0 focus:ring-offset-0" id="prefix" type="text" v-model="prefix" />
-      </label>
-      <button type="submit">Create</button>
+      <div class="mb-2">
+        Form New Foundation
+      </div>
+      <div class="flex flex-row items-center">
+        <label for="prefix">
+          Name
+          <input class="focus:ring-0 focus:ring-offset-0" id="prefix" type="text" v-model="prefix" />
+        </label>
+        <button class="ml-2" type="submit">Create</button>
+      </div>
     </form>
   </div>
 </template>

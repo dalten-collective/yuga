@@ -1,14 +1,15 @@
 <template>
   <div>
-    <div>
+    <div class="mt-4 mb-6">
       <NewFoundationForm />
     </div>
 
-    <hr />
-
     <div class="flex flex-col">
-      <div class="mb-4" v-for="f in foundations" :key="f.foundation.provider">
+      <div v-if="foundations.length > 0" class="mb-4" v-for="f in foundations" :key="f.foundation.provider">
         <Foundation :provider="f.foundation.provider" :key="f.foundation.provider" />
+      </div>
+      <div v-else>
+        You haven't created any Foundations yet.
       </div>
     </div>
 
