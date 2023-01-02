@@ -7,8 +7,8 @@
           <span class="text-gray-400 text-md">({{ posts.length }} posts)</span>
         </div>
         <div class="ml-2">
-          <span v-if="!expanded" @click="expanded = true" class="text-blue-500 underline cursor-pointer">Open</span>
-          <span v-if="expanded" @click="expanded = false" class="text-blue-500 underline cursor-pointer">Close</span>
+          <span v-if="!expanded" @click="expanded = true" class="link-text">Open</span>
+          <span v-if="expanded" @click="expanded = false" class="link-text">Close</span>
         </div>
       </h1>
     </header>

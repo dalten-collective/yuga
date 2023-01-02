@@ -14,7 +14,7 @@
         <div class="text-right">
           <h1 class="">{{ post.quipCount }} comments</h1>
           <ul class="flex flex-row">
-            <li v-for="tag in currentTags" class="px-2 py-1 ml-2 text-sm font-bold text-blue-400 bg-blue-100 border border-blue-300 rounded-lg">
+            <li v-for="tag in currentTags" class="mr-2 tag">
               {{ tag }}
             </li>
           </ul>
@@ -40,10 +40,10 @@
 
         <ul>
           <li v-for="tag in currentTags" :key="tag" class="mb-1">
-            <span class="px-2 py-1 ml-2 text-sm font-bold text-blue-400 bg-blue-100 border border-blue-300 rounded-lg">
+            <span class="ml-2 text-sm tag">
               {{ tag }}
             </span>
-            <span v-if="amJanitor" @click="removeTag(tag)" class="p-1 text-sm font-bold text-red-400 underline cursor-pointer">remove</span>
+            <span v-if="amJanitor" @click="removeTag(tag)" class="p-1 text-sm font-bold text-red-400 underline cursor-pointer dark:text-rose-800">remove</span>
           </li>
         </ul>
         <div class="my-2">

@@ -8,7 +8,7 @@
           <h1 class="text-3xl">{{ foundationName }}</h1>
         </div>
         <div class="flex flex-row justify-between">
-          <div class="flex flex-col text-gray-400">
+          <div class="flex flex-col subtle">
             <div v-if="amJanitor">I am a janitor</div>
             <div v-if="amAlmoner">I am an almoner</div>
           </div>

@@ -4,7 +4,7 @@
     <form ref="form" @submit.prevent="create">
       <label for="prefix">
         Prefix
-        <input id="prefix" type="text" v-model="prefix" />
+        <input class="focus:ring-0 focus:ring-offset-0" id="prefix" type="text" v-model="prefix" />
       </label>
       <button type="submit">Create</button>
     </form>
