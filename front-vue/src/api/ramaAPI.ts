@@ -155,7 +155,7 @@ export function addNote(args: {
     }
   }
 
-  urbitAPI.poke({
+  return urbitAPI.poke({
     app: "rama",
     mark: HARI_RAMA_MARK,
     json: {

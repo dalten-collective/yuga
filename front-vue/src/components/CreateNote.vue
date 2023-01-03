@@ -32,13 +32,13 @@
     </div>
 
     <div class="flex flex-row">
-      <div class="flex-grow w-1/2 h-[40em]">
+      <div class="flex-grow w-1/2 h-[40em]" :class="loading ? 'opacity-20' : ''">
         <label for="body-field">
           Post body
           <textarea :disabled="loading" class="w-full h-[37em]" v-model="content" />
         </label>
       </div>
-      <div class="w-1/2 ml-2 h-[38em]">
+      <div class="w-1/2 ml-2 h-[38em]" :class="loading ? 'opacity-20' : ''">
         Post preview:
         <div class="border border-2 rounded-sm shadow-inner">
           <div v-html="postPreview" class="h-[38em] p-2 overflow-scroll rendered-markdown">
@@ -87,7 +87,8 @@ const getMarkdown = () => {
   // extract(articleURL.value)
       console.log('article ', result.data)
       const markdownContent = t.turndown(result.data.content)
-      content.value = markdownContent
+      content.value = `[Article source](${articleURL.value})\n\n`
+      content.value = content.value + markdownContent
       loading.value = false
     }).catch((err) => {
       loading.value = false
@@ -102,6 +103,7 @@ const postPreview = computed(() => {
 const sendPost = () => {
   const who = sigShip(props.host)
   const foundation = props.foundation
+  loading.value = true
 
   ramaAPI.addNote({
     who,
@@ -111,6 +113,13 @@ const sendPost = () => {
     folder: '',  // TODO
     tags: [],    // TODO
     content: content.value,
+  })
+  .then(() => {
+    // TODO: redirect to foundation?
+    // window.location = "/apps/cyclo/explore"
+  })
+  .finally(() => {
+    loading.value = false;
   })
 }
 
