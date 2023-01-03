@@ -2,8 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+.rendered-markdown h1, h2, h3, h4, h5, h6 {
+  @apply mt-6;
+  @apply mb-4;
+}
+.rendered-markdown img {
+  @apply mx-auto;
+}
 .rendered-markdown h1 {
   @apply text-5xl;
+}
+.rendered-markdown p {
+  @apply mb-3;
 }
 .rendered-markdown h2 {
   @apply text-4xl;
