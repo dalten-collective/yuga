@@ -38,6 +38,12 @@
   @apply underline;
   @apply cursor-pointer;
 }
+.no-underline-link-text {
+  @apply text-blue-500;
+  @apply dark:text-sky-600;
+  @apply no-underline;
+  @apply cursor-pointer;
+}
 
 a {
   @apply text-blue-500;

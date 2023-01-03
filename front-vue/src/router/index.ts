@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, createWebHashHistory, RouteRecordRaw } 
 import Admin from "../views/Admin.vue";
 import Explore from "../views/Explore.vue";
 import HostFoundation from "../views/HostFoundation.vue";
+import HostFolder from "../views/HostFolder.vue";
 import RamaPostShow from "../views/RamaPostShow.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -22,6 +23,16 @@ const routes: Array<RouteRecordRaw> = [
     props: route => ({
       host: route.params.foundationHost,
       foundationName: route.params.foundationName
+    })
+  },
+  {
+    path: "/explore/:foundationHost/:foundationName/folders/:folderName",
+    name: "hostFolder",
+    component: HostFolder,
+    props: route => ({
+      host: route.params.foundationHost,
+      foundationName: route.params.foundationName,
+      folderName: route.params.folderName,
     })
   },
   {

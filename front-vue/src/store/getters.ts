@@ -13,6 +13,11 @@ export type Getters = {
   [GetterTypes.POST_BY_ID](state: State): D.PostOutlineWithID
   [GetterTypes.HOSTED_FOLDERS_BY_PROVIDER](state: State): (provider: string) => Array<T.FoldersMeta> | []
   [GetterTypes.HOSTED_TAGS_BY_PROVIDER](state: State): (provider: string) => Array<T.TagsMeta> | []
+  [GetterTypes.HOSTED_FOLDER_BY_DETAILS](state: State): (args: {
+    host: T.Ship;
+    foundationName: string;
+    folderName: string
+  }) => R.FoldersMeta | null
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -84,5 +89,29 @@ export const getters: GetterTree<State, State> & Getters = {
       return []
     }
     return []
+  },
+
+  [GetterTypes.HOSTED_FOLDER_BY_DETAILS]: (state) => (args: {
+    host: T.Ship;
+    foundationName: string;
+    folderName: string;
+  }): R.FoldersMeta | null => {
+    const { host, foundationName, folderName } = args
+    const hostObject: R.HostObject | undefined = state.hosts.find(ho => ho.host === host)
+
+    if (hostObject) {
+      const foundation: R.SubFoundation | undefined = hostObject.foundations.find(f => f.name === foundationName)
+      if (foundation) {
+        const folder: R.FoldersMeta | undefined = foundation.details.metadata.folders.find((folder: R.FoldersMeta) => {
+          return folder.folder === folderName
+        })
+        if (folder) {
+          return folder
+        }
+        return null
+      }
+      return null
+    }
+    return null
   },
 }

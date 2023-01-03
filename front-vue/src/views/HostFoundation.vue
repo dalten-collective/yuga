@@ -33,10 +33,16 @@
 
       <main>
         <div class="p-2 my-4">
-          <h3 class="text-2xl">Folders:</h3>
+          <PostFolder
+            :rama="true"
+            :folder="unfolder"
+            :host="host"
+            :foundation="foundationName"
+          />
+          <h3 class="mt-8 mb-4 text-2xl">Folders:</h3>
           <ul>
             <li
-              v-for="f in theFoundation.details.metadata.folders"
+              v-for="f in foldered"
               :key="f.folder"
             >
               <PostFolder
@@ -113,6 +119,18 @@ const postsWithIDs = computed<Array<D.PostWithID>>(() => {
     return post;
   });
 });
+
+const unfolder = computed<R.FoldersMeta>(() => {
+  return theFoundation.value.details.metadata.folders.find((f: R.FoldersMeta) => {
+    return f.folder === ''
+  })
+})
+
+const foldered = computed<Array<R.FoldersMeta>>(() => {
+  return theFoundation.value.details.metadata.folders.filter((f: R.FoldersMeta) => {
+    return f.folder !== ''
+  })
+})
 
 const enter = () => {
   console.log("entering ", props.host, props.foundationName);
