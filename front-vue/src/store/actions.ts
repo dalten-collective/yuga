@@ -69,6 +69,10 @@ export interface Actions {
     payload: T.NameAndTag
   ): void;
 
+  [ActionTypes.LOADING_STATE_RESET](
+    { commit }: AugmentedActionContext,
+    payload: L.UIElement
+  ): void;
   [ActionTypes.INITIAL_SET](
     { commit }: AugmentedActionContext,
     payload: L.UIElement
@@ -105,6 +109,7 @@ export const actions: ActionTree<State, State> & Actions = {
           }
           if (T.IsAddFoundationResponse(data)) {
             dispatch(ActionTypes.FOUNDATION_ADD, data.add as T.FoundationWithName);
+            dispatch(ActionTypes.SUCCESS_SET, 'foundationCreate')
           }
 
           if (T.IsAddAlmonersResponse(data)) {
@@ -321,11 +326,12 @@ export const actions: ActionTree<State, State> & Actions = {
   },
 
   [ActionTypes.SUCCESS_SET](
-    { commit },
+    { commit, dispatch },
     payload: L.UIElement
   ) {
     const currentState: L.LoaderState = L.loaderStates.success
     commit(MutationTypes.LOADING_STATE_SET, { uiElement: payload, currentState })
+    dispatch(ActionTypes.LOADING_STATE_RESET, payload)
   },
 
   [ActionTypes.ERROR_SET](
@@ -334,5 +340,14 @@ export const actions: ActionTree<State, State> & Actions = {
   ) {
     const currentState: L.LoaderState = L.loaderStates.error
     commit(MutationTypes.LOADING_STATE_SET, { uiElement: payload, currentState })
+  },
+
+  [ActionTypes.LOADING_STATE_RESET](
+    ctx,
+    payload: L.UIElement
+  ) {
+    setTimeout(() => {
+      ctx.dispatch(ActionTypes.INITIAL_SET, payload)
+    }, 3000)
   },
 };

@@ -1,5 +1,8 @@
 import urbitAPI from "./urbitAPI";
 import * as T from '@/types';
+import { ActionTypes } from "@/store/action-types";
+
+import { useStore } from "@/store/store";
 
 const ADMIN_MARK = 'hari-seldon'
 const META_ADMIN_MARK = 'meta-admin'
@@ -7,7 +10,7 @@ const HARI_SCHIZO_MARK = "hari-schizo";
 
 export function createFoundation(
   prefix: string
-) {
+): Promise<any> {
   return urbitAPI.poke({
     app: 'hari',
     mark: ADMIN_MARK,
@@ -18,6 +21,9 @@ export function createFoundation(
     },
   }).then((r) => {
     return r
+  }).catch((e) => {
+    useStore().dispatch(ActionTypes.ERROR_SET, 'foundationCreate')
+    return e
   })
 }
 

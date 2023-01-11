@@ -7,9 +7,9 @@
       <div class="flex flex-row items-center">
         <label for="prefix">
           Name
-          <input class="focus:ring-0 focus:ring-offset-0" id="prefix" type="text" :class="loading ? loading : ''" v-model="prefix" :disabled="loading" />
+          <input class="focus:ring-0 focus:ring-offset-0" id="prefix" type="text" :class="loading ? 'loading' : ''" v-model="prefix" :disabled="loading" />
         </label>
-        <button class="ml-2" :class="loading ? 'btn-loading' : ''" :disabled="loading" type="submit">{{ loading ? 'Creating...' : 'Create' }}</button>
+        <button class="ml-2" :class="loading ? 'loading-btn' : ''" :disabled="loading" type="submit">{{ loading ? 'Creating...' : 'Create' }}</button>
       <div v-if="success">
         SUCCESS
       </div>
@@ -50,20 +50,15 @@ const error = computed(() => {
 const prefix = ref('')
 
 const create = () => {
-  store.dispatch(ActionTypes.LOADING_SET, 'foundationCreate')
-  setTimeout(() => {
-    store.dispatch(ActionTypes.SUCCESS_SET, 'foundationCreate')
-  }, 1000)
-  setTimeout(() => {
-    store.dispatch(ActionTypes.INITIAL_SET, 'foundationCreate')
-  }, 4000)
-
-  return
   if (!prefix.value) {
     return
   }
+  store.dispatch(ActionTypes.LOADING_SET, 'foundationCreate')
+
   // TODO: validate this.$refs
-  foundationAPI.createFoundation(prefix.value)
+  foundationAPI.createFoundation(prefix.value).finally(() => {
+      prefix.value = '';
+    })
 }
 
 </script>
