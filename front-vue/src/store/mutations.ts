@@ -3,6 +3,7 @@ import { MutationTypes } from "./mutation-types";
 import { State } from "./state";
 import * as T from "@/types";
 import * as R from "@/rama-types";
+import * as L from "@/loading-types";
 import { sigShip } from "@/helpers"
 
 export type Mutations<S = State> = {
@@ -55,6 +56,11 @@ export type Mutations<S = State> = {
   [MutationTypes.SAVED_SET](
     state: S,
     payload: Array<R.Saved>
+  ): void;
+
+  [MutationTypes.LOADING_STATE_SET](
+    state: S,
+    payload: { uiElement: L.UIElement, currentState: L.LoaderState }
   ): void;
 };
 
@@ -183,5 +189,13 @@ export const mutations: MutationTree<State> & Mutations = {
     payload: Array<R.Saved>
   ) {
     state.saved = payload
+  },
+
+
+  [MutationTypes.LOADING_STATE_SET](
+    state,
+    payload: { uiElement: L.UIElement, currentState: L.LoaderState }
+  ) {
+    state.loadingStates[payload.uiElement] = payload.currentState
   },
 };

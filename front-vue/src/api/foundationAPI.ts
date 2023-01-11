@@ -8,7 +8,7 @@ const HARI_SCHIZO_MARK = "hari-schizo";
 export function createFoundation(
   prefix: string
 ) {
-  urbitAPI.poke({
+  return urbitAPI.poke({
     app: 'hari',
     mark: ADMIN_MARK,
     json: {

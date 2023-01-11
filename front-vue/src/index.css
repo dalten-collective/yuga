@@ -135,10 +135,16 @@ button.loading-btn {
   @apply bg-stone-300;
   @apply text-stone-700;
   @apply opacity-75;
+  @apply cursor-progress;
 }
 
 ul.list-disc li {
   @apply ml-4;
+}
+
+.loading {
+  @apply opacity-20;
+  @apply cursor-progress;
 }
 
 select {

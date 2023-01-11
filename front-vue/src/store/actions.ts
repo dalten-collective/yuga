@@ -4,8 +4,11 @@ import { Getters } from "./getters";
 import { Mutations } from "./mutations";
 import { ActionTypes } from "./action-types";
 import { MutationTypes } from "./mutation-types";
+import { sigShip } from "@/helpers"
+
 import * as T from "@/types";
 import * as R from "@/types/rama-types";
+import * as L from "@/types/loading-types";
 import airlock from "@/api";
 import ramaAPI from "@/api";
 
@@ -64,6 +67,23 @@ export interface Actions {
   [ActionTypes.TAG_ADD](
     { commit }: AugmentedActionContext,
     payload: T.NameAndTag
+  ): void;
+
+  [ActionTypes.INITIAL_SET](
+    { commit }: AugmentedActionContext,
+    payload: L.UIElement
+  ): void;
+  [ActionTypes.LOADING_SET](
+    { commit }: AugmentedActionContext,
+    payload: L.UIElement
+  ): void;
+  [ActionTypes.SUCCESS_SET](
+    { commit }: AugmentedActionContext,
+    payload: L.UIElement
+  ): void;
+  [ActionTypes.ERROR_SET](
+    { commit }: AugmentedActionContext,
+    payload: L.UIElement
   ): void;
 }
 
@@ -224,10 +244,12 @@ export const actions: ActionTree<State, State> & Actions = {
     let temp = foundation
     let foundName = temp.name
     let {name, ...otherFields} = temp
+    let provider = `${ sigShip(window.ship) }/${ foundName }`
     let newFoundation: T.Foundation = temp
+    newFoundation.provider = provider
     const toAdd = {
       foundation: newFoundation,
-      name: foundName
+      name: foundName,
     } as T.StateFoundation
     commit(MutationTypes.FOUNDATIONS_ADD, toAdd)
   },
@@ -278,5 +300,39 @@ export const actions: ActionTree<State, State> & Actions = {
     payload: T.NameAndFolder
   ) {
     commit(MutationTypes.FOLDER_ADD, payload)
+  },
+
+  //// Loading
+
+  [ActionTypes.INITIAL_SET](
+    { commit },
+    payload: L.UIElement
+  ) {
+    const currentState: L.LoaderState = L.loaderStates.initial
+    commit(MutationTypes.LOADING_STATE_SET, { uiElement: payload, currentState })
+  },
+
+  [ActionTypes.LOADING_SET](
+    { commit },
+    payload: L.UIElement
+  ) {
+    const currentState: L.LoaderState = L.loaderStates.loading
+    commit(MutationTypes.LOADING_STATE_SET, { uiElement: payload, currentState })
+  },
+
+  [ActionTypes.SUCCESS_SET](
+    { commit },
+    payload: L.UIElement
+  ) {
+    const currentState: L.LoaderState = L.loaderStates.success
+    commit(MutationTypes.LOADING_STATE_SET, { uiElement: payload, currentState })
+  },
+
+  [ActionTypes.ERROR_SET](
+    { commit },
+    payload: L.UIElement
+  ) {
+    const currentState: L.LoaderState = L.loaderStates.error
+    commit(MutationTypes.LOADING_STATE_SET, { uiElement: payload, currentState })
   },
 };

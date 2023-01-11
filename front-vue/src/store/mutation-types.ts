@@ -19,4 +19,6 @@ export enum MutationTypes {
   HOSTS_ADD = 'HOSTS_ADD',
 
   SAVED_SET = 'SAVED_SET',
+
+  LOADING_STATE_SET = 'LOADING_STATE_SET',
 }

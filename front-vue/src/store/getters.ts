@@ -4,6 +4,7 @@ import { State } from './state'
 import * as T from '@/types'
 import * as R from '@/types/rama-types'
 import * as D from '@/types/diary-types'
+import * as L from '@/types/loading-types'
 
 export type Getters = {
   [GetterTypes.FOUNDATION_BY_PROVIDER](state: State): (provider: string) => T.StateFoundation | null
@@ -18,6 +19,11 @@ export type Getters = {
     foundationName: string;
     folderName: string
   }) => R.FoldersMeta | null
+
+  [GetterTypes.ELEMENT_INITIAL](state: State): (uie: L.UIElement) => boolean
+  [GetterTypes.ELEMENT_LOADING](state: State): (uie: L.UIElement) => boolean
+  [GetterTypes.ELEMENT_SUCCESS](state: State): (uie: L.UIElement) => boolean
+  [GetterTypes.ELEMENT_ERROR]  (state: State): (uie: L.UIElement) => boolean
 }
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -113,5 +119,18 @@ export const getters: GetterTree<State, State> & Getters = {
       return null
     }
     return null
+  },
+
+  [GetterTypes.ELEMENT_INITIAL]: (state) => (uie: L.UIElement): boolean => {
+    return state.loadingStates[uie] === L.loaderStates.initial
+  },
+  [GetterTypes.ELEMENT_LOADING]: (state) => (uie: L.UIElement): boolean => {
+    return state.loadingStates[uie] === L.loaderStates.loading
+  },
+  [GetterTypes.ELEMENT_SUCCESS]: (state) => (uie: L.UIElement): boolean => {
+    return state.loadingStates[uie] === L.loaderStates.success
+  },
+  [GetterTypes.ELEMENT_ERROR]: (state) => (uie: L.UIElement): boolean => {
+    return state.loadingStates[uie] === L.loaderStates.error
   },
 }
