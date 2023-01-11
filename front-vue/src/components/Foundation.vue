@@ -1,8 +1,40 @@
 <template>
   <div>
     <h1 class="text-xl">{{ foundation.name }}</h1>
-    <CreateNote :host="hostShip" :foundation="foundation.name" />
-    <div class="p-2 border rounded-sm">
+
+    <div v-if="showPostForm">
+      <CreateNote :host="hostShip" :foundation="foundation.name" />
+    </div>
+
+  <div class="flex justify-end">
+    <div
+      v-if="!manageExpanded"
+      @click="manageExpanded = true"
+      class="flex no-underline-link-text"
+    >
+      <div class="mr-1">
+        Manage
+      </div>
+      <div>
+        <ExpandIcon />
+      </div>
+    </div>
+
+    <div
+      v-if="manageExpanded"
+      @click="manageExpanded = false"
+      class="flex no-underline-link-text"
+    >
+      <div class="mr-1">
+        Collapse
+      </div>
+      <div>
+        <CollapseIcon />
+      </div>
+    </div>
+  </div>
+
+    <div v-if="manageExpanded" class="p-2 border rounded-sm dark:border-stone-500">
       <div>
         <h2>Almoners</h2>
         <ul>
@@ -83,11 +115,18 @@ import AddFolder from '@/components/AddFolder.vue'
 import CreateNote from '@/components/CreateNote.vue'
 import PostFolder from '@/components/PostFolder.vue'
 
+import ExpandIcon from "@/icons/ExpandIcon.vue"
+import CollapseIcon from "@/icons/CollapseIcon.vue"
+
 interface Props {
   provider: T.Provider;
+  showPostForm: boolean;
 }
+
 const props = defineProps<Props>();
 const store = useStore();
+
+const manageExpanded = ref(false)
 
 const hostShip = computed<T.Ship>(() => {
   return foundation.value.foundation.provider.split('/')[0]

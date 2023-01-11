@@ -24,7 +24,7 @@ export type Getters = {
   [GetterTypes.ELEMENT_LOADING](state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_SUCCESS](state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_ERROR]  (state: State): (uie: L.UIElement) => boolean
-  [GetterTypes.ELEMENT_STATUS_MAP]  (state: State): (uie: L.UIElement) => L.StatusMap
+  [GetterTypes.ELEMENT_STATUS_MAP]  (state: State, getters: Getters): (uie: L.UIElement) => L.StatusMap
 }
 
 export const getters: GetterTree<State, State> & Getters = {

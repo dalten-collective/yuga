@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 border rounded-sm dark:border-stone-500">
+  <div class="p-2 border rounded-md dark:border-stone-500">
     <form ref="form" @submit.prevent="create">
       <div class="mb-2">
         Form New Foundation

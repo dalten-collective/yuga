@@ -94,6 +94,8 @@ export interface Actions {
 export const actions: ActionTree<State, State> & Actions = {
   [ActionTypes.AIRLOCK_OPEN]({ commit, dispatch }, payload: string) {
     const agentName = payload;
+    dispatch(ActionTypes.LOADING_SET, 'foundationListHost')
+
     airlock.openAirlockTo(
       agentName,
 
@@ -106,6 +108,7 @@ export const actions: ActionTree<State, State> & Actions = {
           console.log("hari response ", data);
           if (T.IsInitialStateResponse(data)) {
             dispatch(ActionTypes.FOUNDATION_SET, data.put.foundations as Array<T.StateFoundation>);
+            dispatch(ActionTypes.SUCCESS_SET, 'foundationListHost')
           }
           if (T.IsAddFoundationResponse(data)) {
             dispatch(ActionTypes.FOUNDATION_ADD, data.add as T.FoundationWithName);

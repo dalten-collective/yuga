@@ -5,6 +5,7 @@ import * as L from "@/types/loading-types";
 import { loaderStates } from "@/types/loading-types";
 
 const uiElementLoadingState: L.UILoaderState = {
+  foundationListHost: loaderStates.initial,
   foundationCreate: loaderStates.initial,
   foundationSubscribe: loaderStates.initial,
 }
