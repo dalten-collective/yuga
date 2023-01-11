@@ -7,20 +7,13 @@
       <div class="flex flex-row items-center">
         <label for="prefix">
           Name
-          <input class="focus:ring-0 focus:ring-offset-0" id="prefix" type="text" :class="loading ? 'loading' : ''" v-model="prefix" :disabled="loading" />
+          <input class="focus:ring-0 focus:ring-offset-0" id="prefix" type="text" :class="status.loading ? 'loading' : ''" v-model="prefix" :disabled="status.loading" />
         </label>
-        <button class="ml-2" :class="loading ? 'loading-btn' : ''" :disabled="loading" type="submit">{{ loading ? 'Creating...' : 'Create' }}</button>
-      <div v-if="success">
-        SUCCESS
+        <button class="ml-2" :class="status.loading ? 'loading-btn' : ''" :disabled="status.loading" type="submit">{{ status.loading ? 'Creating...' : 'Create' }}</button>
+        <div v-if="status.success">
+          SUCCESS
+        </div>
       </div>
-
-      </div>
-      <pre>
-        loading: {{ loading }}
-        success: {{ success }}
-        error: {{ error }}
-        initial: {{ initial }}
-      </pre>
     </form>
   </div>
 </template>
@@ -34,17 +27,8 @@ import { useStore } from "@/store/store";
 
 const store = useStore();
 
-const initial = computed(() => {
-  return store.getters[GetterTypes.ELEMENT_INITIAL]('foundationCreate')
-})
-const loading = computed(() => {
-  return store.getters[GetterTypes.ELEMENT_LOADING]('foundationCreate')
-})
-const success = computed(() => {
-  return store.getters[GetterTypes.ELEMENT_SUCCESS]('foundationCreate')
-})
-const error = computed(() => {
-  return store.getters[GetterTypes.ELEMENT_ERROR]('foundationCreate')
+const status = computed(() => {
+  return store.getters[GetterTypes.ELEMENT_STATUS_MAP]('foundationCreate')
 })
 
 const prefix = ref('')

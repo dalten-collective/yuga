@@ -8,6 +8,9 @@ export type UIElement =
 export interface UILoader {
   [key: string]: LoaderState
 }
+export interface StatusMap {
+  [key: string]: boolean;
+}
 
 export type UILoaderState = {
   [K in UIElement]: LoaderState
