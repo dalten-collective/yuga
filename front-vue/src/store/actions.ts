@@ -89,6 +89,14 @@ export interface Actions {
     { commit }: AugmentedActionContext,
     payload: L.UIElement
   ): void;
+
+  [ActionTypes.RAMA_SCRY_STATE](
+    { commit }: AugmentedActionContext,
+    payload: {
+      payload?: any,
+      cb: { onSuccess: Function, onError: Function }
+    }
+  ): void;
 }
 
 export const actions: ActionTree<State, State> & Actions = {
@@ -185,11 +193,18 @@ export const actions: ActionTree<State, State> & Actions = {
 
   ////// Scries
 
-  [ActionTypes.RAMA_SCRY_STATE]({ dispatch }) {
-    return ramaAPI.scryState().then((data: R.InitialStateResponse) => {
+  [ActionTypes.RAMA_SCRY_STATE]({ dispatch }, payload = { payload: '', cb: { onSuccess: () => {return}, onError: () => {return}}}) {
+    const { onSuccess, onError } = payload.cb
+    return ramaAPI.scryState()
+    .then((data: R.InitialStateResponse) => {
       console.log('rrrrr ', data)
       dispatch(ActionTypes.HOSTS_SET, data.put.hosts as Array<R.HostObject>)
       dispatch(ActionTypes.SAVED_SET, data.put.saved as Array<R.Saved>)
+      onSuccess()
+      return data
+    }).catch((e) => {
+      onError()
+      return e
     })
   },
 

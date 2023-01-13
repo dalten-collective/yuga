@@ -181,5 +181,8 @@ export function scryState(): R.InitialStateResponse {
     })
     .then((r) => {
       return r;
+    })
+    .catch((e) => {
+      return e;
     });
 }

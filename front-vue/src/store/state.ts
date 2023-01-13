@@ -8,6 +8,7 @@ const uiElementLoadingState: L.UILoaderState = {
   foundationListHost: loaderStates.initial,
   foundationCreate: loaderStates.initial,
   foundationSubscribe: loaderStates.initial,
+  ramaListFoundations: loaderStates.initial,
 }
 
 export const state = {

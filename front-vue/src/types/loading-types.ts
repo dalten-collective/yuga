@@ -4,7 +4,8 @@ export type LoaderState =
 export type UIElement =
   'foundationListHost' |
   'foundationCreate' |
-  'foundationSubscribe'
+  'foundationSubscribe' |
+  'ramaListFoundations'
 
 export interface UILoader {
   [key: string]: LoaderState
