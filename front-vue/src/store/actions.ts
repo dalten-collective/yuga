@@ -102,7 +102,8 @@ export interface Actions {
 export const actions: ActionTree<State, State> & Actions = {
   [ActionTypes.AIRLOCK_OPEN]({ commit, dispatch }, payload: string) {
     const agentName = payload;
-    dispatch(ActionTypes.LOADING_SET, 'foundationListHost')
+
+    console.log('agent ', agentName)
 
     airlock.openAirlockTo(
       agentName,
@@ -113,6 +114,7 @@ export const actions: ActionTree<State, State> & Actions = {
         console.log("agentName ", agentName);
 
         if (agentName === 'hari') {
+          dispatch(ActionTypes.LOADING_SET, 'foundationListHost')
           console.log("hari response ", data);
           if (T.IsInitialStateResponse(data)) {
             dispatch(ActionTypes.FOUNDATION_SET, data.put.foundations as Array<T.StateFoundation>);
@@ -148,10 +150,16 @@ export const actions: ActionTree<State, State> & Actions = {
 
         if (agentName === 'rama') {
           console.log("rama response ", data);
-          // TODO: going to ignore sub responses for Rama for now
-          // if (R.IsInitialStateResponse(data)) {
-          //   dispatch(ActionTypes.HOSTS_SET, data.put.hosts as Array<R.HostObject>)
-          // }
+          if (R.IsInitialStateResponse(data)) {
+            console.log('is rama init' )
+            // dispatch(ActionTypes.RAMA_SCRY_STATE)
+            dispatch(ActionTypes.HOSTS_SET, data.put.hosts as Array<R.HostObject>)
+            dispatch(ActionTypes.SAVED_SET, data.put.saved as Array<R.Saved>)
+          }
+          if (R.IsHostAddResponse(data)) {
+            console.log('is rama add' )
+            dispatch(ActionTypes.RAMA_SCRY_STATE)
+          }
 
           // TODO: going to ignore sub responses for Rama for now
           // if (R.IsAddJanitorsResponse(data)) {

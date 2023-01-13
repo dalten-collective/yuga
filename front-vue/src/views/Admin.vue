@@ -37,7 +37,7 @@ const foundationsStatus = computed(() => {
 })
 
 onMounted(() => {
-  startAirlock("hari")
+  // startAirlock("hari")
 })
 
 const foundations = computed(() => store.state.foundations)

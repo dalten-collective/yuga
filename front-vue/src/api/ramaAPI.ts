@@ -10,7 +10,7 @@ const HARI_SOMBER_MARK = "hari-somber";
 import { sigShip } from "@/helpers";
 
 export function startWatching(host: T.Ship) {
-  urbitAPI
+  return urbitAPI
     .poke({
       app: "rama",
       mark: RAMA_ONLY_MARK,
@@ -20,6 +20,9 @@ export function startWatching(host: T.Ship) {
     })
     .then((r) => {
       return r;
+    })
+    .catch((e) => {
+      return e
     });
 }
 

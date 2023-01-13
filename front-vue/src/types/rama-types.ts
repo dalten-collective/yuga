@@ -63,6 +63,14 @@ export interface AddJanitorsResponse {
   }
 }
 
+export interface AddHostResponse {
+  add: {
+    host: Host;
+    janitors: Array<T.Ship>;
+    name: string;
+  }
+}
+
 export type GallResponse = InitialStateResponse | AddJanitorsResponse
 
 export const IsInitialStateResponse = (r: GallResponse):
@@ -73,4 +81,9 @@ export const IsInitialStateResponse = (r: GallResponse):
 export const IsAddJanitorsResponse = (r: GallResponse):
   r is AddJanitorsResponse => {
   return ('add' in r) && (('janitors' in r.add))
+}
+
+export const IsHostAddResponse = (r: GallResponse):
+  r is AddHostResponse => {
+  return ('add' in r) && (('host' in r.add) && ('name' in r.add))
 }

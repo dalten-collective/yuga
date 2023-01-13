@@ -45,7 +45,14 @@ const store = useStore();
 const ourShip = ref(window.ship);
 const currentThemeDark = ref(true);
 
+const startAirlock = (deskname: string) => {
+  store.dispatch(ActionTypes.AIRLOCK_OPEN, deskname)
+}
+
 onMounted(() => {
+  startAirlock("hari")
+  startAirlock("rama")
+
   store.dispatch(ActionTypes.RAMA_SCRY_STATE)
   if (
     localStorage.theme === 'dark' || (
