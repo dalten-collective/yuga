@@ -221,6 +221,8 @@ const moveToFolder = () => {
     folder: selectedFolder.value,
     tags: [], // TODO: current tags strings
     post: props.post,
+  }).then(() => {
+    location.reload()
   })
 }
 
