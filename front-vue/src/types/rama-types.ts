@@ -71,7 +71,14 @@ export interface AddHostResponse {
   }
 }
 
-export type GallResponse = InitialStateResponse | AddJanitorsResponse
+export type ChangeHostResponse = Array<
+  {
+    foundations: Array<any>;
+    host: T.Ship
+  }
+>
+
+export type GallResponse = InitialStateResponse | AddJanitorsResponse | ChangeHostResponse
 
 export const IsInitialStateResponse = (r: GallResponse):
   r is InitialStateResponse => {
@@ -86,4 +93,10 @@ export const IsAddJanitorsResponse = (r: GallResponse):
 export const IsHostAddResponse = (r: GallResponse):
   r is AddHostResponse => {
   return ('add' in r) && (('host' in r.add) && ('name' in r.add))
+}
+
+export const IsHostSubscribeChange = (r: GallResponse):
+  r is ChangeHostResponse => {
+    return (Array.isArray(r) && (r.length > 0 && ('host' in r[0] && 'foundations' in r[0]))) ||
+      (('put' in r) && (('hosts' in r.put) && ('host' in r.put.hosts) && ('subscribed' in r.put.hosts)))
 }

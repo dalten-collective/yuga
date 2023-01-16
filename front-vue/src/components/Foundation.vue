@@ -76,7 +76,7 @@
       <h2>Posts</h2>
       <ul>
         <li v-for="f in foundation.foundation.metadata.public.folders" :key="f.folder">
-          <PostFolder :folder="f" :host="hostShip" :foundation="foundation.name" />
+          <AdminFolder :folder="f" :host="hostShip" :foundation="foundation.name" />
         </li>
       </ul>
       <AddFolder :foundation="foundation" />
@@ -85,11 +85,6 @@
     <div>
       <h2>Secret TODO</h2>
       {{ foundation.foundation.metadata.secret }}
-    </div>
-
-    <div>
-      <h2>Public TODO</h2>
-      {{ foundation.foundation.metadata.public }}
     </div>
 
   </div>
@@ -114,6 +109,8 @@ import AddFolder from '@/components/AddFolder.vue'
 
 import CreateNote from '@/components/CreateNote.vue'
 import PostFolder from '@/components/PostFolder.vue'
+
+import AdminFolder from '@/components/AdminFolder.vue'
 
 import ExpandIcon from "@/icons/ExpandIcon.vue"
 import CollapseIcon from "@/icons/CollapseIcon.vue"

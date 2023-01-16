@@ -12,7 +12,7 @@
             <div v-if="amJanitor">I am a janitor</div>
             <div v-if="amAlmoner">I am an almoner</div>
           </div>
-          <div>
+          <div v-if="false"> <!-- TODO: bring back when using sub responses -->
             <button
               v-if="!theFoundation.subscribed"
               class="action-btn"
@@ -32,34 +32,43 @@
       </header>
 
       <main>
+        <div v-if="!anyPosts">
+          No posts yet.
+        </div>
+
         <div class="p-2 my-4">
+
           <PostFolder
+            v-if="unfolder"
             :rama="true"
             :folder="unfolder"
             :host="host"
             :foundation="foundationName"
           />
-          <h3 class="mt-8 mb-4 text-2xl">Folders:</h3>
-          <ul>
-            <li
-              v-for="f in foldered"
-              :key="f.folder"
-            >
-              <PostFolder
-                :rama="true"
-                :folder="f"
-                :host="host"
-                :foundation="foundationName"
-              />
-            </li>
-          </ul>
+
+          <div v-if="foldered.length > 0">
+            <h3 class="mt-8 mb-4 text-2xl">Folders:</h3>
+            <ul>
+              <li
+                v-for="f in foldered"
+                :key="f.folder"
+              >
+                <PostFolder
+                  :rama="true"
+                  :folder="f"
+                  :host="host"
+                  :foundation="foundationName"
+                />
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <div class="p-2 my-4">
+        <div class="p-2 my-4" v-if="authors.length > 0">
           <h3 class="text-2xl">Authors:</h3>
           <ul>
             <li
-              v-for="a in theFoundation.details.metadata.authors"
+              v-for="a in authors"
               :key="a.author"
             >
               <AuthorFolder
@@ -109,27 +118,35 @@ interface Props {
 }
 const props = defineProps<Props>();
 const store = useStore();
-const posts: D.PostList = ref([]);
 
-const postsWithIDs = computed<Array<D.PostWithID>>(() => {
-  const ids = Object.keys(posts.value);
-  return ids.map((id: string) => {
-    const post = posts.value[id];
-    post.id = id;
-    return post;
-  });
-});
+const anyPosts = computed(() => {
+  const folderedPosts = foldered.value.reduce((prev, current) => {
+    return prev + current.posts.length
+  }, 0)
+  if (unfolder.value && unfolder.value.posts.length > 0 || folderedPosts > 0) {
+    return true
+  }
+  return false
+})
 
-const unfolder = computed<R.FoldersMeta>(() => {
-  return theFoundation.value.details.metadata.folders.find((f: R.FoldersMeta) => {
+const unfolder = computed<R.FoldersMeta | null>(() => {
+  const fol = theFoundation.value?.details.metadata.folders.find((f: R.FoldersMeta) => {
     return f.folder === ''
   })
+  if (fol) {
+    return fol
+  }
+  return null
 })
 
 const foldered = computed<Array<R.FoldersMeta>>(() => {
-  return theFoundation.value.details.metadata.folders.filter((f: R.FoldersMeta) => {
+  return theFoundation.value?.details.metadata.folders.filter((f: R.FoldersMeta) => {
     return f.folder !== ''
   })
+})
+
+const authors = computed<Array<R.AuthorsMeta> | null>(() => {
+  return theFoundation.value?.details.metadata.authors
 })
 
 const enter = () => {
@@ -137,13 +154,18 @@ const enter = () => {
   ramaAPI.joinFoundation({
     who: props.host,
     fond: props.foundationName,
+  }).then(() => {
+    location.reload()
   });
 };
+
 const leave = () => {
   console.log("leaving ", props.host, props.foundationName);
   ramaAPI.leaveFoundation({
     who: props.host,
     fond: props.foundationName,
+  }).then(() => {
+    location.reload()
   });
 };
 

@@ -160,6 +160,10 @@ export const actions: ActionTree<State, State> & Actions = {
             console.log('is rama add' )
             dispatch(ActionTypes.RAMA_SCRY_STATE)
           }
+          if (R.IsHostSubscribeChange(data)) {
+            console.log('is rama change subscriptions' )
+            dispatch(ActionTypes.RAMA_SCRY_STATE)
+          }
 
           // TODO: going to ignore sub responses for Rama for now
           // if (R.IsAddJanitorsResponse(data)) {
@@ -203,6 +207,7 @@ export const actions: ActionTree<State, State> & Actions = {
 
   [ActionTypes.RAMA_SCRY_STATE]({ dispatch }, payload = { payload: '', cb: { onSuccess: () => {return}, onError: () => {return}}}) {
     const { onSuccess, onError } = payload.cb
+    console.log('scrying state')
     return ramaAPI.scryState()
     .then((data: R.InitialStateResponse) => {
       console.log('rrrrr ', data)

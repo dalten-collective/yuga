@@ -9,16 +9,11 @@
     <div>
       <pre>tags: {{ currentTags }}</pre>
     </div>
-    <p>
-      TODO PREVIEW?: {{ post.content[0].inline[0] }}...
-    </p>
     <ul>
       <li>
-        posted on TODO: {{ (new Date(post.sent)).toLocaleString() }}
+        posted on {{ (new Date(post.seal.time)).toLocaleString() }}
       </li>
     </ul>
-    <button @click="getNote" class="p-2 text-white bg-blue-300 border rounded-md">get more</button>
-    <pre v-if="('value' in more)">{{ more }}</pre>
   </div>
 </template>
 
@@ -57,9 +52,9 @@ const removeDots = (postID: string) => {
   return postID.replaceAll('.', '')
 }
 
-const postLink = computed(() => {
-  return `/apps/groups/groups/${ props.foundationHost }/${ props.foundationName }/channels/diary/${ props.foundationHost }/${ props.foundationName }/note/${ removeDots(props.post.id) }`
-})
+// const postLink = computed(() => {
+//   return `/apps/groups/groups/${ props.foundationHost }/${ props.foundationName }/channels/diary/${ props.foundationHost }/${ props.foundationName }/note/${ removeDots(props.post.id) }`
+// })
 
 const theFoundation = computed<R.SubFoundation | null>(() => {
   return store.getters[GetterTypes.HOSTED_FOUNDATION_BY_PROVIDER](`${ props.foundationHost }/${ props.foundationName }`)
@@ -99,16 +94,6 @@ const currentTags = computed<Array<string> | []>(() => {
   })
   return ct.map(t => t.tag)
 })
-
-const getNote = () => {
-  diaryAPI.getNote({
-    host: props.foundationHost,
-    found: props.foundationName,
-    noteID: props.post.id,
-  }).then((r) => {
-    more.value = r
-  })
-}
 
 const moveToFolder = () => {
   ramaAPI.moveToFolder({

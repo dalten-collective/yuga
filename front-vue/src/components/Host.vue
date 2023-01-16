@@ -10,6 +10,7 @@
             <RouterLink class="text-blue-500 underline" :to="{ name: 'hostFoundationShow', params: { foundationName: f.name, foundationHost: theHost.host } }">
               {{ f.name }}
             </RouterLink>
+            <!-- TODO: <pre>{{ f.subscribed }}</pre> -->
           </li>
         </ul>
       </div>

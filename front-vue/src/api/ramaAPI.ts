@@ -27,7 +27,7 @@ export function startWatching(host: T.Ship) {
 }
 
 export function joinFoundation(args: { who: T.Ship; fond: string; }) {
-  urbitAPI
+  return urbitAPI
     .poke({
       app: "rama",
       mark: RAMA_ONLY_MARK,
@@ -44,7 +44,7 @@ export function joinFoundation(args: { who: T.Ship; fond: string; }) {
 }
 
 export function leaveFoundation(args: { who: T.Ship; fond: string; }) {
-  urbitAPI
+  return urbitAPI
     .poke({
       app: "rama",
       mark: RAMA_ONLY_MARK,
