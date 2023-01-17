@@ -20,6 +20,12 @@ export type Getters = {
     folderName: string
   }) => R.FoldersMeta | null
 
+  [GetterTypes.AUTHOR_BY_DETAILS](state: State): (args: {
+    host: T.Ship;
+    foundationName: string;
+    authorName: string
+  }) => T.AuthorsMeta | null
+
   [GetterTypes.ELEMENT_INITIAL](state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_LOADING](state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_SUCCESS](state: State): (uie: L.UIElement) => boolean
@@ -114,6 +120,30 @@ export const getters: GetterTree<State, State> & Getters = {
         })
         if (folder) {
           return folder
+        }
+        return null
+      }
+      return null
+    }
+    return null
+  },
+
+  [GetterTypes.AUTHOR_BY_DETAILS]: (state) => (args: {
+    host: T.Ship;
+    foundationName: string;
+    authorName: string;
+  }): R.FoldersMeta | null => {
+    const { host, foundationName, authorName } = args
+    const hostObject: R.HostObject | undefined = state.hosts.find(ho => ho.host === host)
+
+    if (hostObject) {
+      const foundation: R.SubFoundation | undefined = hostObject.foundations.find(f => f.name === foundationName)
+      if (foundation) {
+        const author: T.AuthorsMeta | undefined = foundation.details.metadata.authors.find((author: T.AuthorsMeta) => {
+          return author.author === authorName
+        })
+        if (author) {
+          return author
         }
         return null
       }

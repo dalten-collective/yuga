@@ -3,6 +3,7 @@ import Admin from "../views/Admin.vue";
 import Explore from "../views/Explore.vue";
 import HostFoundation from "../views/HostFoundation.vue";
 import HostFolder from "../views/HostFolder.vue";
+import AuthorShow from "../views/AuthorShow.vue";
 import RamaPostShow from "../views/RamaPostShow.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -33,6 +34,16 @@ const routes: Array<RouteRecordRaw> = [
       host: route.params.foundationHost,
       foundationName: route.params.foundationName,
       folderName: route.params.folderName,
+    })
+  },
+  {
+    path: "/explore/:foundationHost/:foundationName/authors/:authorName",
+    name: "authorShow",
+    component: AuthorShow,
+    props: route => ({
+      host: route.params.foundationHost,
+      foundationName: route.params.foundationName,
+      authorName: route.params.authorName,
     })
   },
   {
