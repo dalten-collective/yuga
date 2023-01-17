@@ -55,6 +55,11 @@
   @apply cursor-pointer;
 }
 
+.tag a {
+  @apply dark:text-white !important;
+  @apply no-underline;
+}
+
 a {
   @apply text-blue-500;
   @apply dark:text-sky-600;

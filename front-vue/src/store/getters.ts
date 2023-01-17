@@ -26,6 +26,12 @@ export type Getters = {
     authorName: string
   }) => T.AuthorsMeta | null
 
+  [GetterTypes.TAG_BY_DETAILS](state: State): (args: {
+    host: T.Ship;
+    foundationName: string;
+    tagName: string
+  }) => T.TagsMeta | null
+
   [GetterTypes.ELEMENT_INITIAL](state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_LOADING](state: State): (uie: L.UIElement) => boolean
   [GetterTypes.ELEMENT_SUCCESS](state: State): (uie: L.UIElement) => boolean
@@ -144,6 +150,30 @@ export const getters: GetterTree<State, State> & Getters = {
         })
         if (author) {
           return author
+        }
+        return null
+      }
+      return null
+    }
+    return null
+  },
+
+  [GetterTypes.TAG_BY_DETAILS]: (state) => (args: {
+    host: T.Ship;
+    foundationName: string;
+    tagName: string;
+  }): R.TagsMeta | null => {
+    const { host, foundationName, tagName } = args
+    const hostObject: R.HostObject | undefined = state.hosts.find(ho => ho.host === host)
+
+    if (hostObject) {
+      const foundation: R.SubFoundation | undefined = hostObject.foundations.find(f => f.name === foundationName)
+      if (foundation) {
+        const tag: T.TagsMeta | undefined = foundation.details.metadata.tags.find((tag: T.TagsMeta) => {
+          return tag.tag === tagName
+        })
+        if (tag) {
+          return tag
         }
         return null
       }

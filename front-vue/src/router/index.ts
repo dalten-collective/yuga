@@ -4,6 +4,7 @@ import Explore from "../views/Explore.vue";
 import HostFoundation from "../views/HostFoundation.vue";
 import HostFolder from "../views/HostFolder.vue";
 import AuthorShow from "../views/AuthorShow.vue";
+import TagShow from "../views/TagShow.vue";
 import RamaPostShow from "../views/RamaPostShow.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -46,6 +47,17 @@ const routes: Array<RouteRecordRaw> = [
       authorName: route.params.authorName,
     })
   },
+  {
+    path: "/explore/:foundationHost/:foundationName/tags/:tagName",
+    name: "tagShow",
+    component: TagShow,
+    props: route => ({
+      host: route.params.foundationHost,
+      foundationName: route.params.foundationName,
+      tagName: route.params.tagName,
+    })
+  },
+
   {
     path: "/explore/:foundationHost/:foundationName/posts/:postID",
     name: "ramaPostShow",

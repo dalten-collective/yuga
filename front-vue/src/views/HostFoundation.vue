@@ -64,20 +64,48 @@
           </div>
         </div>
 
-        <div class="p-2 my-4" v-if="authors.length > 0">
-          <h3 class="text-2xl">Authors:</h3>
-          <ul>
-            <li
-              v-for="a in authors"
-              :key="a.author"
-            >
-              <AuthorFolder
-                :author="a"
-                :host="host"
-                :foundation="foundationName"
-              />
-            </li>
-          </ul>
+        <div class="flex flex-row">
+          <div class="flex-grow p-2 my-4" v-if="authors.length > 0">
+            <h3 class="text-2xl">Authors:</h3>
+            <ul>
+              <li
+                v-for="a in authors"
+                :key="a.author"
+              >
+                <AuthorFolder
+                  :author="a"
+                  :host="host"
+                  :foundation="foundationName"
+                />
+              </li>
+            </ul>
+          </div>
+
+          <div class="flex-grow p-2 my-4" v-if="tags.length > 0">
+            <h3 class="text-2xl">Tags:</h3>
+            <ul>
+              <li
+                v-for="t in tags"
+                :key="t.tag"
+              >
+                <span class="mr-2 tag">
+                  <router-link
+                    :to="{
+                      name: 'tagShow',
+                      params: {
+                        host,
+                        foundationName,
+                        tagName: encodeURIComponent(t.tag),
+                      },
+                    }"
+                  >
+                    {{ t.tag }}
+                  </router-link>
+                </span>
+                <span class="text-sm text-gray-400">({{ t.posts.length }} {{ t.posts.legnth === 1 ? 'post' : 'posts' }})</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div v-if="amAlmoner">
@@ -147,6 +175,10 @@ const foldered = computed<Array<R.FoldersMeta>>(() => {
 
 const authors = computed<Array<R.AuthorsMeta> | null>(() => {
   return theFoundation.value?.details.metadata.authors
+})
+
+const tags = computed<Array<R.TagsMeta> | null>(() => {
+  return theFoundation.value?.details.metadata.tags
 })
 
 const enter = () => {
