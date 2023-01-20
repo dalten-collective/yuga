@@ -3,7 +3,7 @@
 =/  state-0
   $:  %0
       hosts=(jug ship [term [? foundation:hari]])
-      saved=((mop @da ,[flag @da]) gth)
+      saved=((mop @da ,[flag @ud]) gth)
       share=?
   ==
 |_  state=state-0
@@ -11,7 +11,7 @@
 ++  grow
   |%
   ++  noun  state
-  ++  json  (state-0:rama:enjs:c-j state)
+  ++  json  [%s 'test']  ::(state-0:rama:enjs:c-j state)
   --
 ++  grab
   |%

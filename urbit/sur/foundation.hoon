@@ -24,6 +24,7 @@
         [%set-folder item=@ud dest=term]
         [%set-tags item=@ud them=(set term)]
         [%add-tag item=@ud it=term]
+        [%set-author them=@p item=@ud]
         [%all %rama rama:states]
     ==
   ::

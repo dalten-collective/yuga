@@ -5,10 +5,7 @@
 ++  grow
   |%
   ++  noun  state-0
-  ++  json
-    %-  rama-state:meta:enjs:c-j
-    :-  %0
-    `state:meta:f`[%rama state-0]
+  ++  json  (rama-state:meta:enjs:c-j [%0 [%rama state-0]])
   --
 ++  grab
   |%
