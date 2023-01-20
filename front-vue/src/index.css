@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.rendered-markdown h1, h2, h3, h4, h5, h6 {
+  @apply mt-6;
+  @apply mb-4;
+}
+.rendered-markdown img {
+  @apply mx-auto;
+}
+.rendered-markdown h1 {
+  @apply text-5xl;
+}
+.rendered-markdown p {
+  @apply mb-3;
+}
+.rendered-markdown h2 {
+  @apply text-4xl;
+}
+.rendered-markdown h3 {
+  @apply text-3xl;
+}
+.rendered-markdown h4 {
+  @apply text-2xl;
+}
+.rendered-markdown h5 {
+  @apply text-xl;
+}
+.rendered-markdown h6 {
+  @apply text-lg;
+}
+.rendered-markdown a {
+  @apply text-blue-500;
+  @apply dark:text-sky-600;
+  @apply underline;
+}
+.rendered-markdown ul {
+  @apply list-disc;
+}
+.rendered-markdown li {
+  @apply ml-4;
+}
+
+.link-text {
+  @apply text-blue-500;
+  @apply dark:text-sky-600;
+  @apply underline;
+  @apply cursor-pointer;
+}
+.no-underline-link-text {
+  @apply text-blue-500;
+  @apply dark:text-sky-600;
+  @apply no-underline;
+  @apply cursor-pointer;
+}
+
+.tag a {
+  @apply dark:text-white !important;
+  @apply no-underline;
+}
+
+a {
+  @apply text-blue-500;
+  @apply dark:text-sky-600;
+  @apply underline;
+}
+
+input[type="text"] {
+  @apply p-1;
+  @apply border;
+  @apply rounded-sm;
+  @apply bg-stone-100;
+  @apply dark:bg-stone-800;
+  @apply dark:border-stone-600;
+}
+
+textarea {
+  @apply p-1;
+  @apply border;
+  @apply rounded-sm;
+  @apply bg-stone-100;
+  @apply dark:bg-stone-800;
+  @apply dark:border-stone-600;
+}
+
+body {
+  @apply dark:text-stone-300;
+  @apply dark:bg-stone-900;
+  @apply bg-white;
+}
+
+.subtle {
+  @apply text-stone-400;
+  @apply dark:text-stone-600;
+}
+
+label {
+  @apply text-stone-800;
+  @apply dark:text-stone-400;
+}
+
+button {
+  @apply font-bold;
+  @apply p-2;
+  @apply border;
+  @apply dark:border-sky-900;
+  @apply rounded-md;
+  @apply bg-blue-400;
+  @apply dark:bg-sky-800;
+  @apply dark:text-stone-300;
+  @apply text-white;
+}
+
+button[type="submit"] {
+  @apply font-bold;
+  @apply p-2;
+  @apply border;
+  @apply dark:border-sky-900;
+  @apply rounded-md;
+  @apply bg-blue-400;
+  @apply dark:bg-sky-800;
+  @apply dark:text-stone-300;
+  @apply text-white;
+}
+
+button.action-btn {
+  @apply bg-green-500;
+  @apply border-green-600;
+  @apply dark:bg-emerald-800;
+  @apply dark:border-emerald-900;
+}
+button.cancel-btn {
+  @apply bg-red-500;
+  @apply border-red-600;
+  @apply dark:bg-rose-800;
+  @apply dark:border-rose-900;
+}
+button.loading-btn {
+  @apply bg-stone-300;
+  @apply text-stone-700;
+  @apply opacity-75;
+  @apply cursor-progress;
+}
+
+ul.list-disc li {
+  @apply ml-4;
+}
+
+.loading {
+  @apply opacity-20;
+  @apply cursor-progress;
+}
+
+select {
+  @apply cursor-pointer;
+  @apply p-2;
+  @apply rounded-md;
+  @apply dark:bg-stone-800;
+  @apply dark:border-stone-600;
+}
+
+.tag {
+  @apply px-2;
+  @apply py-1;
+  @apply font-bold;
+  @apply border;
+  @apply border-blue-300;
+  @apply dark:border-sky-600;
+  @apply text-blue-400;
+  @apply dark:text-stone-200;
+  @apply bg-blue-100;
+  @apply dark:bg-sky-800;
+  @apply rounded-lg;
+}

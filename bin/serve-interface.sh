@@ -1,3 +1,3 @@
 #!/bin/bash
 
-npm run dev --prefix front
+npm run serve --prefix front-vue

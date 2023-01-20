@@ -158,7 +158,7 @@
       %+  turn  ~(tap by host)
       |=  (pair @p (set [t=term [h=? f=foundation:hari:f]]))
       %-  pairs
-      :~  host+(ships p)
+      :~  host+(ships p)  :: TODO: ask
       ::
         :+  %foundations  %a
         %+  turn  ~(tap in q)
