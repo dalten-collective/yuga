@@ -1,3 +1,3 @@
 #!/bin/bash
 
-npm run build --prefix front-vue
+npm run build --prefix front

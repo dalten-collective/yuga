@@ -1,90 +1,175 @@
-@import './fonts.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
+.rendered-markdown h1, h2, h3, h4, h5, h6 {
+  @apply mt-6;
+  @apply mb-4;
+}
+.rendered-markdown img {
+  @apply mx-auto;
+}
+.rendered-markdown h1 {
+  @apply text-5xl;
+}
+.rendered-markdown p {
+  @apply mb-3;
+}
+.rendered-markdown h2 {
+  @apply text-4xl;
+}
+.rendered-markdown h3 {
+  @apply text-3xl;
+}
+.rendered-markdown h4 {
+  @apply text-2xl;
+}
+.rendered-markdown h5 {
+  @apply text-xl;
+}
+.rendered-markdown h6 {
+  @apply text-lg;
+}
+.rendered-markdown a {
+  @apply text-blue-500;
+  @apply dark:text-sky-600;
+  @apply underline;
+}
+.rendered-markdown ul {
+  @apply list-disc;
+}
+.rendered-markdown li {
+  @apply ml-4;
+}
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+.link-text {
+  @apply text-blue-500;
+  @apply dark:text-sky-600;
+  @apply underline;
+  @apply cursor-pointer;
+}
+.no-underline-link-text {
+  @apply text-blue-500;
+  @apply dark:text-sky-600;
+  @apply no-underline;
+  @apply cursor-pointer;
+}
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+.tag a {
+  @apply dark:text-white !important;
+  @apply no-underline;
 }
 
 a {
-  font-weight: 500;
-  /* color: #646cff; */
-  /* text-decoration: inherit; */
+  @apply text-blue-500;
+  @apply dark:text-sky-600;
+  @apply underline;
 }
-a:hover {
-  cursor: pointer;
-  color: #535bf2;
+
+input[type="text"] {
+  @apply p-1;
+  @apply border;
+  @apply rounded-sm;
+  @apply bg-stone-100;
+  @apply dark:bg-stone-800;
+  @apply dark:border-stone-600;
 }
-.link {
-  font-weight: 500;
-  /* color: #646cff; */
-  /* text-decoration: inherit; */
-}
-.link:hover {
-  cursor: pointer;
-  color: #535bf2;
+
+textarea {
+  @apply p-1;
+  @apply border;
+  @apply rounded-sm;
+  @apply bg-stone-100;
+  @apply dark:bg-stone-800;
+  @apply dark:border-stone-600;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  @apply dark:text-stone-300;
+  @apply dark:bg-stone-900;
+  @apply bg-white;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.subtle {
+  @apply text-stone-400;
+  @apply dark:text-stone-600;
 }
 
-.logotext {
-  font-family: 'InferiLight', system-ui, sans-serif;
-  font-size: 2.5em;
-  font-weight: 300;
-  /* line-height: 1.1; */
+label {
+  @apply text-stone-800;
+  @apply dark:text-stone-400;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  border-color: #646cff;
+  @apply font-bold;
+  @apply p-2;
+  @apply border;
+  @apply dark:border-sky-900;
+  @apply rounded-md;
+  @apply bg-blue-400;
+  @apply dark:bg-sky-800;
+  @apply dark:text-stone-300;
+  @apply text-white;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-    background-color: #c3bdbda5;
-  }
+button[type="submit"] {
+  @apply font-bold;
+  @apply p-2;
+  @apply border;
+  @apply dark:border-sky-900;
+  @apply rounded-md;
+  @apply bg-blue-400;
+  @apply dark:bg-sky-800;
+  @apply dark:text-stone-300;
+  @apply text-white;
+}
+
+button.action-btn {
+  @apply bg-green-500;
+  @apply border-green-600;
+  @apply dark:bg-emerald-800;
+  @apply dark:border-emerald-900;
+}
+button.cancel-btn {
+  @apply bg-red-500;
+  @apply border-red-600;
+  @apply dark:bg-rose-800;
+  @apply dark:border-rose-900;
+}
+button.loading-btn {
+  @apply bg-stone-300;
+  @apply text-stone-700;
+  @apply opacity-75;
+  @apply cursor-progress;
+}
+
+ul.list-disc li {
+  @apply ml-4;
+}
+
+.loading {
+  @apply opacity-20;
+  @apply cursor-progress;
+}
+
+select {
+  @apply cursor-pointer;
+  @apply p-2;
+  @apply rounded-md;
+  @apply dark:bg-stone-800;
+  @apply dark:border-stone-600;
+}
+
+.tag {
+  @apply px-2;
+  @apply py-1;
+  @apply font-bold;
+  @apply border;
+  @apply border-blue-300;
+  @apply dark:border-sky-600;
+  @apply text-blue-400;
+  @apply dark:text-stone-200;
+  @apply bg-blue-100;
+  @apply dark:bg-sky-800;
+  @apply rounded-lg;
 }

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-npm install --prefix front-vue
+npm install --prefix front
